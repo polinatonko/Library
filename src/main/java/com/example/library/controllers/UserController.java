@@ -292,18 +292,24 @@ public class UserController {
     {
         String pwd = userDto.getPassword(),
                 matchPwd = userDto.getMatchingPassword();
-        if (pwd.equals(matchPwd)) {
-            User auth_user = userService.getById(user.getId()).get();
-            auth_user.setPassword(passwordEncoder.encode(pwd));
-            userService.save(auth_user);
-            return "redirect:/profile";
-        }
 
         User authUser = userService.getById(user.getId()).get();
-        model.addAttribute("user", authUser);
-        model.addAttribute("userDto", new UserDto());
 
-        redirectAttributes.addFlashAttribute("passwordError", "Passwords don't match!");
+        if (pwd.equals(matchPwd)) {
+            authUser.setPassword(passwordEncoder.encode(pwd));
+            userService.save(authUser);
+
+            redirectAttributes.addFlashAttribute("passwordSuccess", "Password was successfully changed!");
+            return "redirect:/profile";
+        }
+        else
+        {
+            model.addAttribute("user", authUser);
+            model.addAttribute("userDto", new UserDto());
+
+            redirectAttributes.addFlashAttribute("passwordError", "Passwords don't match!");
+        }
+
         return "redirect:/profile";
     }
 
