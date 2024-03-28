@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments.html :: header(${title})"></head>
+<body>
+
+<div th:replace="fragments/navbar.html :: navbar"></div>
+
+<form th:object="${genre}" method="post" action="">
+    <div>
+        <label>Name</label>
+        <input type="text" th:field="*{name}"/>
+        <span th:errors="*{name}"></span>
+    </div>
+    <input type="submit" value="Add"/>
+</form>
+</body>
+</html>
