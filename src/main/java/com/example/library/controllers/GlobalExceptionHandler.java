@@ -20,7 +20,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpClientErrorException.Forbidden.class)
     public String accessDeniedException(HttpClientErrorException.Forbidden ex, Model model) {
         String errorMessage = "Access denied!";
-        System.out.println("her");
         model.addAttribute("error_msg", errorMessage);
         return "error";
     }

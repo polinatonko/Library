@@ -1,6 +1,5 @@
 package com.example.library.controllers;
 
-import com.example.library.models.Book;
 import com.example.library.models.Edition;
 import com.example.library.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;

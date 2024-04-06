@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class SecurityService {
@@ -26,11 +27,11 @@ public class SecurityService {
 
     public String checkToken(String token)
     {
-        PasswordResetToken passwordResetToken = passwordResetTokenRepositoryTokenRepository.findByToken(token);
+        Optional<PasswordResetToken> passwordResetToken = passwordResetTokenRepositoryTokenRepository.findByToken(token);
 
-        if (!isTokenExists(passwordResetToken))
+        if (passwordResetToken.isEmpty())
             return "invalid-token";
-        if (isTokenExpired(passwordResetToken))
+        if (isTokenExpired(passwordResetToken.get()))
             return "expired-token";
 
         return null;

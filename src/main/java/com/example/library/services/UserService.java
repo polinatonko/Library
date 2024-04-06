@@ -1,34 +1,36 @@
 package com.example.library.services;
-import com.example.library.models.Role;
+import com.example.library.GlobalFunctions;
+import com.example.library.models.Block;
 import com.example.library.models.User;
 import com.example.library.dto.UserDto;
 import com.example.library.enums.ERole;
-import com.example.library.repositories.PasswordResetTokenRepository;
+import com.example.library.repositories.*;
+import com.example.library.timer.BlockTimerTask;
+import com.example.library.tokens.NewEmailToken;
 import com.example.library.tokens.PasswordResetToken;
 import com.example.library.tokens.VerificationToken;
-import com.example.library.repositories.RoleRepository;
-import com.example.library.repositories.UserRepository;
-import com.example.library.repositories.VerificationTokenRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private TimerService timerService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private GlobalFunctions utils;
 
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private BlockService blockService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -36,6 +38,8 @@ public class UserService {
     private VerificationTokenRepository verificationTokenRepository;
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
+    @Autowired
+    private NewTokenRepository newTokenRepository;
 
     public User registerUser(UserDto userDto, ERole roleName) throws IllegalArgumentException
     {
@@ -46,28 +50,7 @@ public class UserService {
         }
 
         User user = new User(userDto, passwordEncoder.encode(userDto.getPassword()));
-
-        Role role = roleRepository.findByName(roleName);
-        if (role == null)
-        {
-            role = new Role(roleName);
-            roleRepository.save(role);
-        }
-        user.setRole(role);
-
-        /*User new_user = userRepository.save(user);
-
-        VerificationToken token = new VerificationToken(UUID.randomUUID().toString(), new_user, 24);
-        token = verificationTokenRepository.save(token);
-
-        new_user.setVerificationToken(token);
-        userRepository.save(new_user);
-
-        emailService.sendEmail(
-                user.getEmail(),
-                "Account confirmation",
-                "Click to link to activate your account: http://localhost:8080/confirm-account?token=" + token.getToken()
-        );*/
+        user.setRole(roleService.getRoleByName(roleName));
 
         return save(user);
     }
@@ -77,7 +60,7 @@ public class UserService {
         User new_user = userRepository.save(user);
         VerificationToken token = createToken(new_user);
         new_user.setVerificationToken(token);
-        user = userRepository.save(new_user);
+        userRepository.save(new_user);
 
         emailService.sendEmail(
                 user.getEmail(),
@@ -88,13 +71,37 @@ public class UserService {
         return user;
     }
 
+    public void sendNewEmailConfirmationMail(User user, String new_email)
+    {
+        Optional<NewEmailToken> optToken = newTokenRepository.findById(user.getId());
+        NewEmailToken token;
+        if (optToken.isEmpty())
+        {
+            token = createNewEmailToken(user, new_email);
+            user.setNewEmailToken(token);
+            userRepository.save(user);
+        }
+        else
+        {
+            token = optToken.get();
+            token.setExpiryDate(utils.getDate(1, 0, 0, 0));
+            token.setNewEmail(new_email);
+        }
+
+        emailService.sendEmail(
+                new_email,
+                "New email confirmation",
+                "Click to link to confirm your new email: http://localhost:8080/confirm-email?token=" + token.getToken()
+        );
+    }
+
     public String confirmEmail(String token)
     {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
 
-        if (verificationToken != null)
+        if (verificationToken.isPresent())
         {
-            User user = userRepository.findUserByVerificationToken(verificationToken);
+            User user = userRepository.findUserByVerificationToken(verificationToken.get());
             if (user.isEnabled())
                 return "User account already active!";
 
@@ -115,7 +122,12 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User getByEmail(String email) { return userRepository.findUserByEmail(email); }
+    public Optional<User> getByEmail(String email) { return userRepository.findUserByEmail(email); }
+    public NewEmailToken createNewEmailToken(User user, String newEmail)
+    {
+        NewEmailToken token = new NewEmailToken(UUID.randomUUID().toString(), newEmail, user, 24);
+        return newTokenRepository.save(token);
+    }
 
     public VerificationToken createToken(User user)
     {
@@ -140,14 +152,20 @@ public class UserService {
 
     public Optional<User> findUserByToken(String token)
     {
-        VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
-        return verificationToken != null ? Optional.of(verificationToken.getUser()) : Optional.empty();
+        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
+        return verificationToken.map(VerificationToken::getUser);
+    }
+
+    public Optional<User> findUserByNewEmailToken(String token)
+    {
+        Optional<NewEmailToken> newEmailToken = newTokenRepository.findByToken(token);
+        return newEmailToken.map(NewEmailToken::getUser);
     }
 
     public Optional<User> findUserByPasswordResetToken(String token)
     {
-        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token);
-        return passwordResetToken != null ? Optional.of(passwordResetToken.getUser()) : Optional.empty();
+        Optional<PasswordResetToken> passwordResetToken = passwordResetTokenRepository.findByToken(token);
+        return passwordResetToken.map(PasswordResetToken::getUser);
     }
 
     public void changePassword(User user, String password)
@@ -165,7 +183,7 @@ public class UserService {
 
     public Iterable<User> getAllUsersForLibrarian()
     {
-        List<User> users = (List<User>) getUsersByRole(ERole.ROLE_LIBRARIAN);
+        List<User> users = getUsersByRole(ERole.ROLE_LIBRARIAN);
         users.addAll(getUsersByRole(ERole.ROLE_READER));
         return users;
     }
@@ -177,18 +195,14 @@ public class UserService {
 
     public void updateUser(User user)
     {
-        Optional<User> savedOptionalUser = userRepository.findById(user.getId());
-        if (savedOptionalUser.isPresent())
-        {
-            User saved = savedOptionalUser.get();
-            saved.setLastName(user.getLastName());
-            saved.setName(user.getName());
-            saved.setMiddleName(user.getMiddleName());
-            saved.setEmail(user.getEmail());
-            saved.setBirthDate(user.getBirthDate());
+        User saved = getUserByIdOrThrowException(user.getId());
+        saved.setLastName(user.getLastName());
+        saved.setName(user.getName());
+        saved.setMiddleName(user.getMiddleName());
+        saved.setEmail(user.getEmail());
+        saved.setBirthDate(user.getBirthDate());
 
-            userRepository.save(saved);
-        }
+        userRepository.save(saved);
     }
 
     public void deleteUser(Integer id)
@@ -198,44 +212,50 @@ public class UserService {
 
     public void unblockUser(Integer id)
     {
-        Optional<User> optUser = userRepository.findById(id);
-        if (optUser.isPresent())
-        {
-            User user = optUser.get();
-            user.setBlocked(false);
-            user.setBlockingEnd(null);
-            userRepository.save(user);
-        }
-        else
-        {
-            throw new UsernameNotFoundException("User with such id doesn't exist");
-        }
+        User user = getUserByIdOrThrowException(id);
+        user.setBlocked(false);
+        user.setBlockingEnd(null);
+
+        blockService.cancelBlock(userRepository.save(user).getId());
+        timerService.stopTimerByUserId(user.getId());
     }
 
     public void blockUser(Integer id, Date blockingEnd)
     {
-        Optional<User> optUser = userRepository.findById(id);
-        if (optUser.isPresent())
-        {
-            User user = optUser.get();
-            user.setBlocked(true);
-            user.setBlockingEnd(blockingEnd);
-            userRepository.save(user);
-        }
-        else
-        {
-            throw new UsernameNotFoundException("User with such id doesn't exist");
-        }
+        User user = getUserByIdOrThrowException(id);
+        user.setBlocked(true);
+        user.setBlockingEnd(blockingEnd);
+        User saved = userRepository.save(user);
+
+        Block block = new Block(saved, timerService.getTimerById(saved.getId()), new BlockTimerTask(saved) { @Override public void run() { unblockUser(saved.getId());}});
+        blockService.save(block);
     }
 
     public boolean isUserAdmin(Integer id)
     {
-        Optional<User> optUser = userRepository.findById(id);
-        if (optUser.isPresent())
+        User user = getUserByIdOrThrowException(id);
+        return (user.getRole().getName() == ERole.ROLE_ADMIN);
+    }
+
+    private User getUserByIdOrThrowException(Integer id) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty())
+            throw new UsernameNotFoundException("User with such id doesn't exist");
+
+        return user.get();
+    }
+
+    public String changeEmail(String token) {
+        Optional<NewEmailToken> newEmailToken = newTokenRepository.findByToken(token);
+
+        if (newEmailToken.isPresent())
         {
-            User user = optUser.get();
-            return (user.getRole().getName() == ERole.ROLE_ADMIN);
+            User user = userRepository.findByNewEmailToken(newEmailToken.get());
+            user.setEmail(newEmailToken.get().getNewEmail());
+            userRepository.save(user);
+            return "Email was successfully changed";
         }
-        throw new UsernameNotFoundException("User with such id doesn't exist");
+        return "Token is invalid!";
     }
 }

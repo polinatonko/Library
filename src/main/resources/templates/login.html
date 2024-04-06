@@ -22,9 +22,18 @@
                                 </button>
                             </div>
 
-                            <div class="error alert alert-danger" th:if="${param.error}"
-                                 role="alert">
-                                Authentication error.</div>
+                            <div class="error alert alert-danger" th:if="${#strings.toString(param.error)} == 'true'"
+                                 role="alert">Authentication error.</div>
+
+                            <div class="error alert alert-danger" th:if="${#strings.toString(param.error)} == 'bad-credentials'"
+                                 role="alert">Invalid password.</div>
+
+                            <div class="error alert alert-danger" th:if="${#strings.toString(param.error)} == 'disabled'"
+                                 role="alert">This account is disabled.</div>
+
+                            <div class="error alert alert-danger" th:if="${#strings.toString(param.error)} == 'locked'"
+                                 role="alert">This account is locked.</div>
+
                             <div class="error alert alert-dark" th:if="${param.logout}"
                                  role="alert">
                                 You have been logged out.</div>

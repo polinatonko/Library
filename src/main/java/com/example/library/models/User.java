@@ -1,6 +1,8 @@
 package com.example.library.models;
 
 import com.example.library.dto.UserDto;
+import com.example.library.interfaces.IEntity;
+import com.example.library.tokens.NewEmailToken;
 import com.example.library.tokens.VerificationToken;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -15,7 +17,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -34,18 +36,16 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "verification_token_id")
     private VerificationToken verificationToken;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "new_email_token_id")
+    private NewEmailToken newEmailToken;
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
     @OneToMany(mappedBy = "reader", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews;
-    //private Set<Action> actions;
-
-    /*@ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles;*/
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Action> actions;
 
     public User() {}
 
@@ -57,5 +57,10 @@ public class User {
         email = userDto.getEmail();
         birthDate = userDto.getBirthDate();
         password = pswd;
+    }
+
+    @Override
+    public String getShortName() {
+        return middleName + name + lastName;
     }
 }

@@ -12,10 +12,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class UsersListDto {
-    private List<User> users = new ArrayList<>();
+    private List<User> objects = new ArrayList<>();
 
     public UsersListDto(List<User> users)
     {
-        this.users.addAll(users);
+        this.objects.addAll(users);
     }
 }

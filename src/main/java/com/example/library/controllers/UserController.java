@@ -10,11 +10,9 @@ import com.example.library.dto.UserDto;
 import com.example.library.repositories.RoleRepository;
 import com.example.library.services.SecurityService;
 import com.example.library.services.UserService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
@@ -29,7 +27,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.InvalidParameterException;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,9 +67,7 @@ public class UserController {
     {
         checkLibrarianPermission(request, id);
 
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR, 24 * 30);
-        userService.blockUser(id, new Date(cal.getTime().getTime()));
+        userService.blockUser(id, utils.getDate(0, 0, 1, 0));
         return utils.getPreviousUrl(request);
     }
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
@@ -88,7 +83,7 @@ public class UserController {
         {
             try
             {
-                User registered = userService.registerUser(userDto, userDto.getRole());
+                userService.registerUser(userDto, userDto.getRole());
             }
             catch (IllegalArgumentException ex)
             {
@@ -117,7 +112,7 @@ public class UserController {
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
-    @PostMapping(value = "/delete-user/{id}")
+    @PostMapping(value = "users/delete-user/{id}")
     public String deleteUser(HttpServletRequest request,
                              @PathVariable("id") Integer id,
                              Model model)
@@ -136,7 +131,7 @@ public class UserController {
     {
         checkLibrarianPermission(request, id);
 
-        User edited = form.getUsers().getLast();
+        User edited = form.getObjects().getLast();
         edited.setId(id);
         userService.updateUser(edited);
         return utils.getPreviousUrl(request);
@@ -169,7 +164,6 @@ public class UserController {
             default:
                 throw new InvalidParameterException("There is no resource on such uri!");
         }
-        model.addAttribute("users", users);
         model.addAttribute("form", new UsersListDto(users));
         model.addAttribute("new_user", new UserDto());
         return "manageUsers";
@@ -177,23 +171,26 @@ public class UserController {
 
     @PostMapping(value = "/reset-password")
     public String resetPassword(@ModelAttribute("email") String email,
-                                BindingResult bindingResult,
                                 Model model)
     {
-        User user = userService.getByEmail(email);
-        if (user == null)
+        Optional<User> user = userService.getByEmail(email);
+        if (user.isEmpty())
         {
             return "redirect:/forgot-password?error=true";
         }
 
-        userService.sendResetPasswordEmail(userService.createPasswordResetToken(user));
+        userService.sendResetPasswordEmail(userService.createPasswordResetToken(user.get()));
         model.addAttribute("messageHeader", "Password reset mail was send!");
         model.addAttribute("messageBody", "Сheck your mail and follow the link from the letter\n");
         return "message";
     }
 
     @GetMapping(value = "/reset-password")
-    public String resetPasswordForm(HttpServletRequest request, HttpServletResponse response, @RequestParam("token") String token, Model model)
+    public String resetPasswordForm(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            @RequestParam("token") String token,
+            Model model)
     {
         String res = securityService.checkToken(token);
         if (res != null)
@@ -243,7 +240,7 @@ public class UserController {
     {
         model.addAttribute("title", "Profile");
         Optional<User> optAuthUser = userService.getById(user.getId());
-        if (optAuthUser.isPresent())
+        if (optAuthUser.isPresent()) // выполняется всегда, т. к. profile доступен только авторизованным пользователям
         {
             User authUser = optAuthUser.get();
             model.addAttribute("user", authUser);
@@ -252,7 +249,6 @@ public class UserController {
             model.addAttribute("userDto", userDto);
             return "reader_profile";
         }
-        // user profile not found !
         return "redirect:";
     }
 
@@ -274,12 +270,24 @@ public class UserController {
         else
         {
             User auth_user = userService.getById(user.getId()).get();
+            userService.sendNewEmailConfirmationMail(auth_user, new_email);
+
+            /*User auth_user = userService.getById(user.getId()).get();
             auth_user.setEmail(new_email);
 
-            userService.save(auth_user);
+            userService.save(auth_user);*/
         }
 
+        model.addAttribute("changedEmail", new_email);
         return "redirect:/profile";
+    }
+
+    @GetMapping(value = "/confirm-email")
+    public String changeEmail(@RequestParam("token")String token, Model model)
+    {
+        model.addAttribute("title", "New email confirmation");
+        model.addAttribute("message", userService.changeEmail(token));
+        return "confirmation";
     }
 
     @PostMapping(value = "/change-password")
@@ -332,7 +340,7 @@ public class UserController {
         {
             try
             {
-                User registered = userService.registerUser(userDto, ERole.ROLE_READER);
+                userService.registerUser(userDto, ERole.ROLE_READER);
             }
             catch (IllegalArgumentException ex)
             {
@@ -354,7 +362,11 @@ public class UserController {
     }
 
     @RequestMapping(value = "/login")
-    public String login(@AuthenticationPrincipal CustomUserDetails user, Model model) {
+    public String login(
+            @AuthenticationPrincipal CustomUserDetails user,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model) {
         if (user != null)
         {
             return "redirect:";

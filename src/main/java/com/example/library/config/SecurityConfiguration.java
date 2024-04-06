@@ -22,7 +22,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/add-genre", "/profile").authenticated()
+                        .requestMatchers("/add-genre", "/profile", "/change-password").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(
@@ -32,7 +32,9 @@ public class SecurityConfiguration {
                                 .failureUrl("/login?error=true")
                                 .usernameParameter("email")
                                 .passwordParameter("password")
+                                .failureHandler(authenticationFailureHandler())
                         .permitAll())
+
                 .logout(auth -> auth.logoutRequestMatcher(new AntPathRequestMatcher("/logout")));
 
         return http.build();
@@ -55,4 +57,7 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public CustomAuthenticationFailureHandler authenticationFailureHandler() { return new CustomAuthenticationFailureHandler(); }
 }

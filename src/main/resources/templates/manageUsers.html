@@ -45,7 +45,6 @@
                         <th scope="col">First name</th>
                         <th scope="col">Middle name</th>
                         <th scope="col">Email</th>
-                        <th scope="col">Password</th>
                         <th scope="col">Birth date</th>
                         <th scope="col">Enabled</th>
                         <th scope="col">Blocked</th>
@@ -56,7 +55,7 @@
                 </thead>
 
                 <tbody>
-                    <tr th:each="user : ${users}">
+                    <tr th:each="user : ${form.objects}">
                         <td th:text="${user.id}"></td>
                             <div th:switch="${user.role.name.name}">
                                 <td th:case="'admin'"><a th:href="@{/manage-users?role=admin}">ADMIN</a></td>
@@ -68,7 +67,6 @@
                         <td th:text="${user.name}"></td>
                         <td th:text="${user.middleName}"></td>
                         <td th:text="${user.email}"></td>
-                        <td th:text="${user.password}"></td>
                         <td th:text="${#dates.format(user.birthDate, 'dd-MM-yyyy')}"></td>
 
                         <td>
@@ -91,7 +89,7 @@
 
                         <td>
                             <div th:switch="${user.isBlocked}">
-                                <p th:case="true"> <a th:text="${user.blockingEnd}"></a> </p>
+                                <p th:case="true"> <a th:text="${#dates.format(user.blockingEnd, 'dd-MM-yyyy HH:mm:ss')}"></a> </p>
                                 <p th:case="false"> <a>-</a> </p>
                             </div>
                         </td>
@@ -132,7 +130,7 @@
             </table>
         </div>
 
-            <div th:block th:each="user, it : ${users}">
+            <div th:block th:each="user, it : ${form.objects}">
                 <div class="modal fade"  th:attr="id=${'editModal' + user.id}, aria-labelledby=${'#editModalLabel' + user.id}" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog" role="document" >
                         <div class="modal-content">
@@ -146,42 +144,42 @@
                             <div class="modal-body">
                                 <form class="login-form" th:action="@{/edit-user/{id}(id=${user.id})}" th:object="${form}" method="post">
                                     <div class="form-floating mb-3">
-                                        <input disabled="disabled" required type="text" th:field="*{users[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingId' + user.id}">
+                                        <input disabled="disabled" required type="text" th:field="*{objects[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingId' + user.id}">
                                         <label th:attr="for=${'#floatingId' + user.id}">Id</label>
                                     </div>
 
                                     <div class="form-floating mb-3">
-                                        <input required type="text" th:field="*{users[__${it.index}__].lastName}" class="form-control" th:attr="id=${'floatingLastName' + user.id}" placeholder="Last name">
+                                        <input required type="text" th:field="*{objects[__${it.index}__].lastName}" class="form-control" th:attr="id=${'floatingLastName' + user.id}" placeholder="Last name">
                                         <label th:attr="for=${'#floatingLastName' + user.id}">Last name</label>
-                                        <p th:each="error : ${#fields.errors('users[__${it.index}__].lastName')}"
+                                        <p th:each="error : ${#fields.errors('objects[__${it.index}__].lastName')}"
                                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                                     </div>
 
                                     <div class="form-floating mb-3">
-                                        <input required type="text" th:field="*{users[__${it.index}__].name}" class="form-control" th:attr="id=${'floatingName' + user.id}" placeholder="Name">
+                                        <input required type="text" th:field="*{objects[__${it.index}__].name}" class="form-control" th:attr="id=${'floatingName' + user.id}" placeholder="Name">
                                         <label th:attr="for=${'#floatingName' + user.id}">First name</label>
-                                        <p th:each="error : ${#fields.errors('users[__${it.index}__].name')}"
+                                        <p th:each="error : ${#fields.errors('objects[__${it.index}__].name')}"
                                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                                     </div>
 
                                     <div class="form-floating mb-3">
-                                        <input required type="text" th:field="*{users[__${it.index}__].middleName}" class="form-control" th:attr="id=${'floatingMiddleName' + user.id}" placeholder="Middle name">
+                                        <input required type="text" th:field="*{objects[__${it.index}__].middleName}" class="form-control" th:attr="id=${'floatingMiddleName' + user.id}" placeholder="Middle name">
                                         <label th:attr="for=${'#floatingMiddleName' + user.id}">Middle name</label>
-                                        <p th:each="error : ${#fields.errors('users[__${it.index}__].middleName')}"
+                                        <p th:each="error : ${#fields.errors('objects[__${it.index}__].middleName')}"
                                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                                     </div>
 
                                     <div class="input-group form-floating mb-4">
                                         <i class="bi bi-envelope-open input-group-text"></i>
-                                        <input required type="email" th:field="*{users[__${it.index}__].email}" class="form-control" th:attr="id=${'floatingEmail' + user.id}" placeholder="name@example.com">
+                                        <input required type="email" th:field="*{objects[__${it.index}__].email}" class="form-control" th:attr="id=${'floatingEmail' + user.id}" placeholder="name@example.com">
                                         <label th:attr="for=${'#floatingEmail' + user.id}" id="myLabel5">Email address</label>
-                                        <p th:each="error : ${#fields.errors('users[__${it.index}__].email')}"
+                                        <p th:each="error : ${#fields.errors('objects[__${it.index}__].email')}"
                                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                                     </div>
 
                                     <div class="form-floating input-group mb-4">
                                         <i class="bi bi-calendar-date input-group-text" id="myIcon2"></i>
-                                        <input type="text" th:attr="id=${'datePicker' + user.id}" th:field="*{users[__${it.index}__].birthDate}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
+                                        <input type="text" th:attr="id=${'datePicker' + user.id}" th:field="*{objects[__${it.index}__].birthDate}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
                                         <label th:attr="for=${'datePicker' + user.id}" id="myLabel6">Select birthday date</label>
                                     </div>
 
@@ -198,38 +196,9 @@
                 </div>
             </div>
 
-            <div th:block th:each="user, it : ${users}">
-                <div class="modal fade"  th:attr="id=${'deleteModal' + user.id}, aria-labelledby=${'#deleteModalLabel' + user.id}" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog" role="document" >
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" th:attr="id=${'deleteModalLabel' + user.id}">Confirm deletion</h5>
-                                <button type="button" class="close d-flex justify-content-end" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            </div>
+        <div th:replace="modals/confirmDeletion :: modal(${form}, 'user')"></div>
 
-                            <div class="modal-body">
-                                <p>Do you really want to delete user [[${user.lastName}]] [[${user.name}]] [[${user.middleName}]]?</p>
-
-                                <form class="login-form" th:action="@{/delete-user/{id}(id=${user.id})}" th:object="${form}" method="post">
-                                    <div class="form-floating mb-3">
-                                        <input hidden="hidden" type="text" th:field="*{users[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingDeleteId' + user.id}">
-                                        <label hidden="hidden" th:attr="for=${'#floatingDeleteId' + user.id}">Id</label>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <div class="btn-group" role="group" aria-label="Basic example">
-                                            <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">No</button>
-                                            <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Yes</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        <div th:block th:each="user, it : ${users}">
+        <div th:block th:each="user, it : ${form.objects}">
             <div class="modal fade"  th:attr="id=${'blockModal' + user.id}, aria-labelledby=${'#blockModalLabel' + user.id}" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog" role="document" >
                     <div class="modal-content">
@@ -243,7 +212,7 @@
 
                             <form class="login-form" th:action="@{/block-user/{id}(id=${user.id})}" th:object="${form}" method="post">
                                 <div class="form-floating mb-3">
-                                    <input hidden="hidden" type="text" th:field="*{users[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingBlockId' + user.id}">
+                                    <input hidden="hidden" type="text" th:field="*{objects[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingBlockId' + user.id}">
                                     <label hidden="hidden" th:attr="for=${'#floatingBlockId' + user.id}">Id</label>
                                 </div>
 
@@ -259,6 +228,7 @@
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

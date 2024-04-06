@@ -1,12 +1,8 @@
 package com.example.library.controllers;
 
-import com.example.library.ComponentScanApp;
 import com.example.library.GlobalFunctions;
-import com.example.library.dto.ObjectsListDto;
 import com.example.library.dto.PublisherDto;
 import com.example.library.dto.PublishersListDto;
-import com.example.library.dto.UserDto;
-import com.example.library.dto.UsersListDto;
 import com.example.library.models.Publisher;
 import com.example.library.services.PublisherService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,12 +10,10 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("publishers")

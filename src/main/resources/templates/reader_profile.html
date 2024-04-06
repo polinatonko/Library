@@ -59,6 +59,11 @@
                                 <div class="form-floating mb-3">
                                     <input type="text" th:field="*{email}" class="form-control" id="floatingEmail">
                                     <label for="floatingEmail">Email</label>
+
+                                    <div class="error alert alert-dark" th:if="${changedEmail}"
+                                         role="alert">
+                                        Check your new email [[${changedEmail}]]</div>
+
                                     <p th:text="${emailError}"></p>
                                 </div>
                                 <div class="form-floating mb-3">

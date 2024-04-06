@@ -11,7 +11,7 @@
                 <div class="modal-body">
                     <p>Do you really want to delete [[${objName}]] [[${obj.getShortName}]]?</p>
 
-                    <form class="login-form" th:action="@{/publishers/delete-{objn}/{id}(objn=${objName},id=${obj.id})}" th:object="${form}" method="post">
+                    <form class="login-form" th:action="@{/{objn}s/delete-{objn}/{id}(objn=${objName},id=${obj.id})}" th:object="${form}" method="post">
                         <div class="form-floating mb-3">
                             <input hidden="hidden" type="text" th:field="*{objects[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingDeleteId' + obj.id}">
                             <label hidden="hidden" th:attr="for=${'#floatingDeleteId' + obj.id}">Id</label>
