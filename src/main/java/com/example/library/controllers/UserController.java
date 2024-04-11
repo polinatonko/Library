@@ -1,6 +1,7 @@
 package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.config.CustomUserDetails;
+import com.example.library.dto.ObjectsListDto;
 import com.example.library.dto.PasswordDto;
 import com.example.library.dto.UsersListDto;
 import com.example.library.enums.ERole;
@@ -141,7 +142,7 @@ public class UserController {
     @GetMapping(value = "/manage-users")
     public String manageUsers(HttpServletRequest request, @RequestParam("role") String role, Model model)
     {
-        List<User> users;
+        Iterable<User> users;
         switch (role) {
             case ("admin"):
                 if (!request.isUserInRole("ROLE_ADMIN"))
@@ -157,14 +158,14 @@ public class UserController {
                 break;
             case ("all"):
                 if (request.isUserInRole("ROLE_ADMIN"))
-                    users = (List<User>) userService.getAllUsersForAdmin();
+                    users = userService.getAllUsersForAdmin();
                 else
-                    users = (List<User>) userService.getAllUsersForLibrarian();
+                    users = userService.getAllUsersForLibrarian();
                 break;
             default:
                 throw new InvalidParameterException("There is no resource on such uri!");
         }
-        model.addAttribute("form", new UsersListDto(users));
+        model.addAttribute("form", new ObjectsListDto<User>(users));
         model.addAttribute("new_user", new UserDto());
         return "manageUsers";
     }

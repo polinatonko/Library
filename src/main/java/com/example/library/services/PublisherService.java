@@ -1,7 +1,5 @@
 package com.example.library.services;
-import com.example.library.dto.PublishersListDto;
 import com.example.library.models.Publisher;
-import com.example.library.models.User;
 import com.example.library.repositories.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,17 +17,11 @@ public class PublisherService {
     }
     public void updatePublisher(Publisher publisher)
     {
-        Optional<Publisher> savedOptionalPublisher = publisherRepository.findById(publisher.getId());
-        if (savedOptionalPublisher.isPresent())
-        {
-            Publisher saved = savedOptionalPublisher.get();
-            saved.setName(publisher.getName());
-            saved.setDescription(publisher.getDescription());
-            saved.setAddress(publisher.getAddress());
-            saved.setISBNPrefix(publisher.getISBNPrefix());
-
-            publisherRepository.save(saved);
-        }
+        Publisher saved = getByIdOrThrowException(publisher.getId());
+        saved.setName(publisher.getName());
+        saved.setDescription(publisher.getDescription());
+        saved.setAddress(publisher.getAddress());
+        saved.setISBNPrefix(publisher.getISBNPrefix());
     }
 
     public Publisher createPublisher(PublisherDto publisherDto)
@@ -45,5 +37,13 @@ public class PublisherService {
     }
 
     public Iterable<Publisher> getAll() { return publisherRepository.findAll(); }
+    private Publisher getByIdOrThrowException(Integer id) throws IllegalArgumentException {
+        Optional<Publisher> publisher = publisherRepository.findById(id);
+
+        if (publisher.isEmpty())
+            throw new IllegalArgumentException("Publisher with such id doesn't exist");
+
+        return publisher.get();
+    }
 
 }

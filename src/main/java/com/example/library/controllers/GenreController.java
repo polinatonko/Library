@@ -1,4 +1,5 @@
 package com.example.library.controllers;
+import com.example.library.GlobalFunctions;
 import com.example.library.models.Genre;
 import com.example.library.repositories.GenreRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,11 +20,8 @@ import java.util.Optional;
 public class GenreController {
     @Autowired
     private GenreRepository genreRepository;
-    private String getPreviousUrl(HttpServletRequest request)
-    {
-        Optional<String> previousUrl = Optional.ofNullable(request.getHeader("Referer")).map(requestUrl -> "redirect:" + requestUrl);
-        return previousUrl.orElse("redirect:");
-    }
+    @Autowired
+    private GlobalFunctions utils;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
@@ -42,23 +40,28 @@ public class GenreController {
 
     @Secured("ROLE_ADMIN")
     @PostMapping(value = "/add-genre")
-    public String addGenreProcessForm(@ModelAttribute @Valid @RequestBody Genre newGenre,
-                           Errors errors, Model model) {
+    public String addGenreProcessForm(
+            @ModelAttribute @Valid @RequestBody Genre newGenre,
+            Errors errors,
+            Model model) {
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add genre");
             return "redirect:/add-genre";
         }
 
-        model.addAttribute("title", "Add genre");
         genreRepository.save(newGenre);
 
+        model.addAttribute("title", "Add genre");
         return "redirect:";
     }
 
     @PostMapping(value = "delete-genre")
-    public String deleteGenre(@RequestParam Integer id, Model model) {
+    public String deleteGenre(
+            @RequestParam Integer id,
+            HttpServletRequest request,
+            Model model) {
         genreRepository.deleteById(id);
 
-        return "redirect:";
+        return utils.getPreviousUrl(request);
     }
 }

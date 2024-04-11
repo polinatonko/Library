@@ -25,7 +25,7 @@
         <div sec:authorize="!hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')">
             <div class="col-sm">
                 <div class="card-header border-0">
-                    <h3 class="mb-0">Publishers</h3>
+                    <h3 class="mb-0">Authors</h3>
                 </div>
             </div>
         </div>
@@ -35,12 +35,12 @@
             </div>
             <div class="col-sm">
                 <div class="card-header border-0">
-                    <h3 class="mb-0">Publishers</h3>
+                    <h3 class="mb-0">Authors</h3>
                 </div>
             </div>
             <div class="col-sm d-flex justify-content-end" >
                 <a class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold mb-2"
-                   th:href="@{/publishers/add-publisher}">Add publisher</a>
+                   th:href="@{/authors/add}">Add author</a>
             </div>
         </div>
     </div>
@@ -49,75 +49,64 @@
         <table class="table align-items-center table-flush">
             <thead class="thead-light">
             <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Address</th>
-                <th scope="col">ISBN prefix</th>
-                <th scope="col">Editions</th>
-                <th scope="col" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')">Actions</th>
+                <th class="col">Id</th>
+                <th class="col">Photo</th>
+                <th class="col">Full name</th>
+                <th class="col" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')">Actions</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr th:each="publisher : ${form.objects}">
-                <td th:text="${publisher.id}"></td>
-                <td th:text="${publisher.name}"></td>
-                <td th:text="${#strings.abbreviate(publisher.description, 20)}"></td>
-                <td th:text="${publisher.address}"></td>
-                <td th:text="${publisher.ISBNPrefix}"></td>
-                <td>editions</td>
+            <tr th:each="object : ${form.objects}">
+                <td th:text="${object.id}"></td>
 
-                <td th:replace="fragments/dropdown-actions.html :: dropdown-actions(${publisher})"></td>
+                <td>
+                    <img class="col-6" th:if="${object.photo}" th:src="@{${object.photo.url}}" alt="image"/>
+                </td>
+
+                <td>
+                    <a th:href="@{/authors/profile/{id} (id=${object.id})}">[[${object.fullName}]]</a>
+                </td>
+
+                <td th:replace="fragments/dropdown-actions.html :: dropdown-actions(${object})"></td>
             </tr>
 
             </tbody>
         </table>
     </div>
 
-    <div th:block th:each="publisher, it : ${form.objects}">
-        <div class="modal fade"  th:attr="id=${'editModal' + publisher.id}, aria-labelledby=${'#editModalLabel' + publisher.id}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div th:block th:each="object, it : ${form.objects}">
+        <div class="modal fade"  th:attr="id=${'editModal' + object.id}, aria-labelledby=${'#editModalLabel' + object.id}" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" th:attr="id=${'editModalLabel' + publisher.id}">Edit publisher</h5>
+                        <h5 class="modal-title" th:attr="id=${'editModalLabel' + object.id}">Edit Author</h5>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
                     <div class="modal-body">
-                        <form class="login-form" th:action="@{/publishers/edit-publisher/{id}(id=${publisher.id})}" th:object="${form}" method="post">
+                        <div th:replace="loadImage.html :: loadImage(${object.id})"></div>
+
+                        <form class="login-form" th:action="@{/authors/edit-author/{id}(id=${object.id})}" th:object="${form}" method="post">
+
                             <div class="form-floating mb-3">
-                                <input disabled="disabled" required type="text" th:field="*{objects[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingId' + publisher.id}">
-                                <label th:attr="for=${'#floatingId' + publisher.id}">Id</label>
+                                <input disabled="disabled" required type="text" th:field="*{objects[__${it.index}__].id}" class="form-control" th:attr="id=${'floatingId' + object.id}">
+                                <label th:attr="for=${'#floatingId' + object.id}">Id</label>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input required type="text" th:field="*{objects[__${it.index}__].name}" class="form-control" th:attr="id=${'floatingName' + publisher.id}" placeholder="Name">
-                                <label th:attr="for=${'#floatingName' + publisher.id}">Name</label>
-                                <p th:each="error : ${#fields.errors('objects[__${it.index}__].name')}"
+                                <input required type="text" th:field="*{objects[__${it.index}__].fullName}" class="form-control" th:attr="id=${'floatingFullName' + object.id}" placeholder="Full name">
+                                <label th:attr="for=${'#floatingFullName' + object.id}">Full name</label>
+                                <p th:each="error : ${#fields.errors('objects[__${it.index}__].fullName')}"
                                    th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                             </div>
 
                             <div class="form-floating mb-3">
-                                <input required type="text" th:field="*{objects[__${it.index}__].description}" class="form-control" th:attr="id=${'floatingDescription' + publisher.id}" placeholder="Description">
-                                <label th:attr="for=${'#floatingDescription' + publisher.id}">Description</label>
-                                <p th:each="error : ${#fields.errors('objects[__${it.index}__].description')}"
-                                   th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
-                            </div>
-
-                            <div class="form-floating mb-3">
-                                <input required type="text" th:field="*{objects[__${it.index}__].address}" class="form-control" th:attr="id=${'floatingAddress' + publisher.id}" placeholder="Address">
-                                <label th:attr="for=${'#floatingAddress' + publisher.id}">Address</label>
-                                <p th:each="error : ${#fields.errors('objects[__${it.index}__].address')}"
-                                   th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
-                            </div>
-
-                            <div class="form-floating mb-3">
-                                <input required type="text" th:field="*{objects[__${it.index}__].ISBNPrefix}" class="form-control" th:attr="id=${'floatingISBNPrefix' + publisher.id}" placeholder="ISBN prefix">
-                                <label th:attr="for=${'#floatingISBNPrefix' + publisher.id}">ISBN prefix</label>
-                                <p th:each="error : ${#fields.errors('objects[__${it.index}__].ISBNPrefix')}"
+                                <input required type="text" th:field="*{objects[__${it.index}__].bio}" class="form-control" th:attr="id=${'floatingBio' + object.id}" placeholder="Bio">
+                                <label th:attr="for=${'#floatingBio' + object.id}">Bio</label>
+                                <p th:each="error : ${#fields.errors('objects[__${it.index}__].bio')}"
                                    th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                             </div>
 
@@ -134,7 +123,7 @@
         </div>
     </div>
 
-    <div th:replace="modals/confirmDeletion :: modal(${form}, 'publisher')"></div>
+    <div th:replace="modals/confirmDeletion :: modal(${form}, 'author')"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

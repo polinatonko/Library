@@ -1,0 +1,22 @@
+<div th:fragment="loadImage (authorId)">
+    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+            data-bs-target="#collapseLoadImage" style="border: 0; color: black">
+        Load image
+    </button>
+
+    <div class="collapse" id="collapseLoadImage">
+        <form th:action="@{/images/upload/{id} (id=${authorId})}" method="post" class="dropzone" id="myAwesomeDropzone" enctype="multipart/form-data">
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <div class="fallback">
+                <input name="file" type="file"/>
+            </div>
+
+            <input name="name" type="hidden" value="${authorId}"/>
+
+            <div class="dz-message">
+                <button type="submit" class="dz-button" style="color: #666666">Save image</button>
+                <br/>
+            </div>
+        </form>
+    </div>
+</div>

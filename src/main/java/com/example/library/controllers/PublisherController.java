@@ -1,6 +1,7 @@
 package com.example.library.controllers;
 
 import com.example.library.GlobalFunctions;
+import com.example.library.dto.ObjectsListDto;
 import com.example.library.dto.PublisherDto;
 import com.example.library.dto.PublishersListDto;
 import com.example.library.models.Publisher;
@@ -26,8 +27,7 @@ public class PublisherController {
     @GetMapping(value = "")
     public String getPublishers(Model model)
     {
-        List<Publisher> publishers = (List<Publisher>) publisherService.getAll();
-        model.addAttribute("form", new PublishersListDto(publishers));
+        model.addAttribute("form", new ObjectsListDto<Publisher>(publisherService.getAll()));
         return "publishers";
     }
 

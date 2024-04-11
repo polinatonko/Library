@@ -1,0 +1,18 @@
+<div th:fragment="dropdown-actions (object)">
+    <td class="text-right" sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')">
+        <div class="dropdown">
+            <a class="btn btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="bi bi-list"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                <a class="dropdown-item"
+                   data-bs-toggle="modal"
+                   th:attr="data-bs-target='#deleteModal' + ${object.id}">Delete</a>
+
+                <a class="dropdown-item"
+                   data-bs-toggle="modal"
+                   th:attr="data-bs-target='#editModal' + ${object.id}">Edit</a>
+            </div>
+        </div>
+    </td>
+</div>
