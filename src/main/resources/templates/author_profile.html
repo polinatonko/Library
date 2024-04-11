@@ -21,29 +21,22 @@
 
 <div class="container light-style flex-grow-1 container-p-y">
 
-            <div class="col-md-12">
-                <div class="card p-6 py-6">
-                    <div class="text-center">
-                        <img th:if="${object.photo}" th:src="@{${object.photo.url}}" alt="image" class="col-4 rounded-circle">
-                    </div>
-
-                    <div class="text-center mt-3">
-                        <h5 class="mt-2 mb-0" th:text="${object.fullName}"></h5>
-                        <span>Author</span>
-
-                        <div class="px-4 mt-1">
-                            <p class="fonts" th:text="${object.bio}"></p>
-
-                        </div>
-
-                        <div class="buttons">
-                            <button class="btn btn-outline-primary px-4">View editions</button>
-                        </div>
-
-
+    <div class="card mb-3">
+        <div class="row no-gutters">
+            <div class="col-md-4">
+                <img th:if="${object.photo}" th:src="@{${object.photo.url}}" alt="image" class="card-img">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${object.fullName}"></h5>
+                    <p class="card-text" th:text="${object.bio}"></p>
+                    <div class="buttons">
+                        <button class="btn btn-outline-primary px-4">View editions</button>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

@@ -1,22 +1,25 @@
 <div th:fragment="loadImage (authorId)">
-    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseLoadImage" style="border: 0; color: black">
-        Load image
-    </button>
+    <div class="row justify-content-center">
+        <button class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login text-uppercase fw-bold col-4" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseLoadImage" style="margin: 10px;">
+            Load image
+        </button>
+    </div>
 
-    <div class="collapse" id="collapseLoadImage">
+    <div class="collapse" id="collapseLoadImage" style="margin: 5% 0;">
         <form th:action="@{/images/upload/{id} (id=${authorId})}" method="post" class="dropzone" id="myAwesomeDropzone" enctype="multipart/form-data">
             <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <div class="fallback">
-                <input name="file" type="file"/>
-            </div>
+
+            <div class="row justify-content-between">
+                <div class="col-6 justify-content-start">
+                    <input class="form-control form-control-sm" name="file" type="file">
+                </div>
+                <div class="col-4 justify-content-end">
+                    <button type="submit" class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login text-uppercase fw-bold">Save image</button>
+                </div>
 
             <input name="name" type="hidden" value="${authorId}"/>
 
-            <div class="dz-message">
-                <button type="submit" class="dz-button" style="color: #666666">Save image</button>
-                <br/>
-            </div>
         </form>
     </div>
 </div>
