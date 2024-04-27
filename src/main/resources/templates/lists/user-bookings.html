@@ -1,0 +1,77 @@
+<div th:fragment="bookings(bookings, id)">
+    <div class="col">
+
+        <div th:replace="fragments/search-by-date-user.html :: search_by_date_user (${period})"></div>
+
+        <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Authors</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Booking end</th>
+                    <th scope="col">Cancel</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+                <tr th:each="b : ${bookings}">
+                    <td th:text="${#dates.format(b.day, 'dd-MM-yyyy')}"></td>
+
+                    <td>
+                        <a th:href="@{/books/{id} (id=${b.edition.id})}">[[${b.edition.name}]]</a>
+                    </td>
+
+                    <td>
+                        <div th:each="a: ${b.edition.authors}">
+                            <a th:href="@{/authors/profile/{id} (id=${a.id})}" th:text="${a.fullName}"></a>
+                        </div>
+                    </td>
+
+                    <td th:text="${b.edition.rating}"></td>
+
+                    <td th:text="${#dates.format(b.lastDay, 'dd-MM-yyyy')}"></td>
+
+                    <td>
+                        <a data-bs-toggle="modal" th:attr="data-bs-target='#cancelBookModal' + ${b.id}">&times;</a>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+        <div th:block th:each="b : ${bookings}">
+            <div class="modal fade"  th:attr="id=${'cancelBookModal' + b.id}, aria-labelledby=${'#cancelBookModalLabel' + b?.id}" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog" role="document" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" th:attr="id=${'cancelBookModalLabel' + b.id}">Cancel booking</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <form class="login-form" th:action="@{/books/cancel-book/{id}/{editionId} (id=${id}, editionId=${b.id})}" method="post">
+
+                                <p>Do you really want to cancel booking on [[${b.edition.name}]]?</p>
+
+                                <div class="text-center">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">No</button>
+                                        <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Yes</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

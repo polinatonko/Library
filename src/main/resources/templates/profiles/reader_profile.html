@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8"/>
+
+    <link th:href="@{/css/login-page.css}" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-star-rating@4.1.2/css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-star-rating@4.1.2/themes/krajee-svg/theme.css" media="all" rel="stylesheet" type="text/css" />
+
+    <style>
+        h3 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="fragments/navbar.html :: navbar"></div>
+
+<div class="container light-style flex-grow-1 container-p-y">
+
+    <div class="card overflow-hidden">
+        <div class="row no-gutters row-bordered row-border-light">
+            <div class="col-md-3 pt-0">
+                <div class="list-group list-group-flush account-settings-links" id="tabPanel">
+                    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#general">General</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-change-password">Change password</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-booking">Bookings</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-issuances">Issuances</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-returns">Returns</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-favorite">Favorites</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-on-hands">On hands</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-by-period">Editions by period</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-reviews">Reviews</a>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <div class="tab-pane fade active show" id="general" role="tabpanel">
+
+                        <hr class="border-light m-0">
+
+                        <div class="card-body">
+                            <form th:object="${user}" method="post">
+
+                                <div class="form-floating mb-3">
+                                    <input type="text" th:field="*{lastName}" class="form-control" id="floatingLastName" disabled>
+                                    <label for="floatingLastName">Last name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" th:field="*{name}" class="form-control" id="floatingName" disabled>
+                                    <label for="floatingLastName">Name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" th:field="*{middleName}" class="form-control" id="floatingMiddleName" disabled>
+                                    <label for="floatingMiddleName">Middle name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" th:field="*{email}" class="form-control" id="floatingEmail">
+                                    <label for="floatingEmail">Email</label>
+
+                                    <div class="error alert alert-dark" th:if="${changedEmail}"
+                                         role="alert">
+                                        Check your new email [[${changedEmail}]]</div>
+
+                                    <p th:text="${emailError}"></p>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" th:field="*{birthDate}" class="form-control" id="floatingBirthDate" disabled>
+                                    <label for="floatingBirthDate">Birth date</label>
+                                </div>
+
+                                <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold mb-2" type="submit">Save changes</button>
+
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="tab-pane fade" id="account-change-password" role="tabpanel">
+                        <div class="card-body pb-2">
+                            <form th:action="@{/change-password}" method="post">
+                                <div class="form-floating mb-3">
+                                    <input type="password" th:field="${userDto.password}" class="form-control" id="floatingNew">
+                                    <label for="floatingNew">New password</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="password" th:field="${userDto.matchingPassword}" class="form-control" id="floatingNewAgain">
+                                    <label for="floatingNewAgain">New password again</label>
+                                    <div class="error alert alert-danger" th:if="${passwordError}"
+                                         role="alert">
+                                        [[${passwordError}]]</div>
+
+                                    <div class="error alert alert-success" th:if="${passwordSuccess}"
+                                         role="alert">
+                                        [[${passwordSuccess}]]</div>
+                                </div>
+                            <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold mb-2" type="submit">Save changes</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="account-booking" role="tabpanel">
+                        <div class="card-body pb-2">
+
+                            <div th:replace="lists/user-bookings.html :: bookings(${bookings}, ${user.id})"></div>
+
+                        </div>
+                        <hr class="border-light m-0">
+                        <div class="card-body pb-2">
+
+                        </div>
+
+                    </div>
+                    <div class="tab-pane fade" id="account-favorite">
+                        <div class="card-body pb-2">
+
+                            <div th:replace="lists/short-book-list.html :: short_book_list(${likes})"></div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="account-on-hands">
+                        <div class="card-body">
+                            <div th:replace="lists/user-issuances.html :: user_issuances(${issuances.?[isActive == true]})"></div>
+                        </div>
+                        <hr class="border-light m-0">
+
+                    </div>
+
+                    <div class="tab-pane fade" id="account-issuances">
+                        <div class="card-body">
+                            <div th:replace="lists/user-issuances.html :: user_issuances(${issuances})"></div>
+                        </div>
+                        <hr class="border-light m-0">
+
+                    </div>
+
+                    <div class="tab-pane fade" id="account-returns">
+                        <div class="card-body pb-2">
+                            <div th:replace="lists/user-returns.html :: user_returns(${returns})"></div>
+                        </div>
+
+                        <hr class="border-light m-0">
+                    </div>
+
+                    <div class="tab-pane fade" id="account-reviews">
+                        <div class="card-body pb-2">
+                            <div th:replace="lists/user-reviews.html :: user_reviews(${reviews})"></div>
+                        </div>
+
+                        <hr class="border-light m-0">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-star-rating@4.1.2/js/star-rating.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-star-rating@4.1.2/themes/krajee-svg/theme.js"></script>
+
+<script>
+    //# /reader_profile.html=somename.js
+
+   $(document).ready(function() {
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab) {
+            $('#tabPanel a[href="' + activeTab + '"]').tab('show');
+   }
+
+    $('#tabPanel a[data-bs-toggle="list"]').on('shown.bs.tab', function (e) {
+        debugger;
+        var curValue = jQuery(this).attr('href');
+        localStorage.setItem('activeTab', curValue);
+
+        // e.target // newly activated tab
+        // e.relatedTarget // previous active tab
+    })
+
+
+});
+</script>
+
+<script>
+    /* Bootstrap 5 JS included */
+/* vanillajs-datepicker 1.1.4 JS included */
+
+const getDatePickerTitle = elem => {
+      // From the label or the aria-label
+      const label = elem.nextElementSibling;
+      let titleText = '';
+      if (label && label.tagName === 'LABEL') {
+        titleText = label.textContent;
+      } else {
+        titleText = elem.getAttribute('aria-label') || '';
+      }
+      return titleText;
+}
+
+const elems = document.querySelectorAll('.datepicker_input');
+    for (const elem of elems) {
+      const datepicker = new Datepicker(elem, {
+        'format': 'dd/mm/yyyy',
+        title: getDatePickerTitle(elem)
+      });
+}
+</script>
+
+</body>
+</html>

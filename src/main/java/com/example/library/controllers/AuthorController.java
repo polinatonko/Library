@@ -36,7 +36,7 @@ public class AuthorController {
     {
         model.addAttribute("form", new ObjectsListDto<Author>(authorService.getAll()));
         model.addAttribute("title", "Authors");
-        return "authors";
+        return "lists/authors";
     }
 
     @Secured({"ROLE_ADMIN","ROLE_LIBRARIAN"})
@@ -45,7 +45,7 @@ public class AuthorController {
     {
         model.addAttribute("title", "Add author");
         model.addAttribute("object", new Author());
-        return "addAuthor";
+        return "addForms/addAuthor";
     }
 
     @Secured({"ROLE_ADMIN","ROLE_LIBRARIAN"})
@@ -67,6 +67,7 @@ public class AuthorController {
         return "redirect:/authors";
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @PostMapping(value = "delete-author/{id}")
     public String delete(
             @PathVariable("id") Integer id,
@@ -77,6 +78,7 @@ public class AuthorController {
         return utils.getPreviousUrl(request);
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @PostMapping(value = "edit-author/{id}")
     public String edit(
             HttpServletRequest request,
@@ -92,12 +94,13 @@ public class AuthorController {
 
     @GetMapping(value = "profile/{id}")
     public String profile(
+
             @PathVariable("id") Integer id,
             Model model
     )
     {
         model.addAttribute("object", authorService.findById(id));
         model.addAttribute("title", "Author");
-        return "author_profile";
+        return "profiles/author_profile";
     }
 }

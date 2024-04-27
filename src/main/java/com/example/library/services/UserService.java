@@ -1,5 +1,6 @@
 package com.example.library.services;
 import com.example.library.GlobalFunctions;
+import com.example.library.config.CustomUserDetails;
 import com.example.library.models.Block;
 import com.example.library.models.User;
 import com.example.library.dto.UserDto;
@@ -21,8 +22,6 @@ public class UserService {
     @Autowired
     private EmailService emailService;
     @Autowired
-    private TimerService timerService;
-    @Autowired
     private RoleService roleService;
     @Autowired
     private GlobalFunctions utils;
@@ -40,6 +39,12 @@ public class UserService {
     private PasswordResetTokenRepository passwordResetTokenRepository;
     @Autowired
     private NewTokenRepository newTokenRepository;
+    public Optional<User> getAuthUser(CustomUserDetails userDetails)
+    {
+        return userDetails != null ? getById(userDetails.getId()) : Optional.empty();
+    }
+
+    public Iterable<User> getEnabledUsers() { return userRepository.findByIsEnabledAndIsBlocked(true, false); }
 
     public User registerUser(UserDto userDto, ERole roleName) throws IllegalArgumentException
     {
@@ -81,8 +86,7 @@ public class UserService {
             user.setNewEmailToken(token);
             userRepository.save(user);
         }
-        else
-        {
+        else {
             token = optToken.get();
             token.setExpiryDate(utils.getDate(1, 0, 0, 0));
             token.setNewEmail(new_email);
@@ -217,7 +221,6 @@ public class UserService {
         user.setBlockingEnd(null);
 
         blockService.cancelBlock(userRepository.save(user).getId());
-        timerService.stopTimerByUserId(user.getId());
     }
 
     public void blockUser(Integer id, Date blockingEnd)
@@ -227,8 +230,7 @@ public class UserService {
         user.setBlockingEnd(blockingEnd);
         User saved = userRepository.save(user);
 
-        Block block = new Block(saved, timerService.getTimerById(saved.getId()), new BlockTimerTask(saved) { @Override public void run() { unblockUser(saved.getId());}});
-        blockService.save(block);
+        blockService.create(saved, new BlockTimerTask(saved) { @Override public void run() { unblockUser(saved.getId());}});
     }
 
     public boolean isUserAdmin(Integer id)

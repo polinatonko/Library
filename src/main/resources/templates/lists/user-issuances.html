@@ -1,0 +1,41 @@
+<div th:fragment="user_issuances (issuances)">
+    <div class="col">
+        <div th:replace="fragments/search-by-date-user.html :: search_by_date_user (${period})"></div>
+
+        <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Authors</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Issuance end</th>
+                </tr>
+
+                </thead>
+
+                <tbody>
+                <tr th:each="b : ${issuances}">
+                    <td th:text="${#dates.format(b.day, 'dd-MM-yyyy')}"></td>
+
+                    <td>
+                        <a th:href="@{/books/{id} (id=${b.edition.id})}">[[${b.edition.name}]]</a>
+                    </td>
+
+                    <td>
+                        <div th:each="a: ${b.edition.authors}">
+                            <a th:href="@{/authors/profile/{id} (id=${a.id})}" th:text="${a.fullName}"></a>
+                        </div>
+                    </td>
+
+                    <td th:text="${b.edition.rating}"></td>
+
+                    <td th:text="${#dates.format(b.lastDay, 'dd-MM-yyyy')}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

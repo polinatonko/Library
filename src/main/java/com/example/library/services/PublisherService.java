@@ -11,6 +11,7 @@ import java.util.Optional;
 public class PublisherService {
     @Autowired
     private PublisherRepository publisherRepository;
+    public Publisher getById(Integer id) { return getByIdOrThrowException(id); }
     public void deletePublisher(Integer id)
     {
         publisherRepository.deleteById(id);
@@ -22,6 +23,7 @@ public class PublisherService {
         saved.setDescription(publisher.getDescription());
         saved.setAddress(publisher.getAddress());
         saved.setISBNPrefix(publisher.getISBNPrefix());
+        publisherRepository.save(saved);
     }
 
     public Publisher createPublisher(PublisherDto publisherDto)

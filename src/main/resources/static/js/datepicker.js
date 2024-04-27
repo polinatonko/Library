@@ -2,21 +2,25 @@
 /* vanillajs-datepicker 1.1.4 JS included */
 
 const getDatePickerTitle = elem => {
-  // From the label or the aria-label
-  const label = elem.nextElementSibling;
-  let titleText = '';
-  if (label && label.tagName === 'LABEL') {
-    titleText = label.textContent;
-  } else {
-    titleText = elem.getAttribute('aria-label') || '';
-  }
-  return titleText;
+      // From the label or the aria-label
+      const label = elem.nextElementSibling;
+      let titleText = '';
+      if (label && label.tagName === 'LABEL') {
+        titleText = label.textContent;
+      } else {
+        titleText = elem.getAttribute('aria-label') || '';
+      }
+      return titleText;
 }
 
 const elems = document.querySelectorAll('.datepicker_input');
-for (const elem of elems) {
-  const datepicker = new Datepicker(elem, {
-    'format': 'dd/mm/yyyy', // UK format
-    title: getDatePickerTitle(elem)
-  });
+    for (const elem of elems) {
+      var d = new Date(Date.now());
+      d.setFullYear(d.getFullYear() - 12);
+
+      const datepicker = new Datepicker(elem, {
+        'format': 'dd/mm/yyyy',
+        maxDate: d,
+        title: getDatePickerTitle(elem)
+      });
 }

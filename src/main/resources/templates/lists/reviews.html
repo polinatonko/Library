@@ -1,0 +1,58 @@
+<div th:fragment="reviews (reviews)">
+    <div class="col">
+        <div class="list-group">
+            <div th:block th:each="b : ${reviews}">
+                <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1" th:text="${b.user.getShortName()}"></h5>
+
+                        <small>
+                            <label for="input-6" class="control-label" style="font-size: 20pt; font-style: bold;"></label>
+                            <input id="input-6" name="input-6" class="rating rating-loading" th:value="${b.rating}" data-show-clear="false" data-show-caption="false" data-readonly="true" data-size="sm">
+                        </small>
+                    </div>
+                    <p class="mb-1" th:text="${b.content}"></p>
+                    <small th:text="${#dates.format(b.date, 'dd-MM-yyyy')}"></small>
+
+                    <div sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_LIBRARIAN')">
+                        <a data-bs-toggle="modal"
+                           th:attr="data-bs-target='#deleteModal' + ${b?.id}">
+                            &times;
+                        </a>
+                    </div>
+
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div th:block th:each="obj, it : ${reviews}">
+        <div class="modal fade"  th:attr="id=${'deleteModal' + obj.id}, aria-labelledby=${'#deleteModalLabel' + obj.id}" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" th:attr="id=${'deleteModalLabel' + obj.id}">Confirm deletion</h5>
+                        <button type="button" class="close d-flex justify-content-end" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <p>Do you really want to delete this review?</p>
+
+                        <form class="login-form" th:action="@{/reviews/delete-review/{id} (id=${obj.id})}" method="post">
+
+                            <div class="text-center">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Yes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

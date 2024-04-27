@@ -22,7 +22,9 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/add-genre", "/profile", "/change-password").authenticated()
+                        .requestMatchers( "/books/notify/{id}", "/books/like/{id}", "/book/{id}",
+                                "/reset-password", "/save-password", "/profile", "/change-password")
+                        .authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(

@@ -14,6 +14,7 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface UserRepository extends CrudRepository<User, Integer> {
+    Iterable<User> findByIsEnabledAndIsBlocked(boolean enabled, boolean blocked);
     Optional<User> findUserByEmail(String email);
     User findUserByVerificationToken(VerificationToken verificationToken);
     User findByNewEmailToken(NewEmailToken newEmailToken);

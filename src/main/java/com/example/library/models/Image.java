@@ -19,4 +19,8 @@ public class Image {
     @OneToOne(mappedBy = "photo")
     @JoinColumn(name = "author_id")
     private Author author;
+
+    @OneToOne(mappedBy = "photo")
+    @JoinColumn(name = "edition_id")
+    private Edition edition;
 }

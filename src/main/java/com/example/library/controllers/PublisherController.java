@@ -28,7 +28,7 @@ public class PublisherController {
     public String getPublishers(Model model)
     {
         model.addAttribute("form", new ObjectsListDto<Publisher>(publisherService.getAll()));
-        return "publishers";
+        return "lists/publishers";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
@@ -36,7 +36,7 @@ public class PublisherController {
     public String addPublisher(HttpServletRequest request, Model model)
     {
         model.addAttribute("publisher", new PublisherDto());
-        return "addPublisher";
+        return "addForms/addPublisher";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
@@ -65,6 +65,6 @@ public class PublisherController {
     public String addPublisher(@ModelAttribute("publisher") @Valid PublisherDto publisherDto)
     {
         publisherService.createPublisher(publisherDto);
-        return "redirect:";
+        return "redirect:/publishers";
     }
 }

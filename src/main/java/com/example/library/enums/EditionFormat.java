@@ -4,8 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum EditionFormat {
-    SOFT_COVER ("мягкий переплет"),
-    HARD_COVER ("твердый переплет");
+    SOFT_COVER ("soft cover"),
+    HARD_COVER ("hard cover");
 
     private final String name;
 

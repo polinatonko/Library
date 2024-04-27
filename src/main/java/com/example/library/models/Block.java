@@ -17,11 +17,19 @@ import java.util.Timer;
 public class Block extends Action {
     private boolean isActive;
 
-    public Block(User user, Timer timer, BlockTimerTask task) {
+    public Block(User user) {
         this.user = user;
         this.isActive = true;
-        this.timer = timer;
+    }
 
+    public void setTimer(Timer timer, BlockTimerTask task)
+    {
+        this.timer = timer;
         timer.schedule(task, user.getBlockingEnd());
+    }
+
+    @Override
+    public String getType() {
+        return this.getClass().getName();
     }
 }

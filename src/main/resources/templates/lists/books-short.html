@@ -1,0 +1,40 @@
+<div th:fragment="books_short (books)">
+    <div class="table-responsive">
+        <table class="table align-items-center table-flush">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Authors</th>
+                <th scope="col">About</th>
+                <th scope="col">Age limit</th>
+                <th scope="col">Rating</th>
+                <th scope="col">Genres</th>
+            </tr>
+
+            </thead>
+
+            <tbody>
+            <tr th:each="edition : ${books}">
+
+                <td>
+                    <a th:href="@{/books/{id} (id=${edition?.id})}">[[${edition?.name}]]</a>
+                </td>
+
+                <td>
+                    <div th:each="a: ${edition?.authors}">
+                        <a th:href="@{/authors/profile/{id} (id=${a.id})}" th:text="${a.fullName}"></a>
+                    </div>
+                </td>
+
+                <td>[[${#strings.abbreviate(edition?.about, 50)}]]</td>
+
+                <td th:text="${edition?.ageLimit}"></td>
+                <td th:text="${edition?.rating}"></td>
+
+                <td th:text="${#strings.listJoin(edition?.genres.![name], ',')}"></td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -17,8 +17,8 @@ public class EditionController {
 
     public String getAllEditions(Model model)
     {
-        List<Edition> books = bookService.getAll();
-        model.addAttribute("editions", books);
+        /*List<Edition> books = bookService.getAll();
+        model.addAttribute("editions", books);*/
         return "editions";
     }
 }

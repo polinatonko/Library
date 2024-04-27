@@ -2,6 +2,9 @@ package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.models.Genre;
 import com.example.library.repositories.GenreRepository;
+import com.example.library.services.BookService;
+import com.example.library.services.BookingService;
+import com.example.library.services.GenreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +22,28 @@ import java.util.Optional;
 @RequestMapping("genres")
 public class GenreController {
     @Autowired
-    private GenreRepository genreRepository;
+    private GenreService genreService;
+    @Autowired
+    private BookService bookService;
     @Autowired
     private GlobalFunctions utils;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
         model.addAttribute("title", "Genres");
-        model.addAttribute("genres", genreRepository.findAll());
-        return "genreList";
+        model.addAttribute("genres", genreService.getAll());
+        return "lists/genreList";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @GetMapping(value = "/add-genre")
     public String addGenreDisplayForm(Model model) {
         model.addAttribute("title", "Add genre");
         model.addAttribute(new Genre());
-        return "addGenreForm";
+        return "addForms/addGenreForm";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @PostMapping(value = "/add-genre")
     public String addGenreProcessForm(
             @ModelAttribute @Valid @RequestBody Genre newGenre,
@@ -49,19 +54,33 @@ public class GenreController {
             return "redirect:/add-genre";
         }
 
-        genreRepository.save(newGenre);
+        genreService.save(newGenre);
 
         model.addAttribute("title", "Add genre");
         return "redirect:";
     }
 
-    @PostMapping(value = "delete-genre")
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
+    @PostMapping(value = "delete-genre/{id}")
     public String deleteGenre(
-            @RequestParam Integer id,
+            @PathVariable("id") Integer id,
             HttpServletRequest request,
             Model model) {
-        genreRepository.deleteById(id);
+        genreService.deleteById(id);
 
         return utils.getPreviousUrl(request);
+    }
+
+    @GetMapping(value = "/genre/{id}")
+    public String genreEditions(
+            HttpServletRequest request,
+            @PathVariable("id") Integer id,
+            Model model
+    )
+    {
+        Genre genre = genreService.getById(id);
+        model.addAttribute("genre", genre);
+        model.addAttribute("books", genreService.getByGenreId(id));
+        return "profiles/genre";
     }
 }

@@ -1,20 +1,19 @@
 package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.config.CustomUserDetails;
-import com.example.library.dto.ObjectsListDto;
-import com.example.library.dto.PasswordDto;
-import com.example.library.dto.UsersListDto;
+import com.example.library.dto.*;
+import com.example.library.enums.BookingStatus;
 import com.example.library.enums.ERole;
-import com.example.library.models.Role;
-import com.example.library.models.User;
-import com.example.library.dto.UserDto;
+import com.example.library.models.*;
+import com.example.library.repositories.ActionRepository;
+import com.example.library.repositories.IssuanceRepository;
 import com.example.library.repositories.RoleRepository;
-import com.example.library.services.SecurityService;
-import com.example.library.services.UserService;
+import com.example.library.services.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -27,9 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.InvalidParameterException;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @Validated
@@ -39,7 +36,23 @@ public class UserController {
     @Autowired
     private SecurityService securityService;
     @Autowired
+    private BookingService bookingService;
+    @Autowired
+    private BlockService blockService;
+    @Autowired
+    private IssuanceService issuanceService;
+    @Autowired
+    private  ReturnService returnService;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private LikeService likeService;
+    @Autowired
+    private ReviewService reviewService;
+    @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private ActionRepository actionRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -48,6 +61,80 @@ public class UserController {
     {
         if (request.isUserInRole("ROLE_LIBRARIAN") && userService.isUserAdmin(id))
             throw new AccessDeniedException("User must have role ADMIN");
+    }
+    @PostMapping(value = "/cancel-issuance/{id}")
+    public String deleteIssuance(HttpServletRequest request,
+                                 @PathVariable("id") Integer id,
+                                 Model model)
+    {
+        Issuance issuance = issuanceService.getById(id);
+        issuanceService.delete(issuance);
+
+        return utils.getPreviousUrl(request);
+    }
+    @PostMapping(value = "/create-issuance")
+    public String issuance(HttpServletRequest request,
+                           @ModelAttribute("action") @Valid IssuanceDto issuanceDto,
+                           Model model)
+    {
+        Integer editionId = issuanceDto.getEditionId(), userId = issuanceDto.getUserId();
+        Edition edition = bookService.getById(editionId);
+        User user = userService.getById(userId).get(); // fix!
+
+        // create and save:
+        Issuance issuance = new Issuance(edition, user, utils.getDate(30, 0, 0, 0), utils.getCurentDate());
+        issuanceService.create(issuance);
+
+        // cancel booking, if exists:
+        BookingStatus bookingStatus = bookingService.checkBooking(editionId, userId);
+        if (bookingStatus == BookingStatus.DISABLED)
+            bookingService.cancelBooking(editionId, userId);
+
+        return "redirect:/manage-actions?type=issuance";
+
+    }
+    @PostMapping(value = "/create-return")
+    public String returns(HttpServletRequest request,
+                          @ModelAttribute("action") @Valid IssuanceDto issuanceDto,
+                        RedirectAttributes redirectAttributes,
+                        Model model)
+    {
+        Integer editionId = issuanceDto.getEditionId(), userId = issuanceDto.getUserId();
+        Edition edition = bookService.getById(editionId);
+        User user = userService.getById(userId).get(); // fix!
+
+        // check if issuance exists
+        if (issuanceService.exists(editionId, userId))
+        {
+            // create and save:
+            Return ret = new Return(edition, user, utils.getDate(0, 0, 0, 0));
+            returnService.create(ret);
+        }
+        else
+        {
+            redirectAttributes.addFlashAttribute("returnError", true);
+            return utils.getPreviousUrl(request);
+        }
+
+        return "redirect:/manage-actions?type=return";
+    }
+    @GetMapping(value = "/issuance")
+    public String issuanceForm(HttpServletRequest request,
+                               Model model)
+    {
+        model.addAttribute("books", bookService.getAll());
+        model.addAttribute("users", userService.getEnabledUsers());
+        model.addAttribute("action", new IssuanceDto());
+        return "addForms/issuance";
+    }
+    @GetMapping(value = "/return")
+    public String returnForm(HttpServletRequest request,
+                             Model model)
+    {
+        model.addAttribute("books", bookService.getAll());
+        model.addAttribute("users", userService.getEnabledUsers());
+        model.addAttribute("action", new IssuanceDto());
+        return "addForms/return";
     }
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @GetMapping(value = "/unblock-user/{id}")
@@ -98,7 +185,7 @@ public class UserController {
 
         if (bindingResult.hasErrors())
         {
-            return "addUser";
+            return "addForms/addUser";
         }
 
         return "redirect:/manage-users?role=all";
@@ -109,7 +196,7 @@ public class UserController {
     {
         model.addAttribute("title", "Add user");
         model.addAttribute("user", new UserDto());
-        return "addUser";
+        return "addForms/addUser";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
@@ -136,6 +223,41 @@ public class UserController {
         edited.setId(id);
         userService.updateUser(edited);
         return utils.getPreviousUrl(request);
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
+    @GetMapping(value = "/manage-actions")
+    public String manageActions(
+            HttpServletRequest request,
+            @RequestParam("type") String type,
+            @ModelAttribute("period") PeriodDto period,
+            Model model)
+    {
+        String template = "lists/";
+        boolean filter = period.getFrom() != null;
+        Date from = period.getFrom(), to = period.getTo();
+        switch (type) {
+            case ("block"):
+                model.addAttribute("actions", filter ? blockService.getByPeriod(from, to) : blockService.getAll());
+                template += "blocks";
+                break;
+            case ("booking"):
+                model.addAttribute("actions", filter ? bookingService.getByPeriod(from, to) : bookingService.getAll());
+                template += "bookings";
+                break;
+            case ("issuance"):
+                model.addAttribute("actions", filter ? issuanceService.getIssuancesByPeriod(from, to) : issuanceService.getAll());
+                template += "issuances";
+                break;
+            case ("return"):
+                model.addAttribute("actions", filter ? returnService.getByPeriod(from, to) : returnService.getAll());
+                template += "returns";
+                break;
+            default:
+                throw new InvalidParameterException("There is no resource on such uri!");
+        }
+        model.addAttribute("period", period);
+        return template;
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
@@ -167,7 +289,7 @@ public class UserController {
         }
         model.addAttribute("form", new ObjectsListDto<User>(users));
         model.addAttribute("new_user", new UserDto());
-        return "manageUsers";
+        return "lists/manageUsers";
     }
 
     @PostMapping(value = "/reset-password")
@@ -183,7 +305,7 @@ public class UserController {
         userService.sendResetPasswordEmail(userService.createPasswordResetToken(user.get()));
         model.addAttribute("messageHeader", "Password reset mail was send!");
         model.addAttribute("messageBody", "Сheck your mail and follow the link from the letter\n");
-        return "message";
+        return "pages/message";
     }
 
     @GetMapping(value = "/reset-password")
@@ -201,13 +323,13 @@ public class UserController {
         PasswordDto passwordDto = new PasswordDto();
         passwordDto.setToken(token);
         model.addAttribute("passwordDto", passwordDto);
-        return "updatePassword";
+        return "profiles/updatePassword";
     }
 
     @GetMapping(value = "/forgot-password")
     public String forgotPassword()
     {
-        return "resetPassword";
+        return "profiles/resetPassword";
     }
 
     @PostMapping(value = "/save-password")
@@ -237,7 +359,9 @@ public class UserController {
     }
 
     @GetMapping(value = "/profile")
-    public String profile(@AuthenticationPrincipal CustomUserDetails user, Model model)
+    public String profile(@AuthenticationPrincipal CustomUserDetails user,
+                          @ModelAttribute("period") PeriodDto period,
+                          Model model)
     {
         model.addAttribute("title", "Profile");
         Optional<User> optAuthUser = userService.getById(user.getId());
@@ -248,7 +372,17 @@ public class UserController {
             UserDto userDto = new UserDto();
             userDto.setBirthDate(Calendar.getInstance().getTime());
             model.addAttribute("userDto", userDto);
-            return "reader_profile";
+
+            Integer userId = authUser.getId();
+            boolean filter = period.getFrom() != null;
+            Date from = period.getFrom(), to = period.getTo();
+            model.addAttribute("bookings", filter ? bookingService.getByPeriodAndUserId(from, to, userId) : bookingService.getUserBookings(userId));
+            model.addAttribute("likes", likeService.getLikedEditions(userId));
+            model.addAttribute("issuances", filter ? issuanceService.getIssuancesByPeriod(from, to, userId) : issuanceService.getIssuances(userId));
+            model.addAttribute("returns", filter ? returnService.getByPeriodAndId(from, to, userId) : returnService.getReturns(userId));
+            model.addAttribute("reviews", reviewService.getByUserId(userId));
+            model.addAttribute("period", period);
+            return "profiles/reader_profile";
         }
         return "redirect:";
     }
@@ -327,7 +461,7 @@ public class UserController {
     {
         model.addAttribute("title", "Registration");
         model.addAttribute("user", new UserDto());
-        return "registration";
+        return "auth/registration";
     }
 
     @PostMapping(value = "/reader/register")
@@ -355,11 +489,11 @@ public class UserController {
 
         if (bindingResult.hasErrors())
         {
-            return "registration";
+            return "auth/registration";
         }
 
         model.addAttribute("user", userDto);
-        return "successRegister";
+        return "auth/successRegister";
     }
 
     @RequestMapping(value = "/login")
@@ -373,9 +507,10 @@ public class UserController {
             return "redirect:";
         }
         model.addAttribute("title", "Login");
-        return "login";
+        return "auth/login";
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @PostMapping(value = "add-user")
     public String addUser(@RequestBody User user, Model model) {
         if (userService.existsByEmail(user.getEmail()))
@@ -383,7 +518,7 @@ public class UserController {
             model.addAttribute("title","Error");
             model.addAttribute("error_msg","User with this email exists!");
 
-            return "error";
+            return "pages/error";
         }
 
         Role user_role = user.getRole(),

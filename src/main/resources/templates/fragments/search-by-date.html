@@ -1,0 +1,30 @@
+<div th:fragment="search_by_date (period, type)">
+    <div class="row">
+        <form th:action="@{/manage-actions}" th:object="${period}" method="get">
+            <input type="hidden" name="type" th:value="${type}" />
+
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <div class="form-floating input-group mb-4">
+                        <i class="bi bi-calendar-date input-group-text" id="myIcon"></i>
+                        <input type="text" id="datepickerFrom" th:field="*{from}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
+                        <label for="datepickerFrom" id="myLabel1">From:</label>
+                    </div>
+                </div>
+
+                <div class="col-auto">
+                    <div class="form-floating input-group mb-4">
+                        <i class="bi bi-calendar-date input-group-text" id="myIcon1"></i>
+                        <input type="text" id="datepickerTo" th:field="*{to}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
+                        <label for="datepickerTo" id="myLabel2">To:</label>
+                    </div>
+                </div>
+
+                <div class="col-auto d-grid">
+                    <button class="btn btn-lg btn-light btn-bg-light.bg-gradient btn-login text-uppercase fw-bold mb-2" type="submit">Search</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

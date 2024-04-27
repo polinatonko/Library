@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -28,4 +30,10 @@ public class Genre {
             joinColumns = @JoinColumn(name = "genre_id"),
             inverseJoinColumns = @JoinColumn(name = "edition_id"))
     private Set<Edition> editions;
+
+    public void addEdition(Edition edition)
+    {
+        editions.add(edition);
+    }
+    public void removeEdition(Edition edition) { editions.remove(edition);}
 }

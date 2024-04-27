@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -12,25 +13,55 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@Inheritance
+@DiscriminatorColumn(name = "TYPE")
 public abstract class Edition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String ISBN;
     private String language;
-    private Date publishingDate;
+    private String publishingDate;
+    private Date receiptDate;
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
     private String name;
+    @Column(length = 4096)
+    private String about;
     private  int pagesCount;
     private int copiesCount;
     private int ageLimit;
     private double rating;
     private EditionFormat format;
-    private String bibliographicRecord;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "photo_id")
+    private Image photo;
     @ManyToMany(mappedBy = "editions")
-    private List<Genre> genres;
-    @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Genre> genres;
+    @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL)
+    private Set<Like> likes;
+    @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL)
+    private Set<Action> actions;
+    @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL)
     private Set<Review> reviews;
+
+    public void incCopiesCount() { copiesCount++; }
+    public void decCopiesCount() { copiesCount--; }
+    public void book() { copiesCount--; }
+    public void unBook() { copiesCount++; }
+    public String getShortName() {return name; }
+    public void removeGenre(Genre genre) { genres.remove(genre);}
+    public void addGenre(Genre genre)
+    {
+        genres.add(genre);
+    }
+
+    @PreRemove
+    private void removeAssociations() {
+        // many to many
+        for (Genre genre: this.genres) {
+            genre.getEditions().remove(this);
+        }
+    }
 }
