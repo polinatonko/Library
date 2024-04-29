@@ -1,9 +1,7 @@
 package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.models.Genre;
-import com.example.library.repositories.GenreRepository;
 import com.example.library.services.BookService;
-import com.example.library.services.BookingService;
 import com.example.library.services.GenreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -15,7 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
-import java.util.Optional;
 
 @Controller
 @Validated
@@ -23,8 +20,6 @@ import java.util.Optional;
 public class GenreController {
     @Autowired
     private GenreService genreService;
-    @Autowired
-    private BookService bookService;
     @Autowired
     private GlobalFunctions utils;
 
@@ -79,6 +74,7 @@ public class GenreController {
     )
     {
         Genre genre = genreService.getById(id);
+        model.addAttribute("title", genre.getName());
         model.addAttribute("genre", genre);
         model.addAttribute("books", genreService.getByGenreId(id));
         return "profiles/genre";

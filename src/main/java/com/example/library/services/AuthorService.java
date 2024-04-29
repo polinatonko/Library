@@ -13,12 +13,10 @@ public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
 
-    @Autowired
-    private ImageRepository imageRepository;
-
     public Iterable<Author> getAll() { return authorRepository.findAll(); }
 
     public Author save(Author object) { return authorRepository.save(object); }
+    public void delete(Integer id) { authorRepository.deleteById(id); }
 
     public void edit(Author object)
     {

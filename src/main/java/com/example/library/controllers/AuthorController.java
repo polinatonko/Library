@@ -24,11 +24,6 @@ public class AuthorController {
     @Autowired
     private AuthorService authorService;
     @Autowired
-    private AuthorRepository authorRepository;
-    @Autowired
-    private ImageService imageService;
-
-    @Autowired
     private GlobalFunctions utils;
 
     @GetMapping
@@ -73,7 +68,7 @@ public class AuthorController {
             @PathVariable("id") Integer id,
             HttpServletRequest request,
             Model model) {
-        authorRepository.deleteById(id);
+        authorService.delete(id);
 
         return utils.getPreviousUrl(request);
     }

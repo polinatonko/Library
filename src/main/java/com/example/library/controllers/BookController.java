@@ -51,7 +51,6 @@ public class BookController {
     @GetMapping
     public String index(@RequestParam(value = "search", required = false) String search, Model model)
     {
-
         model.addAttribute("form", new ObjectsListDto<Book>(bookService.getAll()));
         model.addAttribute("title", "Books");
         return "lists/books";
