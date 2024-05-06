@@ -3,6 +3,7 @@ package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.config.CustomUserDetails;
 import com.example.library.dto.ObjectsListDto;
+import com.example.library.dto.RequestDto;
 import com.example.library.enums.BookingStatus;
 import com.example.library.models.*;
 import com.example.library.services.*;
@@ -10,6 +11,7 @@ import com.example.library.timer.BlockTimerTask;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -47,6 +49,8 @@ public class BookController {
     @Autowired
     private IssuanceService issuanceService;
     @Autowired
+    private FilterSpecification<Book> filters;
+    @Autowired
     private GlobalFunctions utils;
     @GetMapping
     public String index(@RequestParam(value = "search", required = false) String search, Model model)
@@ -54,6 +58,14 @@ public class BookController {
         model.addAttribute("form", new ObjectsListDto<Book>(bookService.getAll()));
         model.addAttribute("title", "Books");
         return "lists/books";
+    }
+    @ResponseBody
+    @PostMapping(value = "/post")
+    public int search(@RequestBody RequestDto requestDto)
+    {
+        Specification<Book> spec = filters.getSearchSpecification(requestDto.getSearchRequestDtos());
+        List<Book> books = (List<Book>)bookService.search(spec);
+        return books.size();
     }
     @PostMapping(value = "/notify/{id}")
     public String notify(

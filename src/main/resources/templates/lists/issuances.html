@@ -45,14 +45,7 @@
 
                 <td th:text="${#dates.format(a?.day, 'dd-MM-yyyy HH:mm:ss')}"></td>
 
-                <td>
-                    <span class="badge badge-dot mr-4">
-                        <div th:switch="${a?.isActive}">
-                            <p th:case="true"> <i class="bg-success"></i> </p>
-                            <p th:case="false"> <i class="bg-danger"></i> </p>
-                        </div>
-                    </span>
-                </td>
+                <td th:text="${a?.status?.name}"></td>
 
                 <td th:text="${#dates.format(a?.lastDay, 'dd-MM-yyyy HH:mm:ss')}"></td>
 
@@ -63,7 +56,7 @@
                 <td th:text="${a?.user?.id}"></td>
 
                 <td>
-                    <a th:if="${a?.isActive}" class="dropdown-item"
+                    <a th:if="${a?.status != T(com.example.library.enums.IssuanceStatus).RETURNED }" class="dropdown-item"
                        data-bs-toggle="modal"
                        th:attr="data-bs-target='#cancelActionModal' + ${a?.id}">&times;</a>
                 </td>

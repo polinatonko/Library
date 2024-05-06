@@ -7,6 +7,7 @@ import com.example.library.models.Edition;
 import com.example.library.models.Genre;
 import com.example.library.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,7 @@ public class BookService {
     private AuthorService authorService;
     @Autowired
     private GlobalFunctions utils;
+    public Iterable<Book> search(Specification<Book> spec) { return bookRepository.findAll(spec); }
     public void updateRating(Book book, int value, boolean add)
     {
         int count = book.getReviews().size();
@@ -30,7 +32,7 @@ public class BookService {
         if (add)
             rating = (rating + value) / (count + 1);
         else
-            rating = (rating - value) / (count - 1);
+            rating = (count > 1) ? (rating - value) / (count - 1) : 0;
 
         book.setRating(rating);
         bookRepository.save(book);

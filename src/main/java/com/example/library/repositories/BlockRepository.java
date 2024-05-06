@@ -15,6 +15,7 @@ import java.util.List;
 @Transactional
 public interface BlockRepository extends CrudRepository<Block, Integer> {
     Block findByUserIdAndIsActive(Integer userId, boolean isActive);
+    Iterable<Block> findAllByIsActive(boolean isActive);
     @Query("SELECT i FROM Block i WHERE i.day >= %?1% AND i.day <= %?2%")
     public List<Block> findByPeriod(Date from, Date to);
     @Query("SELECT i FROM Block i WHERE i.day >= %?1% AND i.day <= %?2% AND i.user.id = %?3%")

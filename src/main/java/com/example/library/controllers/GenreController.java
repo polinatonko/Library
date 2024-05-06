@@ -77,6 +77,7 @@ public class GenreController {
         model.addAttribute("title", genre.getName());
         model.addAttribute("genre", genre);
         model.addAttribute("books", genreService.getByGenreId(id));
+        model.addAttribute("genres", genreService.getAll());
         return "profiles/genre";
     }
 }

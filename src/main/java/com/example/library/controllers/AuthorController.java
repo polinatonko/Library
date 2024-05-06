@@ -31,7 +31,7 @@ public class AuthorController {
     {
         model.addAttribute("form", new ObjectsListDto<Author>(authorService.getAll()));
         model.addAttribute("title", "Authors");
-        return "lists/authors";
+        return "lists/authors-cards";
     }
 
     @Secured({"ROLE_ADMIN","ROLE_LIBRARIAN"})

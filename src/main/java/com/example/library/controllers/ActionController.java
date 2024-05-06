@@ -9,6 +9,8 @@ import com.example.library.models.Issuance;
 import com.example.library.models.Return;
 import com.example.library.models.User;
 import com.example.library.services.*;
+import com.example.library.timer.BlockTimerTask;
+import com.example.library.timer.IssuanceTimerTask;
 import jakarta.persistence.Access;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -37,6 +39,8 @@ public class ActionController {
     @Autowired
     private UserService userService;
     @Autowired
+    private TimerService timerService;
+    @Autowired
     private GlobalFunctions utils;
 
     @PostMapping(value = "/cancel-issuance/{id}")
@@ -49,6 +53,7 @@ public class ActionController {
 
         return utils.getPreviousUrl(request);
     }
+
     @PostMapping(value = "/create-issuance")
     public String issuance(HttpServletRequest request,
                            @ModelAttribute("action") @Valid IssuanceDto issuanceDto,
@@ -60,7 +65,8 @@ public class ActionController {
 
         // create and save:
         Issuance issuance = new Issuance(edition, user, utils.getDate(30, 0, 0, 0), utils.getCurentDate());
-        issuanceService.create(issuance);
+        issuanceService.create(issuance, new IssuanceTimerTask(issuance));
+
 
         // cancel booking, if exists:
         BookingStatus bookingStatus = bookingService.checkBooking(editionId, userId);
@@ -134,7 +140,7 @@ public class ActionController {
                 template += "bookings";
                 break;
             case ("issuance"):
-                model.addAttribute("actions", filter ? issuanceService.getIssuancesByPeriod(from, to) : issuanceService.getAll());
+                model.addAttribute("actions", filter ? issuanceService.getAllByPeriod(from, to) : issuanceService.getAll());
                 template += "issuances";
                 break;
             case ("return"):

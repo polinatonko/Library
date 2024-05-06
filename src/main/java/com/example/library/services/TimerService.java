@@ -22,10 +22,9 @@ public class TimerService {
     public void stopTimerByUserId(Integer id, Integer actionId)
     {
         Timer timer = timers.get(Pair.of(id, actionId));
-        if (timer == null)
-            throw new IllegalArgumentException("Timer doesn't exist!");
-
-        timer.cancel();
-        timer.purge();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
     }
 }

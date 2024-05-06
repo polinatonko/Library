@@ -63,7 +63,7 @@ public class UserController {
     {
         checkLibrarianPermission(request, id);
 
-        userService.blockUser(id, utils.getDate(0, 0, 1, 0));
+        userService.blockUser(id, utils.getDate(0, 0, 2, 0));
         return utils.getPreviousUrl(request);
     }
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})

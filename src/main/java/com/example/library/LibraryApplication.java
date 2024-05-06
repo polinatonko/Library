@@ -9,10 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @EnableSpringConfigured
 public class LibraryApplication {
-
 	public static void main(String[] args) {
-
 		SpringApplication.run(LibraryApplication.class, args);
 	}
-
 }

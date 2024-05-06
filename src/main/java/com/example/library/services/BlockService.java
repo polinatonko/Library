@@ -20,6 +20,7 @@ public class BlockService {
     public List<Block> getByPeriod(Date from, Date to) { return blockRepository.findByPeriod(from, to); }
     public List<Block> getByPeriodAndUserId(Date from, Date to, Integer userId) { return blockRepository.findByPeriodAndUserId(from, to, userId); }
     public Iterable<Block> getAll() { return blockRepository.findAll(); }
+    public Iterable<Block> getActive() { return blockRepository.findAllByIsActive(true); }
     public Block create(User user, BlockTimerTask task)
     {
         Block block = new Block(user);
@@ -37,4 +38,8 @@ public class BlockService {
     }
 
     public Block save(Block block) { return blockRepository.save(block); }
+    public void restore(Block block, BlockTimerTask task)
+    {
+        block.setTimer(timerService.getTimerById(block.getUser().getId(), block.getId()), task);
+    }
 }

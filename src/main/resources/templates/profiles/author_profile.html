@@ -12,18 +12,72 @@
 
     <div class="card mb-3">
         <div class="row no-gutters">
-            <div class="col-md-4">
+            <div class="col-md-4 justify-content-center">
                 <img th:if="${object.photo}" th:src="@{${object.photo.url}}" alt="image" class="card-img">
+
+                <button class="btn btn-sm btn-outline-dark px-4"
+                        onclick="showEditions()"
+                        style="margin: 20px;">View editions</button>
+
             </div>
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${object.fullName}"></h5>
                     <p class="card-text" th:text="${object.bio}"></p>
                     <div class="buttons">
-                        <button class="btn btn-sm btn-outline-dark px-4" onclick="showEditions()">View editions</button>
 
-                        <div id="list" hidden="hidden">
-                            <div th:replace="lists/books-short.html :: books_short(${object.books})"></div>
+                        <div id="list" class="carousel slide justify-content-center" hidden="hidden" data-bs-ride="carousel">
+
+                            <div class="carousel-inner">
+
+                                <div th:each="edition, it: ${object.books}" th:class="${it.index} ? 'carousel-item' : 'carousel-item active'" >
+                                    <div class="container bootstrap snipets">
+
+                                                <div class="card mb-3" style="width: 30%;">
+                                                    <img th:if="${edition.photo}" th:src="@{${edition.photo.url}}" alt="image" class="card-img-top">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <h5 class="card-title col-md-10">
+                                                                <a th:href="@{/books/{id} (id=${edition.id})}"
+                                                                   th:text="${edition.name}"
+                                                                   class="link-dark link-underline-dark link-offset-3 link-underline-opacity-0 link-underline-opacity-0-hover"></a>
+                                                            </h5>
+                                                        </div>
+
+                                                        <p class="card-text"
+                                                           th:each="a: ${edition?.authors}"
+                                                           style="float: left; width: auto; margin-right: 10px; ">
+                                                            <a th:href="@{/authors/profile/{id} (id=${a.id})}"
+                                                               th:text="${a.fullName}"
+                                                               class="link-dark link-underline-dark link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"></a>
+                                                        </p>
+
+                                                        <br>
+
+                                                        <p class="card-text"
+                                                           th:each="a: ${edition?.genres}"
+                                                           style="float: left; width: auto; margin-right: 10px; ">
+                                                            <a th:href="@{/genres/genre/{id} (id=${a.id})}"
+                                                               class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover">
+                                                                <small th:text="${a.name}"></small>
+                                                            </a>
+                                                        </p>
+
+                                                    </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button class="carousel-control-prev" type="button" data-bs-target="#list" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#list" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -39,6 +93,9 @@
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
 
 <script>
+    $(window).on('load', function() {
+        $('list').carousel($(this).data('slide-to'));
+    });
 
     function showEditions() {
         var list = document.getElementById('list');

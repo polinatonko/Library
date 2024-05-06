@@ -31,8 +31,7 @@
 
                     <td th:text="${b.edition.rating}"></td>
 
-                    <td th:text="${#dates.format(b.lastDay, 'dd-MM-yyyy')}"></td>
-                </tr>
+                    <td th:style="${b.getStatus() == T(com.example.library.enums.IssuanceStatus).ACTIVE} ? 'color: green' : 'color: red'" th:text="${#dates.format(b.lastDay, 'dd-MM-yyyy')}"></td>
 
                 </tbody>
             </table>

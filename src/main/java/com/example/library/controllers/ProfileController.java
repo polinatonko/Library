@@ -4,6 +4,8 @@ import com.example.library.config.CustomUserDetails;
 import com.example.library.dto.PasswordDto;
 import com.example.library.dto.PeriodDto;
 import com.example.library.dto.UserDto;
+import com.example.library.enums.IssuanceStatus;
+import com.example.library.models.Issuance;
 import com.example.library.models.User;
 import com.example.library.services.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -129,7 +132,9 @@ public class ProfileController {
             Date from = period.getFrom(), to = period.getTo();
             model.addAttribute("bookings", filter ? bookingService.getByPeriodAndUserId(from, to, userId) : bookingService.getUserBookings(userId));
             model.addAttribute("likes", likeService.getLikedEditions(userId));
-            model.addAttribute("issuances", filter ? issuanceService.getIssuancesByPeriod(from, to, userId) : issuanceService.getIssuances(userId));
+            List<Issuance> issuances = (List<Issuance>) (filter ? issuanceService.getAllByPeriod(from, to, userId) : issuanceService.getByUserId(userId));
+            model.addAttribute("issuances", issuances);
+            model.addAttribute("activeIssuances", issuances.stream().filter(i -> i.getStatus() != IssuanceStatus.RETURNED).toList());
             model.addAttribute("returns", filter ? returnService.getByPeriodAndId(from, to, userId) : returnService.getReturns(userId));
             model.addAttribute("reviews", reviewService.getByUserId(userId));
             model.addAttribute("period", period);

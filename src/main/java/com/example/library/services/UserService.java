@@ -223,6 +223,11 @@ public class UserService {
         blockService.cancelBlock(userRepository.save(user).getId());
     }
 
+    public void restoreBlock(Integer userId, Block block)
+    {
+        User user = getUserByIdOrThrowException(userId);
+        blockService.restore(block, new BlockTimerTask(user) { @Override public void run() { unblockUser(user.getId());}});
+    }
     public void blockUser(Integer id, Date blockingEnd)
     {
         User user = getUserByIdOrThrowException(id);
