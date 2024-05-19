@@ -4,7 +4,7 @@
             <div class="row">
                 <h1 class="text-center text-muted">Books</h1>
                 <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" class="col-sm d-flex justify-content-end">
-                    <a class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold mb-2"
+                    <a class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login fw-bold mb-2"
                        th:href="@{/books/add}">Add book</a>
                 </div>
             </div>

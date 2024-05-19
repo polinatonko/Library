@@ -1,25 +1,25 @@
 <div th:fragment="user_reviews (reviews)">
     <div class="col">
 
-        <div class="table-responsive">
-            <table class="table align-items-center table-flush">
-                <thead class="thead-light">
-                <tr>
+        <table>
+            <thead>
+                <tr class="table100-head">
                     <th scope="col">Date</th>
                     <th scope="col">Edition</th>
                     <th scope="col">Rating</th>
                     <th scope="col">Content</th>
                 </tr>
+            </thead>
 
-                </thead>
-
-                <tbody>
+            <tbody>
                 <tr th:each="b : ${reviews}">
 
                     <td th:text="${#dates.format(b.date, 'dd-MM-yyyy')}"></td>
 
                     <td>
-                        <a th:href="@{/books/{id} (id=${b.edition.id})}" th:text="${b.edition.name}"></a>
+                        <a class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"
+                           th:href="@{/books/{id} (id=${b.edition.id})}"
+                           th:text="${b.edition.name}"></a>
                     </td>
 
                     <td>
@@ -27,11 +27,10 @@
                         <input id="input-6" name="input-6" class="rating rating-loading" th:value="${b.rating}" data-show-clear="false" data-show-caption="false" data-readonly="true" data-size="sm">
                     </td>
 
-                    <td th:text="${b.content}"></td>
+                    <td th:text="${#strings.abbreviate(b.content, 50)}"></td>
                 </tr>
+            </tbody>
 
-                </tbody>
-            </table>
-        </div>
+        </table>
     </div>
 </div>

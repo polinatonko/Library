@@ -6,6 +6,7 @@ import lombok.Getter;
 public enum IssuanceStatus {
     ACTIVE ("Active"),
     RETURNED ("Returned"),
+    RETURNED_EXPIRED("Returned expired"),
     EXPIRED ("Expired");
 
     private String name;

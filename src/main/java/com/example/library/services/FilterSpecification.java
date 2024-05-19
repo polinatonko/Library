@@ -41,6 +41,22 @@ public class FilterSpecification<T> {
                         String[] vars = column.split("-");
                         yield criteriaBuilder.equal(root.join(vars[0]).get(vars[1]), value);
                     }
+                    case JOIN_IN -> {
+                        String[] cols = column.split("-");
+                        String[] vars = searchRequestDto.getValue().split(",");
+                        Object obj = root.join(cols[0]).get(cols[1]);
+                        yield root.join(cols[0]).get(cols[1]).in(Arrays.asList(vars));
+                    }
+                    case FIND -> {
+                        String[] cols = column.split("-");
+                        List<Predicate> p = new ArrayList<>();
+                        for (String c : cols)
+                            p.add(criteriaBuilder.like(criteriaBuilder.upper(root.get(c)), "%" + value.toUpperCase() + "%"));
+
+                        yield criteriaBuilder.or(p.toArray(new Predicate[0]));
+                    }
+                    case LESS_THAN -> criteriaBuilder.lessThan(root.get(column), Long.parseLong(value));
+                    case GREATER_THAN -> criteriaBuilder.greaterThan(root.get(column), Long.parseLong(value));
                     default -> criteriaBuilder.equal(root.get(column), value);
                 };
                 predicates.add(predicate);

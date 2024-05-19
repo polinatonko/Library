@@ -27,7 +27,6 @@ public class PublisherController {
     @GetMapping(value = "")
     public String getPublishers(Model model)
     {
-        model.addAttribute("title", "Publishers");
         model.addAttribute("form", new ObjectsListDto<Publisher>(publisherService.getAll()));
         return "lists/publishers";
     }
@@ -36,7 +35,6 @@ public class PublisherController {
     @GetMapping(value = "/add-publisher")
     public String addPublisher(HttpServletRequest request, Model model)
     {
-        model.addAttribute("title", "Add publisher");
         model.addAttribute("publisher", new PublisherDto());
         return "addForms/addPublisher";
     }

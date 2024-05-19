@@ -18,6 +18,15 @@ public class GlobalFunctions {
         return previousUrl.orElse("redirect:");
     }
 
+    public String getCurrentUrl(HttpServletRequest request) {
+        StringBuilder url = new StringBuilder(request.getRequestURL().toString());
+        String queryString = request.getQueryString();
+        if (queryString != null) {
+            url.append("?").append(queryString);
+        }
+        return url.toString();
+    }
+
     public Date getDate(int days, int hours, int minutes, int seconds)
     {
         Calendar cal = Calendar.getInstance();

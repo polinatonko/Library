@@ -1,18 +1,25 @@
 package com.example.library.services;
 
 import com.example.library.GlobalFunctions;
-import com.example.library.models.Author;
-import com.example.library.models.Book;
-import com.example.library.models.Edition;
-import com.example.library.models.Genre;
+import com.example.library.dto.PageRequestDto;
+import com.example.library.dto.RequestDto;
+import com.example.library.dto.SearchRequestDto;
+import com.example.library.models.*;
 import com.example.library.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.lang.Math.min;
 
 @Service
 public class BookService {
@@ -23,8 +30,79 @@ public class BookService {
     @Autowired
     private AuthorService authorService;
     @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private FilterSpecification<Book> filterSpecification;
+    @Autowired
     private GlobalFunctions utils;
+    public Page<Book> getSearchPaginatedPage(RequestDto request, String selectedAuthors, String selectedPublishers, String selectedFormats,
+                                             String selectedGenres, String minAge, String maxAge, String keywords) {
+        Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
+
+        if (selectedAuthors != null)
+            request.add("authors-fullName", selectedAuthors, SearchRequestDto.Operation.JOIN_IN);
+
+        if (selectedPublishers != null)
+            request.add("publisher-name", selectedPublishers, SearchRequestDto.Operation.JOIN_IN);
+
+        if (selectedFormats != null)
+            request.add("format", selectedFormats, SearchRequestDto.Operation.IN);
+
+        if (selectedGenres != null)
+            request.add("genres-name", selectedGenres, SearchRequestDto.Operation.JOIN_IN);
+
+        request.add("ageLimit", String.join(",", minAge, maxAge), SearchRequestDto.Operation.BETWEEN);
+
+        if (keywords != null)
+            request.add(String.join("-", "name", "about"), keywords, SearchRequestDto.Operation.FIND);
+
+        Specification<Book> spec = filterSpecification.getSearchSpecification(request.getSearchRequestDtos());
+
+        Page<Book> page;
+        if (request.getSearchRequestDtos().isEmpty())
+        {
+            List<Book> books = (List<Book>)getAll();
+            page = new PageImpl<Book>(books, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()), books.size());
+        }
+        else
+            page = search(spec, pageable);
+
+        return page;
+    }
+    public List<Book> getByIds(List<Integer> ids)
+    {
+        return bookRepository.findAllById(ids);
+    }
+    public Iterable<Book> getAllFree()
+    {
+        RequestDto request = new RequestDto();
+        request.add("copiesCount", "0", SearchRequestDto.Operation.GREATER_THAN);
+        return search(filterSpecification.getSearchSpecification(request.getSearchRequestDtos()));
+    }
+    public List<Book> getRecommend(User user)
+    {
+        List<Book> books = bookRepository.findAll();
+        books.sort(new Comparator<Book>() {
+            @Override
+            public int compare(Book a, Book b) {
+                int aCoeff = a.getCoefficient(user.getLikes()), bCoeff = b.getCoefficient(user.getLikes());
+                return aCoeff > bCoeff ? +1 : aCoeff < bCoeff ? -1 : 0;
+            }
+        });
+
+        return books.stream().limit(20).collect(Collectors.toList());
+    }
+    public int getMinAge()
+    {
+        return Collections.min(bookRepository.findAll(), Comparator.comparing(Edition::getAgeLimit)).getAgeLimit();
+    }
+
+    public int getMaxAge()
+    {
+        return Collections.max(bookRepository.findAll(), Comparator.comparing(Edition::getAgeLimit)).getAgeLimit();
+    }
     public Iterable<Book> search(Specification<Book> spec) { return bookRepository.findAll(spec); }
+    public Page<Book> search(Specification<Book> spec, Pageable pageable) { return bookRepository.findAll(spec, pageable); }
     public void updateRating(Book book, int value, boolean add)
     {
         int count = book.getReviews().size();
@@ -35,23 +113,36 @@ public class BookService {
             rating = (count > 1) ? (rating - value) / (count - 1) : 0;
 
         book.setRating(rating);
-        bookRepository.save(book);
+        save(book);
     }
     public boolean existsById(Integer id) { return bookRepository.existsById(id); }
     public void unBook(Book book)
     {
         book.unBook();
-        bookRepository.save(book);
+        save(book);
     }
     public void book(Book book)
     {
         book.book();
-        bookRepository.save(book);
+        save(book);
     }
     public Iterable<Book> getNew() { return bookRepository.findByReceiptDateGreaterThan(utils.getDate(-7,0,0,0));}
     public Iterable<Book> getAll() { return bookRepository.findAll(); }
 
-    public Book save(Book book) { return bookRepository.save(book); }
+    public Book save(Book book)
+    {
+        Integer id = book.getId();
+
+        if (id != null)
+        {
+            Book saved = getByIdOrThrowException(id);
+
+            if (saved.getCopiesCount() == 0 && book.getCopiesCount() > 0)
+                notificationService.notify(book);
+        }
+
+        return bookRepository.save(book);
+    }
 
     public void deleteById(Integer id) { bookRepository.deleteById(id);}
 

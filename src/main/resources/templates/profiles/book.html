@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head(${object.name})"></div>
 
 <body>
 
@@ -17,35 +17,61 @@
                     <img th:if="${object.photo}" th:src="@{${object.photo.url}}" alt="image" class="card-img">
 
                     <div class="row justify-content-center" style="margin: 20px;" th:switch="${bookingStatus}">
-                            <button th:case="${T(com.example.library.enums.BookingStatus).DISABLED}"
-                                    type="button"
-                                    class="btn btn-dark"
-                                    data-bs-toggle="modal" data-bs-target="#bookModal"
-                                    disabled="disabled"
-                                    style="width: 20%;">
-                                Book
-                            </button>
+                            <div class="btn-group">
+                                <button th:case="${T(com.example.library.enums.BookingStatus).DISABLED}"
+                                        type="button"
+                                        class="btn btn-dark"
+                                        data-bs-toggle="modal" data-bs-target="#bookModal"
+                                        disabled="disabled"
+                                        style="width: 20%;">
+                                    Book
+                                </button>
 
-                            <button th:case="${T(com.example.library.enums.BookingStatus).ENABLED}"
-                                    type="button"
-                                    class="btn btn-dark"
-                                    style="width: 20%;"
-                                    data-bs-toggle="modal" data-bs-target="#bookModal">
-                                Book
-                            </button>
+                                <button th:case="${T(com.example.library.enums.BookingStatus).ENABLED}"
+                                        type="button"
+                                        class="btn btn-dark"
+                                        style="width: 20%;"
+                                        data-bs-toggle="modal" data-bs-target="#bookModal">
+                                    Book
+                                </button>
 
-                            <button th:case="${T(com.example.library.enums.BookingStatus).ZERO_COPIES}"
-                                    type="button"
-                                    class="btn btn-dark"
-                                    style="width: 20%;"
-                                    data-bs-toggle="modal" data-bs-target="#notifyModal">
-                                Notify
-                            </button>
+                                <button th:case="${T(com.example.library.enums.BookingStatus).ZERO_COPIES}"
+                                        type="button"
+                                        class="btn btn-dark"
+                                        style="width: 20%;">
+                                    <a th:href="@{/books/notify/{id} (id=${object.id})}" th:disabled="${disabled}">
+                                        Notify</a>
+                                </button>
 
+                                <a th:href="@{/books/preview/{id} (id=${object.id})}"
+                                   role="button"
+                                   class="btn btn-sm btn-dark"
+                                   style="width: 20%;"
+                                   id="preview">
+                                    View preview</a>
+
+                            </div>
                     </div>
 
-                <div th:replace="modals/notify.html :: notify(${object})"></div>
+                <div hidden="hidden">
+                    <input type="text" hidden="hidden" id="isbn" th:value="${object.ISBN}"/>
 
+                    <div id="viewerCanvas"  style="height: 630px;"></div>
+                </div>
+
+
+                <div class="row justify-content-center">
+                    <div class="col-6 tab" role="tabpanel">
+                        <ul class="nav nav-tabs nav-tabs-vertical" role="tablist">
+                            <li class="nav-item active" role="presentation">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#info" role="tab" aria-selected="true"><i class="bi bi-info-circle-fill"></i> Info</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" data-bs-toggle="tab" href="#reviews" role="tab" aria-selected="false"><i class="bi bi-chat-square-text-fill"></i> Reviews</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
             </div>
             <div class="col-md-8">
@@ -53,7 +79,24 @@
                     <div class="card-title row">
                         <h4 style="float: left; width: auto; height: 40px;" th:text="${object.name}"></h4>
 
-                        <form id="likeForm" name="likeFormName" th:action="@{/books/like/{id} (id=${object.id})}" method="post" style="float: left; width: auto; height: 40px;">
+                        <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" style="float: left; width: auto; height: 40px;">
+                            <div class="col-auto" style="float: left; width: auto; height: 40px;">
+                                <a class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2"
+                                   th:href="@{/books/edit/{id} (id=${object.id})}"><i class="bi bi-pencil-fill"></i></a>
+                            </div>
+
+                            <form th:action="@{/books/delete-book/{id} (id=${object.id})}"
+                                  class="col-auto"
+                                  style="float: left; width: auto; height: 40px;"
+                                  method="post">
+                                <button type="submit"
+                                        class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+
+                        <form id="likeForm" name="likeFormName" th:action="@{/books/like/{id} (id=${object.id})}" method="post" style="float: left; width: 1px; height: 40px;">
                             <div class="heartbox">
                                 <input type="checkbox" class="checkbox" id="checkbox" th:checked="${showLike}" th:onclick="submitLikeForm()"/>
 
@@ -96,6 +139,8 @@
                             </div>
                             <input type="submit" id="likeButton" hidden="hidden">
                         </form>
+
+
                     </div>
 
                     <div class="card-text">
@@ -110,56 +155,56 @@
                         <input id="input-6" name="input-6" class="rating rating-loading" th:value="${object.rating}" data-min="0" data-max="5" data-step="0.1" data-show-clear="false" data-show-caption="false" data-readonly="true" data-size="sm">
                     </div>
 
-                    <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')">
-                        <a th:href="@{/books/edit/{id} (id=${object.id})}">Edit</a>
+                    <div class="tab-content tabs" aria-orientation="vertical">
+                        <div id="info" class="tab-pane in active">
+                            <p class="card-text" th:text="${object.about}"></p>
+                            <p class="card-text">ISBN: [[${object.ISBN}]]</p>
 
-                        <form th:action="@{/books/delete-book/{id} (id=${object.id})}" method="post">
-                            <button type="submit">Delete</button>
-                        </form>
-                    </div>
+                            <p class="card-text">Publisher: [[${object.publisher?.name}]]</p>
+                            <p class="card-text">Language: [[${object.language}]]</p>
+                            <p class="card-text">[[${object.ageLimit}]]+</p>
+                            <p class="card-text">[[${object.copiesCount}]] copies</p>
+                            <p class="card-text">
+                                <small class="text-muted">Publishing: [[${object.publishingDate}]]</small>
+                                <br>
+                                <small class="text-muted">[[${object.pagesCount}]] pages, [[${object.format.name}]]</small>
+                            </p>
 
-                    <p class="card-text" th:text="${object.about}"></p>
-                    <p class="card-text">ISBN: [[${object.ISBN}]]</p>
-
-                    <p class="card-text">Publisher: [[${object.publisher?.name}]]</p>
-                    <p class="card-text">Language: [[${object.language}]]</p>
-                    <p class="card-text">[[${object.ageLimit}]]+</p>
-                    <p class="card-text">[[${object.copiesCount}]] copies</p>
-                    <p class="card-text">
-                        <small class="text-muted">Publishing: [[${object.publishingDate}]]</small>
-                        <br>
-                        <small class="text-muted">[[${object.pagesCount}]] pages, [[${object.format.name}]]</small>
-                    </p>
-
-                    <div class="row d-inline card-text" th:each="g : ${object.genres}">
-                        <a class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover" th:href="@{/genres/genre/{id} (id=${g.id})}" th:text="${g.name}" style="margin: 5px;"></a>
-                    </div>
-
-                    <div class="error alert alert-dark" th:if="${showReviewExists} == true"
-                         role="alert">
-                        Review already exists.</div>
-
-                    <p class="card-text">
-                        <div class="row justify-content-center">
-                            <h4 class="card-text col-auto">Reviews</h4>
-
-                            <form class="col-auto" sec:authorize="isAuthenticated()" th:action="@{/reviews/review/{id} (id=${object.id})}" method="get">
-                                <button type="submit"
-                                        class="btn btn-sm btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold"
-                                        th:disabled="${issuanceExists} == false">
-                                    Leave review</button>
-                            </form>
-
-                            <form class="col-auto" sec:authorize="isAuthenticated()" th:action="@{/reviews/delete/{id} (id=${object.id})}" method="post">
-                                <button
-                                        class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold"
-                                        th:disabled="${reviewExists} == false">
-                                    Delete review</button>
-                            </form>
+                            <div class="row d-inline card-text" th:each="g : ${object.genres}">
+                                <a class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover" th:href="@{/genres/genre/{id} (id=${g.id})}" th:text="${g.name}" style="margin: 5px;"></a>
+                            </div>
                         </div>
-                    </p>
+                        <div id="reviews" class="tab-pane">
+                            <div class="error alert alert-dark" th:if="${showReviewExists} == true"
+                                 role="alert">
+                                Review already exists.</div>
 
-                    <div th:replace="lists/reviews.html :: reviews(${reviews})"></div>
+                            <p class="card-text">
+                                <div class="row justify-content-start">
+
+                                    <form class="col-auto" sec:authorize="isAuthenticated()" th:action="@{/reviews/review/{id} (id=${object.id})}" method="get">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold"
+                                                th:disabled="${issuanceExists} == false">
+                                            Leave review</button>
+                                    </form>
+
+                                    <form class="col-auto" sec:authorize="isAuthenticated()" th:action="@{/reviews/delete/{id} (id=${object.id})}" method="post">
+                                        <button
+                                                class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold"
+                                                th:disabled="${reviewExists} == false">
+                                            Delete review</button>
+                                    </form>
+                                </div>
+                            </p>
+
+                            <div th:replace="lists/reviews.html :: reviews(${reviews})"></div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
             </div>
         </div>
@@ -176,19 +221,19 @@
                 <div class="modal-body">
                     <p>Select booking end:</p>
 
-                    <form class="login-form" th:action="@{/books/book/{id}(id=${object.id})}" method="post">
+                    <form class="login-form" th:object="${booking}" th:action="@{/books/book/{id}(id=${object.id})}" method="post">
                         <div class="form-floating mb-3">
                             <div class="form-floating input-group mb-4">
                                 <i class="bi bi-calendar-date input-group-text" id="myIcon"></i>
-                                <input type="text" id="datepicker" th:field="${lastDay}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
+                                <input type="text" id="datepicker" th:field="*{lastDay}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
                                 <label for="datepicker" id="myLabel1">Select day</label>
                             </div>
                         </div>
 
                         <div class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Book</button>
+                                <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold">Book</button>
                             </div>
                         </div>
                     </form>
@@ -203,12 +248,72 @@
 <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-star-rating@4.1.2/js/star-rating.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
-<script type="text/javascript" th:src="@{/js/datepicker.js}"></script>
 <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-star-rating@4.1.2/themes/krajee-svg/theme.js"></script>
+
+<script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
+
 <script>
     function submitLikeForm() {
     document.likeFormName.submit();
     }
 </script>
+
+<script>
+    $('ul.nav-tabs li').on('click', function(){
+        $('li.active').removeClass('active'); // to remove the current active tab
+        $(this).addClass('active'); // add active class to the clicked tab
+    });
+</script>
+
+<script type="text/javascript">
+    google.books.load();
+
+    function alertNotFound() {
+        document.getElementById("preview").classList.add('disable');
+    }
+
+    function alertInitialized() {
+
+    }
+
+    function initialize() {
+        var viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
+        var isbn = document.getElementById('isbn');
+        console.log(isbn.value);
+        viewer.load('ISBN:' + isbn.value, alertNotFound, alertInitialized);
+      }
+
+    google.books.setOnLoadCallback(initialize);
+</script>
+
+<script>
+    const getDatePickerTitle = elem => {
+        // From the label or the aria-label
+        const label = elem.nextElementSibling;
+        let titleText = '';
+        if (label && label.tagName === 'LABEL') {
+            titleText = label.textContent;
+        } else {
+            titleText = elem.getAttribute('aria-label') || '';
+        }
+        return titleText;
+    }
+
+    const elems = document.querySelectorAll('.datepicker_input');
+    for (const elem of elems) {
+        var curDay = new Date(Date.now());
+        curDay.setDate(curDay.getDate() + 1);
+        const maxDay = new Date(Date.now());
+        maxDay.setDate(maxDay.getDate() + 2*7); // two weeks
+
+        const datepicker = new Datepicker(elem, {
+            'format': 'dd/mm/yyyy',
+            minDate: curDay,
+            maxDate: maxDay,
+            title: getDatePickerTitle(elem)
+        });
+    }
+</script>
+
 </body>
 </html>

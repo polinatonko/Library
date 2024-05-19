@@ -12,10 +12,13 @@
                         <a class="nav-link" th:href="@{/books}">Catalog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Last views</a>
+                        <a class="nav-link" th:href="@{/books/history}">Last views</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/new}">New editions</a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()" class="nav-item">
+                        <a class="nav-link" th:href="@{/recommend}">Recommend</a>
                     </li>
                     <li sec:authorize="isAuthenticated()" class="nav-item">
                         <a class="nav-link" th:href="@{/profile}">Profile</a>

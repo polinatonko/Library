@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:fragment="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Add book')"></div>
 
 <body>
 
@@ -12,6 +12,9 @@
         <div class="container">
             <div class="col-md-9 col-lg-8 mx-auto">
                 <h3 class="login-heading mb-4">Add book</h3>
+
+                <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2"
+                        onclick="getFieldsValues()">Fill fields</button>
 
                 <form class="login-form" th:action="@{/books/add-post}" th:object="${object}" method="post">
                     <div class="form-floating mb-3">
@@ -43,7 +46,7 @@
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input required type="text" th:field="*{about}" class="form-control" id="floatingAbout" placeholder="About">
+                        <textarea required type="text" th:field="*{about}" class="form-control" id="floatingAbout" placeholder="About"></textarea>
                         <label for="floatingAbout">About</label>
                         <p th:each="error : ${#fields.errors('about')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
@@ -82,7 +85,7 @@
                     <div class="d-grid">
 
 
-                        <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold mb-2" type="submit">Add</button>
+                        <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">Add</button>
                     </div>
 
                 </form>
@@ -101,6 +104,36 @@
 <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
 
 <script type="text/javascript" th:src="@{/js/datepicker.js}"></script>
+
+<script>
+    function getFieldsValues() {
+        const xhr = new XMLHttpRequest();
+        var isbn = document.getElementById('floatingISBN').value;
+        xhr.open("GET", "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn + "&key=AIzaSyAIlK21hU5uCyE-LksOy8Ctl-Li0aollNA");
+        xhr.send();
+        xhr.responseType = "json";
+        xhr.onload = () => {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            const data = xhr.response;
+
+            const item = data['items'][0];
+            console.log(item);
+            document.getElementById('floatingName').setAttribute('value', item['volumeInfo']['title']);
+
+            var partsDate = item['volumeInfo']['publishedDate'].split('-');
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            var date = partsDate[2] + ' ' + months[Number(partsDate[1])] + ', ' + partsDate[0];
+
+            document.getElementById('floatingPublishingDate').setAttribute('value', date);
+            document.getElementById('floatingAbout').setAttribute('value', item['volumeInfo']['description']);
+            document.getElementById('floatingPagesCount').setAttribute('value', item['volumeInfo']['pageCount']);
+
+          } else {
+            console.log(`Error: ${xhr.status}`);
+          }
+        };
+    }
+</script>
 
 </body>
 

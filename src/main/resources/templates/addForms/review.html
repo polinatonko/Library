@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Leave review')"></div>
 
 <body>
 
@@ -25,7 +25,7 @@
 
                     <div class="row">
                         <div class="form-floating col-auto mb-3">
-                            <input required type="text" th:field="*{content}" class="form-control" id="floatingContent" placeholder="Content">
+                            <textarea required type="text" th:field="*{content}" class="form-control" id="floatingContent" placeholder="Content"></textarea>
                             <label for="floatingContent">Content</label>
                             <p th:each="error : ${#fields.errors('content')}"
                                th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
@@ -34,7 +34,7 @@
 
                     <div class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Submit</button>
+                            <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold">Submit</button>
                         </div>
                     </div>
                 </form>

@@ -6,18 +6,19 @@ import com.example.library.models.Author;
 import com.example.library.models.Book;
 import com.example.library.models.Image;
 import com.example.library.repositories.AuthorRepository;
+import com.example.library.services.AuthorService;
 import com.example.library.services.BookService;
 import com.example.library.services.ImageService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.io.IOException;
 
 @Controller
 @RequestMapping("/images")
@@ -25,11 +26,32 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
     @Autowired
-    private AuthorRepository authorRepository;
+    private AuthorService authorService;
     @Autowired
     private BookService bookService;
     @Autowired
     private GlobalFunctions utils;
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
+    @GetMapping(value = "/delete-author/{id}")
+    public String deleteImage1(
+            HttpServletRequest request,
+            @PathVariable("id") Integer id
+            ) throws IOException {
+        Author author = authorService.findById(id);
+        imageService.deleteImage(author);
+        return utils.getPreviousUrl(request);
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
+    @GetMapping(value = "/delete-book/{id}")
+    public String deleteImage2(
+            HttpServletRequest request,
+            @PathVariable("id") Integer id
+    ) throws IOException {
+        Book book = bookService.getById(id);
+        imageService.deleteImage(book);
+        return utils.getPreviousUrl(request);
+    }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @PostMapping(value = "/upload/{authorId}")
@@ -39,10 +61,10 @@ public class ImageController {
             @PathVariable("authorId") Integer authorId,
             RedirectAttributes redirectAttributes)
     {
-        Author author = authorRepository.findById(authorId).get();
+        Author author = authorService.findById(authorId);
         Image img = imageService.uploadImage(imageDto, author);
         author.setPhoto(img);
-        authorRepository.save(author);
+        authorService.save(author);
         return utils.getPreviousUrl(request);
     }
 

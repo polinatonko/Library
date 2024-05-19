@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -27,5 +28,20 @@ public class Book extends Edition {
         for (Author author: this.authors) {
             author.getBooks().remove(this);
         }
+    }
+    public int getCoefficient(Set<Like> likes)
+    {
+        int count = 0;
+        for (Like like : likes)
+        {
+            for (Genre genre : like.getEdition().getGenres())
+                count += (getGenres().contains(genre) ? 1 : 0);
+
+            Book book = (Book)like.getEdition();
+            for (Author author : book.getAuthors())
+                count += (getAuthors().contains(author) ? 1 : 0);
+        }
+
+        return count;
     }
 }

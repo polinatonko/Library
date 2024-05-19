@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Issuances')"></div>
 
 <body>
 
@@ -17,7 +17,7 @@
         </div>
         <div class="col-auto">
             <div class="col-sm d-flex justify-content-end">
-                <a class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login text-uppercase fw-bold mb-2"
+                <a class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2"
                    th:href="@{/issuance}"><i class="bi bi-plus-square"></i></a>
             </div>
         </div>
@@ -25,13 +25,13 @@
 
     <div th:replace="fragments/search-by-date.html :: search_by_date (${period}, 'issuance')"></div>
 
-    <div class="table-responsive">
-        <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-            <tr>
+    <div>
+        <table>
+            <thead>
+            <tr class="table100-head">
                 <th scope="col">Id</th>
                 <th scope="col">Date</th>
-                <th scope="col">Is active</th>
+                <th scope="col">Status</th>
                 <th scope="col">Last day</th>
                 <th scope="col">Edition</th>
                 <th scope="col">Used id</th>
@@ -45,18 +45,19 @@
 
                 <td th:text="${#dates.format(a?.day, 'dd-MM-yyyy HH:mm:ss')}"></td>
 
-                <td th:text="${a?.status?.name}"></td>
+                <td th:style="${a?.status == T(com.example.library.enums.IssuanceStatus).ACTIVE || a?.status == T(com.example.library.enums.IssuanceStatus).RETURNED} ? 'color: green' : 'color: red'" th:text="${a?.status?.name}"></td>
 
                 <td th:text="${#dates.format(a?.lastDay, 'dd-MM-yyyy HH:mm:ss')}"></td>
 
                 <td>
-                    <a th:href="@{/books/{id} (id=${a?.edition?.id})}" th:text="${a?.edition?.name}"></a>
+                    <a class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"
+                       th:href="@{/books/{id} (id=${a?.edition?.id})}" th:text="${a?.edition?.name}"></a>
                 </td>
 
                 <td th:text="${a?.user?.id}"></td>
 
                 <td>
-                    <a th:if="${a?.status != T(com.example.library.enums.IssuanceStatus).RETURNED }" class="dropdown-item"
+                    <a th:if="${a?.status != T(com.example.library.enums.IssuanceStatus).RETURNED && a?.status != T(com.example.library.enums.IssuanceStatus).RETURNED_EXPIRED}" class="dropdown-item"
                        data-bs-toggle="modal"
                        th:attr="data-bs-target='#cancelActionModal' + ${a?.id}">&times;</a>
                 </td>

@@ -6,12 +6,28 @@ import com.example.library.repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
+
+    public String getNamesByIds(String selectedAuthors)
+    {
+        List<String> ids = Arrays.stream(selectedAuthors.split(",")).toList(), authors = new ArrayList<>();
+        for (String id : ids)
+            authors.add(getNameById(Integer.parseInt(id)));
+        return String.join(",", authors);
+    }
+
+    private String getNameById(Integer id) {
+        Optional<Author> author = authorRepository.findById(id);
+        return author.isPresent() ? author.get().getFullName() : "";
+    }
 
     public Iterable<Author> getAll() { return authorRepository.findAll(); }
 

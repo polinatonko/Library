@@ -1,5 +1,6 @@
 package com.example.library.services;
 
+import com.example.library.GlobalFunctions;
 import com.example.library.enums.IssuanceStatus;
 import com.example.library.models.Book;
 import com.example.library.models.Issuance;
@@ -23,11 +24,25 @@ public class IssuanceService {
     private BookService bookService;
     @Autowired
     private TimerService timerService;
-    public Issuance findByIds(Integer editionId, Integer userId) {
-        Issuance res = issuanceRepository.findByUserIdAndEditionIdAndStatus(userId, editionId, IssuanceStatus.ACTIVE);
-        if (res == null)
-            res = issuanceRepository.findByUserIdAndEditionIdAndStatus(userId, editionId, IssuanceStatus.EXPIRED);
-        return res;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private GlobalFunctions utils;
+    public Issuance findByIds(Integer editionId, Integer userId) throws Exception {
+        List<Issuance> i = issuanceRepository.findByUserIdAndEditionIdAndStatus(userId, editionId, IssuanceStatus.EXPIRED);
+        Issuance issuance;
+        if (i.isEmpty())
+        {
+            i = issuanceRepository.findByUserIdAndEditionIdAndStatus(userId, editionId, IssuanceStatus.ACTIVE);
+            if (i.isEmpty())
+            {
+                throw new Exception("This issuance doesnt exist!");
+            }
+            issuance = i.getFirst();
+        }
+        else
+            issuance = i.getFirst();
+        return issuance;
     }
     public boolean exists(Integer editionId, Integer userId)
     {
@@ -42,6 +57,9 @@ public class IssuanceService {
     public void expire(Issuance issuance)
     {
         issuance.setStatus(IssuanceStatus.EXPIRED);
+
+        check_expires(issuance.getUser().getId());
+
         issuanceRepository.save(issuance);
     }
     public void cancel(Issuance issuance)
@@ -49,7 +67,10 @@ public class IssuanceService {
         Book book = (Book)issuance.getEdition();
         book.incCopiesCount();
         bookService.save(book);
-        issuance.setStatus(IssuanceStatus.RETURNED);
+
+        issuance.setStatus((issuance.getStatus() == IssuanceStatus.EXPIRED) ? IssuanceStatus.RETURNED_EXPIRED : IssuanceStatus.RETURNED);
+        check_expires(issuance.getUser().getId());
+
         //issuance.setActive(false);
         issuanceRepository.save(issuance);
     }
@@ -79,5 +100,20 @@ public class IssuanceService {
             throw new IllegalArgumentException("Issuance with such id doesn't exist");
 
         return issuance.get();
+    }
+    private int getExpiredCount(Date from, Integer userId)
+    {
+        List<Issuance> iByPeriod = issuanceRepository.findByPeriodAndUserId(from, utils.getCurentDate(), userId);
+        int count = 0;
+        for (Issuance i : iByPeriod)
+            if (i.getStatus() == IssuanceStatus.EXPIRED || i.getStatus() == IssuanceStatus.RETURNED_EXPIRED)
+                count++;
+        return count;
+    }
+
+    private void check_expires(Integer userId)
+    {
+        if (getExpiredCount(utils.getDate(-30*3, 0, 0, 0), userId) > 5)
+            userService.blockUser(userId, utils.getDate(30, 0, 0, 0));
     }
 }

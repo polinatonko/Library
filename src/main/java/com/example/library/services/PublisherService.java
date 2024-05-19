@@ -1,16 +1,33 @@
 package com.example.library.services;
+import com.example.library.models.Author;
 import com.example.library.models.Publisher;
 import com.example.library.repositories.PublisherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import com.example.library.dto.PublisherDto;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class PublisherService {
     @Autowired
     private PublisherRepository publisherRepository;
+    public String getNamesByIds(String selected)
+    {
+        List<String> ids = Arrays.stream(selected.split(",")).toList(), names = new ArrayList<>();
+        for (String id : ids)
+            names.add(getNameById(Integer.parseInt(id)));
+        return String.join(",", names);
+    }
+
+    private String getNameById(Integer id) {
+        Optional<Publisher> obj = publisherRepository.findById(id);
+        return obj.isPresent() ? obj.get().getName() : "";
+    }
     public Publisher getById(Integer id) { return getByIdOrThrowException(id); }
     public void deletePublisher(Integer id)
     {

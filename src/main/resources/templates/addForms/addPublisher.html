@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:fragment="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Add publisher')"></div>
 
 <body>
 
@@ -23,7 +23,7 @@
 
                     <div class="input-group form-floating mb-3">
                         <i class="bi bi-info-circle input-group-text"></i>
-                        <input required type="text" th:field="*{description}" class="form-control" id="floatingDescription" placeholder="Description">
+                        <textarea required type="text" th:field="*{description}" class="form-control" id="floatingDescription" placeholder="Description"></textarea>
                         <label for="floatingDescription" id="myLabel3"></label>
                         <p th:each="error : ${#fields.errors('description')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="d-grid">
-                        <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold mb-2" type="submit">Add</button>
+                        <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">Add</button>
                     </div>
 
                 </form>

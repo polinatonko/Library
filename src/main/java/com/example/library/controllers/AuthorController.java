@@ -30,7 +30,6 @@ public class AuthorController {
     public String index(Model model)
     {
         model.addAttribute("form", new ObjectsListDto<Author>(authorService.getAll()));
-        model.addAttribute("title", "Authors");
         return "lists/authors-cards";
     }
 
@@ -38,7 +37,6 @@ public class AuthorController {
     @GetMapping(value = "/add")
     public String addForm(Model model)
     {
-        model.addAttribute("title", "Add author");
         model.addAttribute("object", new Author());
         return "addForms/addAuthor";
     }
@@ -95,7 +93,6 @@ public class AuthorController {
     )
     {
         model.addAttribute("object", authorService.findById(id));
-        model.addAttribute("title", "Author");
         return "profiles/author_profile";
     }
 }

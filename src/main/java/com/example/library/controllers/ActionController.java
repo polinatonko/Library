@@ -3,15 +3,14 @@ package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.dto.IssuanceDto;
 import com.example.library.dto.PeriodDto;
+import com.example.library.dto.SearchRequestDto;
 import com.example.library.enums.BookingStatus;
 import com.example.library.models.Edition;
 import com.example.library.models.Issuance;
 import com.example.library.models.Return;
 import com.example.library.models.User;
 import com.example.library.services.*;
-import com.example.library.timer.BlockTimerTask;
 import com.example.library.timer.IssuanceTimerTask;
-import jakarta.persistence.Access;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.InvalidParameterException;
 import java.util.Date;
+import java.util.Optional;
 
 @Controller
 public class ActionController {
@@ -57,14 +57,27 @@ public class ActionController {
     @PostMapping(value = "/create-issuance")
     public String issuance(HttpServletRequest request,
                            @ModelAttribute("action") @Valid IssuanceDto issuanceDto,
+                           RedirectAttributes redirectAttributes,
                            Model model)
     {
         Integer editionId = issuanceDto.getEditionId(), userId = issuanceDto.getUserId();
         Edition edition = bookService.getById(editionId);
-        User user = userService.getById(userId).get(); // fix!
+
+        Optional<User> user = userService.getById(userId);
+        if (user.isEmpty())
+        {
+            redirectAttributes.addFlashAttribute("noUser", true);
+            return utils.getPreviousUrl(request);
+        }
+
+        if (edition.getCopiesCount() <= 0)
+        {
+            redirectAttributes.addFlashAttribute("noCopies", true);
+            return utils.getPreviousUrl(request);
+        }
 
         // create and save:
-        Issuance issuance = new Issuance(edition, user, utils.getDate(30, 0, 0, 0), utils.getCurentDate());
+        Issuance issuance = new Issuance(edition, user.get(), utils.getDate(30, 0, 0, 0), utils.getCurentDate());
         issuanceService.create(issuance, new IssuanceTimerTask(issuance));
 
 
@@ -80,18 +93,25 @@ public class ActionController {
     public String returns(HttpServletRequest request,
                           @ModelAttribute("action") @Valid IssuanceDto issuanceDto,
                           RedirectAttributes redirectAttributes,
-                          Model model)
-    {
+                          Model model) throws Exception {
         Integer editionId = issuanceDto.getEditionId(), userId = issuanceDto.getUserId();
         Edition edition = bookService.getById(editionId);
-        User user = userService.getById(userId).get(); // fix!
+        Optional<User> user = userService.getById(userId); // fix!
 
         // check if issuance exists
         if (issuanceService.exists(editionId, userId))
         {
-            // create and save:
-            Return ret = new Return(edition, user, utils.getDate(0, 0, 0, 0));
-            returnService.create(ret);
+            if (user.isPresent())
+            {
+                // create and save:
+                Return ret = new Return(edition, user.get(), utils.getDate(0, 0, 0, 0));
+                returnService.create(ret);
+            }
+            else
+            {
+                redirectAttributes.addFlashAttribute("noUser", true);
+                return utils.getPreviousUrl(request);
+            }
         }
         else
         {
@@ -105,7 +125,7 @@ public class ActionController {
     public String issuanceForm(HttpServletRequest request,
                                Model model)
     {
-        model.addAttribute("books", bookService.getAll());
+        model.addAttribute("books", bookService.getAllFree());
         model.addAttribute("users", userService.getEnabledUsers());
         model.addAttribute("action", new IssuanceDto());
         return "addForms/issuance";

@@ -63,7 +63,7 @@ public class UserController {
     {
         checkLibrarianPermission(request, id);
 
-        userService.blockUser(id, utils.getDate(0, 0, 2, 0));
+        userService.blockUser(id, utils.getDate(0, 0, 3, 0));
         return utils.getPreviousUrl(request);
     }
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
@@ -102,7 +102,6 @@ public class UserController {
     @GetMapping(value = "/add-user")
     public String addUserForm(Model model)
     {
-        model.addAttribute("title", "Add user");
         model.addAttribute("user", new UserDto());
         return "addForms/addUser";
     }
@@ -167,7 +166,6 @@ public class UserController {
     @GetMapping(value = "/reader/register")
     public String registration(Model model)
     {
-        model.addAttribute("title", "Registration");
         model.addAttribute("user", new UserDto());
         return "auth/registration";
     }
@@ -214,7 +212,6 @@ public class UserController {
         {
             return "redirect:";
         }
-        model.addAttribute("title", "Login");
         return "auth/login";
     }
 
@@ -223,7 +220,6 @@ public class UserController {
     public String addUser(@RequestBody User user, Model model) {
         if (userService.existsByEmail(user.getEmail()))
         {
-            model.addAttribute("title","Error");
             model.addAttribute("error_msg","User with this email exists!");
 
             return "pages/error";
@@ -244,13 +240,11 @@ public class UserController {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
 
-        model.addAttribute("title","Genres");
         return "redirect:";
     }
 
     @RequestMapping(value="/confirm-account", method= {RequestMethod.GET, RequestMethod.POST})
     public String confirmUserAccount(@RequestParam("token")String token, Model model) {
-        model.addAttribute("title", "Account confirmation");
         model.addAttribute("message", userService.confirmEmail(token));
         return "confirmation";
     }

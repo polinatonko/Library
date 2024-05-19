@@ -1,5 +1,6 @@
 package com.example.library.services;
 
+import com.example.library.GlobalFunctions;
 import com.example.library.enums.BookingStatus;
 import com.example.library.models.*;
 import com.example.library.repositories.BookingRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.TimerTask;
 
 @Service
 public class BookingService {
@@ -19,6 +21,8 @@ public class BookingService {
     private TimerService timerService;
     @Autowired
     private BookService bookService;
+    @Autowired
+    private GlobalFunctions utils;
     public List<Booking> getByPeriod(Date from, Date to) { return bookingRepository.findByPeriod(from, to); }
     public List<Booking> getByPeriodAndUserId(Date from, Date to, Integer userId) { return bookingRepository.findByPeriodAndUserId(from, to, userId); }
     public Iterable<Booking> getAll() { return bookingRepository.findAll(); }
@@ -31,9 +35,9 @@ public class BookingService {
         return copiesExist ? (booking.isPresent() ? BookingStatus.DISABLED : BookingStatus.ENABLED) : BookingStatus.ZERO_COPIES;
     }
 
-    public Booking create(Edition edition, User user, Date lastDay, BlockTimerTask task)
+    public Booking create(Edition edition, User user, Date lastDay, TimerTask task)
     {
-        Booking booking = new Booking(edition, user, lastDay);
+        Booking booking = new Booking(edition, user, lastDay, utils.getCurentDate());
         bookingRepository.save(booking);
         booking.setTimer(timerService.getTimerById(user.getId(), booking.getId()), task);
 

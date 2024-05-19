@@ -19,6 +19,7 @@ public abstract class Edition {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @Column(unique = true)
     private String ISBN;
     private String language;
     private String publishingDate;
@@ -45,8 +46,11 @@ public abstract class Edition {
     private Set<Action> actions;
     @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL)
     private Set<Review> reviews;
+    @OneToMany(mappedBy = "edition", cascade = CascadeType.ALL)
+    private Set<Notification> notifications;
 
-    public void incCopiesCount() { copiesCount++; }
+    public void incCopiesCount()
+    { copiesCount++; }
     public void decCopiesCount() { copiesCount--; }
     public void book() { copiesCount--; }
     public void unBook() { copiesCount++; }

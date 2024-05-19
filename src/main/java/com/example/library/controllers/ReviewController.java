@@ -67,7 +67,6 @@ public class ReviewController {
         if (reviewService.existsByIds(userId, editionId))
             return reviewExists(redirectAttributes, editionId);
 
-        model.addAttribute("title", "Leave review");
         model.addAttribute("review", new ReviewDto(editionId));
         return "addForms/review";
     }

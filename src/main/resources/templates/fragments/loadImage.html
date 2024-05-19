@@ -1,9 +1,16 @@
-<div th:fragment="loadImage (authorId)">
+<div th:fragment="loadImage (authorId, enabled)">
     <div class="row justify-content-center">
-        <button class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login text-uppercase fw-bold col-4" type="button" data-bs-toggle="collapse"
+        <button class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login fw-bold col-4" type="button" data-bs-toggle="collapse"
                 data-bs-target="#collapseLoadImage" style="margin: 10px;">
             Load image
         </button>
+
+        <div class="col-sm d-flex">
+            <a class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login text-uppercase fw-bold mb-2"
+               th:href="@{/images/delete-author/{id} (id=${authorId})}"
+               th:disabled="${!enabled}"
+            ><i class="bi bi-trash"></i></a>
+        </div>
     </div>
 
     <div class="collapse" id="collapseLoadImage" style="margin: 5% 0;">
@@ -15,10 +22,11 @@
                     <input class="form-control form-control-sm" name="file" type="file">
                 </div>
                 <div class="col-4 justify-content-end">
-                    <button type="submit" class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login text-uppercase fw-bold">Save image</button>
+                    <button type="submit" class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login fw-bold">Save image</button>
                 </div>
 
-            <input name="name" type="hidden" value="${authorId}"/>
+                <input name="name" type="hidden" th:value="${authorId}"/>
+            </div>
 
         </form>
     </div>

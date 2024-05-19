@@ -2,6 +2,7 @@ package com.example.library.repositories;
 
 import com.example.library.enums.IssuanceStatus;
 import com.example.library.models.Issuance;
+import com.example.library.services.IssuanceService;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,6 @@ public interface IssuanceRepository extends CrudRepository<Issuance, Integer> {
     public List<Issuance> findByPeriodAndUserId(Date from, Date to, Integer userId);
     public boolean existsByUserIdAndEditionIdAndStatus(Integer userId, Integer editionId, IssuanceStatus status);
     //public boolean existsByUserIdAndEditionIdAndIsActive(Integer userId, Integer editionId, boolean isActive);
-    public Issuance findByUserIdAndEditionIdAndStatus(Integer userId, Integer editionId, IssuanceStatus status);
+    public List<Issuance> findByUserIdAndEditionIdAndStatus(Integer userId, Integer editionId, IssuanceStatus status);
     //public Issuance findByUserIdAndEditionIdAndIsActive(Integer userId, Integer editionId, boolean isActive);
 }

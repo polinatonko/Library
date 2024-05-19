@@ -49,6 +49,8 @@ public class User implements IEntity {
     private Set<Action> actions;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Like> likes;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Notification> notifications;
 
     public User() {}
 

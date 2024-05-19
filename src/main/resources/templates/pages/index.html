@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Main page')"></div>
 
 <body>
 
@@ -30,7 +30,25 @@
     </div>
     <div class="col-md-offset-3 col-md-12 col-lg-6 text-center">
         <div class="jumbotron m-5">
-            <h1 class="display-4">Welcome to main page!</h1>
+            <div class="row">
+                <h1 class="display-4" style="float: left; width: auto;">
+                    Welcome to main page!
+                </h1>
+
+                <button type="submit"
+                        onclick="doMagic()"
+                        class="col-auto btn btn-md btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2">
+                    <i class="bi bi-magic"></i>
+                </button>
+
+
+            </div>
+
+            <div    id="magic"
+                    class="row"
+                    hidden="hidden">
+                <img src="https://res.cloudinary.com/dvoy5cbc7/image/upload/v1/milka-removebg-preview_n4k4fp" alt="image" width="300">
+            </div>
         </div>
     </div>
 </div>
@@ -70,6 +88,16 @@
             }
         };
 
+    </script>
+
+    <script>
+        function doMagic() {
+        var magic = document.getElementById('magic');
+        if (magic.hasAttribute('hidden'))
+            magic.removeAttribute('hidden');
+        else
+            magic.setAttribute('hidden', 'hidden');
+        }
     </script>
 
 </body>

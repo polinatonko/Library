@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Books')"></div>
 
 <body>
 
@@ -61,7 +61,7 @@
                 </td>
 
 
-                <td>[[${#strings.abbreviate(edition?.about, 50)}]]</td>
+                <td>[[]]</td>
 
                 <td th:text="${edition?.ISBN}"></td>
                 <td th:text="${edition?.language}"></td>

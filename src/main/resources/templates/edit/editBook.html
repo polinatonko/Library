@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Edit book')"></div>
 
 <body>
 
@@ -83,6 +83,13 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-4" hidden="hidden">
+                                <div class="form-floating mb-3">
+                                    <input required type="text" th:field="*{rating}" class="form-control" th:attr="id=${'floatingRating' + object.id}">
+                                    <label th:attr="for=${'#floatingRating' + object.id}">Rating</label>
+                                </div>
+                            </div>
+
                             <div class="col-md-4">
                                 <select class="form-control selectpicker"
                                         id="publisher"
@@ -143,8 +150,8 @@
 
                         <div class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-md btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Save changes</button>
+                                <button type="button" class="btn btn-md btn-secondary btn-bg-secondary.bg-gradient btn-login fw-bold" data-bs-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold">Save changes</button>
                             </div>
                         </div>
                     </form>
@@ -225,7 +232,7 @@
 
         <div class="row">
             <div class="col-md-4">
-                <div th:replace="fragments/loadBookImage.html :: loadBookImage(${object.id})"></div>
+                <div th:replace="fragments/loadBookImage.html :: loadBookImage(${object.id}, ${object.photo != null})"></div>
             </div>
         </div>
     </div>

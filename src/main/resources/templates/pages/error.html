@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Error')">
+</div>
 
 <body>
 
 <div th:replace="fragments/navbar.html :: navbar"></div>
 
-<h1>Error occurred</h1>
+<h1 th:text="${error_msg} ? ${error_msg} : 'Oops, something went wrong!'" style="text-align: center;"></h1>
 
-<p>
-    [[${error_msg}]] Oops, something went wrong!
+
+
+
+
+<p style="text-align: center; font-size: 20pt;">
     Return to <a th:href="@{/}">main page</a>
 </p>
+
+<img th:src="@{/Dino.gif}" style="width: 300px; height: 300px;" class="center"/>
+
 </body>
 </html>

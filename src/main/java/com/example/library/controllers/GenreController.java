@@ -25,15 +25,13 @@ public class GenreController {
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public String index(Model model) {
-        model.addAttribute("title", "Genres");
         model.addAttribute("genres", genreService.getAll());
-        return "lists/genreList";
+        return "lists/genres";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
     @GetMapping(value = "/add-genre")
     public String addGenreDisplayForm(Model model) {
-        model.addAttribute("title", "Add genre");
         model.addAttribute(new Genre());
         return "addForms/addGenreForm";
     }
@@ -45,13 +43,11 @@ public class GenreController {
             Errors errors,
             Model model) {
         if (errors.hasErrors()) {
-            model.addAttribute("title", "Add genre");
             return "redirect:/add-genre";
         }
 
         genreService.save(newGenre);
 
-        model.addAttribute("title", "Add genre");
         return "redirect:";
     }
 
@@ -74,7 +70,6 @@ public class GenreController {
     )
     {
         Genre genre = genreService.getById(id);
-        model.addAttribute("title", genre.getName());
         model.addAttribute("genre", genre);
         model.addAttribute("books", genreService.getByGenreId(id));
         model.addAttribute("genres", genreService.getAll());

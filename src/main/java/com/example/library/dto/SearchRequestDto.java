@@ -1,10 +1,12 @@
 package com.example.library.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class SearchRequestDto {
     private String column;
     private String value;
@@ -15,6 +17,10 @@ public class SearchRequestDto {
         LIKE,
         IN,
         BETWEEN,
-        JOIN
+        JOIN,
+        JOIN_IN,
+        FIND,
+        LESS_THAN,
+        GREATER_THAN
     }
 }

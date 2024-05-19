@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.Timer;
 
 @Getter
@@ -17,9 +18,10 @@ import java.util.Timer;
 public class Block extends Action {
     private boolean isActive;
 
-    public Block(User user) {
+    public Block(User user, Date day) {
         this.user = user;
         this.isActive = true;
+        this.day = day;
     }
 
     public void setTimer(Timer timer, BlockTimerTask task)

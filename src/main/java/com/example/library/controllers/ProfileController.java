@@ -117,7 +117,6 @@ public class ProfileController {
                           @ModelAttribute("period") PeriodDto period,
                           Model model)
     {
-        model.addAttribute("title", "Profile");
         Optional<User> optAuthUser = userService.getById(user.getId());
         if (optAuthUser.isPresent()) // выполняется всегда, т. к. profile доступен только авторизованным пользователям
         {
@@ -151,7 +150,6 @@ public class ProfileController {
     {
         if (new_email == null || new_email.isEmpty() || userService.existsByEmail(new_email))
         {
-            model.addAttribute("title", "Profile");
             model.addAttribute("user", userService.getById(user.getId()).get());
 
             String msg = userService.existsByEmail(new_email) ? "User with this email already exists!" : "Enter valid email!";
@@ -174,7 +172,6 @@ public class ProfileController {
     @GetMapping(value = "/confirm-email")
     public String changeEmail(@RequestParam("token")String token, Model model)
     {
-        model.addAttribute("title", "New email confirmation");
         model.addAttribute("message", userService.changeEmail(token));
         return "confirmation";
     }

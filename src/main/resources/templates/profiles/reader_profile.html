@@ -2,27 +2,26 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Profile')"></div>
 
 <body>
 
 <div th:replace="fragments/navbar.html :: navbar"></div>
 
-<div class="container light-style flex-grow-1 container-p-y">
+<div class="container light-style flex-grow-1 container-p-y" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
 
-    <div class="card overflow-hidden">
+    <div class="card overflow-hidden" style="position: relative;">
         <div class="row no-gutters row-bordered row-border-light">
             <div class="col-md-3 pt-0">
                 <div class="list-group list-group-flush account-settings-links" id="tabPanel">
-                    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#general">General</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-change-password">Change password</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-booking">Bookings</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-issuances">Issuances</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-returns">Returns</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-favorite">Favorites</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-on-hands">On hands</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-by-period">Editions by period</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-reviews">Reviews</a>
+                    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#general"><i class="bi bi-gear-fill"></i> General</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-change-password"><i class="bi bi-tools"></i> Change password</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-booking"><i class="bi bi-calendar-heart-fill"></i> Bookings</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-issuances"><i class="bi bi-calendar-range"></i> Issuances</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-returns"><i class="bi bi-calendar-week-fill" style="width: 21px;"></i> Returns</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-favorite"><i class="bi bi-bookmark-heart"></i> Favorites</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-on-hands"><i class="bi bi-hourglass-split"></i> On hands</a>
+                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-reviews"><i class="bi bi-chat-square-text-fill"></i> Reviews</a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -61,7 +60,7 @@
                                     <label for="floatingBirthDate">Birth date</label>
                                 </div>
 
-                                <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold mb-2" type="submit">Save changes</button>
+                                <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold mb-2" type="submit">Save changes</button>
 
                             </form>
                         </div>
@@ -87,7 +86,7 @@
                                          role="alert">
                                         [[${passwordSuccess}]]</div>
                                 </div>
-                            <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold mb-2" type="submit">Save changes</button>
+                            <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold mb-2" type="submit">Save changes</button>
                             </form>
                         </div>
                     </div>
@@ -95,7 +94,7 @@
                     <div class="tab-pane fade" id="account-booking" role="tabpanel">
                         <div class="card-body pb-2">
 
-                            <div th:replace="lists/user-bookings.html :: bookings(${bookings}, ${user.id})"></div>
+                            <div th:replace="lists/profile/bookings.html :: bookings(${bookings}, ${user.id})"></div>
 
                         </div>
                         <hr class="border-light m-0">
@@ -107,13 +106,13 @@
                     <div class="tab-pane fade" id="account-favorite">
                         <div class="card-body pb-2">
 
-                            <div th:replace="lists/short-book-list.html :: short_book_list(${likes})"></div>
+                            <div th:replace="lists/profile/likes.html :: short_book_list(${likes})"></div>
 
                         </div>
                     </div>
                     <div class="tab-pane fade" id="account-on-hands">
                         <div class="card-body">
-                            <div th:replace="lists/user-issuances.html :: user_issuances(${activeIssuances})"></div>
+                            <div th:replace="lists/profile/issuances.html :: user_issuances(${activeIssuances})"></div>
                         </div>
                         <hr class="border-light m-0">
 
@@ -121,7 +120,7 @@
 
                     <div class="tab-pane fade" id="account-issuances">
                         <div class="card-body">
-                            <div th:replace="lists/user-issuances.html :: user_issuances(${issuances})"></div>
+                            <div th:replace="lists/profile/issuances.html :: user_issuances(${issuances})"></div>
                         </div>
                         <hr class="border-light m-0">
 
@@ -129,7 +128,7 @@
 
                     <div class="tab-pane fade" id="account-returns">
                         <div class="card-body pb-2">
-                            <div th:replace="lists/user-returns.html :: user_returns(${returns})"></div>
+                            <div th:replace="lists/profile/returns.html :: user_returns(${returns})"></div>
                         </div>
 
                         <hr class="border-light m-0">
@@ -137,7 +136,7 @@
 
                     <div class="tab-pane fade" id="account-reviews">
                         <div class="card-body pb-2">
-                            <div th:replace="lists/user-reviews.html :: user_reviews(${reviews})"></div>
+                            <div th:replace="lists/profile/reviews.html :: user_reviews(${reviews})"></div>
                         </div>
 
                         <hr class="border-light m-0">
@@ -148,6 +147,8 @@
     </div>
 
 </div>
+
+<div th:replace="modals/short-book-list-modal.html :: short_book_list_modals(${likes})"></div>
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

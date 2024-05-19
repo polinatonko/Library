@@ -1,0 +1,45 @@
+<div th:fragment="short_book_list(books)">
+    <div class="col">
+
+        <table>
+            <thead>
+                <tr class="table100-head">
+                    <th scope="col">Name</th>
+                    <th scope="col">Authors</th>
+                    <th scope="col">Rating</th>
+                    <th scope="col">Unlike</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="b : ${books}">
+
+                <td>
+                    <a class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover" th:href="@{/books/{id} (id=${b.id})}" th:text="${b.name}"></a>
+                </td>
+
+                <td>
+                    <div th:each="a: ${b.authors}">
+                        <a class="link-dark link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover" th:href="@{/authors/profile/{id} (id=${a.id})}" th:text="${a.fullName}"></a>
+                    </div>
+                </td>
+
+                <td th:text="${b.rating}"></td>
+
+                <td>
+                    <a data-bs-toggle="modal"
+                       th:attr="data-bs-target='#cancelLikeModal' + ${b.id}">
+                        <i class="bi bi-heartbreak-fill"></i>
+                    </a>
+                </td>
+            </tr>
+
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+
+</div>

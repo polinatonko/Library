@@ -1,7 +1,6 @@
 <div th:fragment="reviews (reviews)">
-    <div class="col">
-        <div class="list-group">
-            <div th:block th:each="b : ${reviews}">
+        <div class="col-12 list-group list-group-mine">
+            <div th:block th:each="b : ${reviews}" style="margin: 10px 0px; border-radius: 0.5rem;">
                     <div class="col-auto w-100 list-group-item list-group-item-dark flex-column align-items-start">
                         <div class="d-flex justify-content-between">
                             <h5 class="mb-1" th:text="${b.user.getShortName()}"></h5>
@@ -24,8 +23,6 @@
             </div>
         </div>
 
-    </div>
-
     <div th:block th:each="obj, it : ${reviews}">
         <div class="modal fade"  th:attr="id=${'deleteModal' + obj.id}, aria-labelledby=${'#deleteModalLabel' + obj.id}" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document" >
@@ -42,8 +39,8 @@
 
                             <div class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">No</button>
-                                    <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Yes</button>
+                                    <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold">Yes</button>
                                 </div>
                             </div>
                         </form>

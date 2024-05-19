@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Bookings')"></div>
 
 <body>
 
@@ -19,10 +19,10 @@
 
     <div th:replace="fragments/search-by-date.html :: search_by_date (${period}, 'booking')"></div>
 
-    <div class="table-responsive">
-        <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-            <tr>
+    <div>
+        <table>
+            <thead>
+            <tr class="table100-head">
                 <th scope="col">Id</th>
                 <th scope="col">Date</th>
                 <th scope="col">Is active</th>
@@ -48,10 +48,12 @@
                     </span>
                 </td>
 
-                <td th:text="${#dates.format(a?.user.blockingEnd, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                <td th:text="${#dates.format(a?.lastDay, 'dd-MM-yyyy HH:mm:ss')}"></td>
 
                 <td>
-                    <a th:href="@{/books/{id} (id=${a?.edition?.id})}" th:text="${a?.edition?.name}"></a>
+                    <a class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"
+                       th:href="@{/books/{id} (id=${a?.edition?.id})}"
+                       th:text="${a?.edition?.name}"></a>
                 </td>
 
                 <td th:text="${a?.user?.id}"></td>
@@ -85,8 +87,8 @@
 
                             <div class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">No</button>
-                                    <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Yes</button>
+                                    <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold" data-bs-dismiss="modal">No</button>
+                                    <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold">Yes</button>
                                 </div>
                             </div>
                         </form>

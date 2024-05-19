@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="fragments/head.html :: head('Form issuance')"></div>
 
 <body>
 
@@ -19,7 +19,7 @@
 
                     <div class="row">
 
-                        <div class="col-md-4">
+                        <div class="col-md-4 justify-content-center">
                             <select class="form-control selectpicker"
                                     id="edition"
                                     th:field="*{editionId}"
@@ -56,10 +56,18 @@
 
                     <div class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Form</button>
+                            <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold">Form</button>
                         </div>
                     </div>
                 </form>
+
+                <div class="error alert alert-dark" th:if="${noUser} == true"
+                     role="alert">
+                    User doesn't exists.</div>
+
+                <div class="error alert alert-dark" th:if="${noUser} == true"
+                     role="alert">
+                    There not free copies of this edition.</div>
 
             </div>
         </div>

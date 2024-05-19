@@ -17,8 +17,7 @@ public class ReturnService {
     private ReturnRepository returnRepository;
     public List<Return> getByPeriod(Date from, Date to) { return returnRepository.findByPeriod(from, to); }
     public List<Return> getByPeriodAndId(Date from, Date to, Integer userId) { return returnRepository.findByPeriodAndUserId(from, to, userId); }
-    public void create(Return ret)
-    {
+    public void create(Return ret) throws Exception {
         Integer editionId = ret.getEdition().getId(), userId = ret.getUser().getId();
         Issuance issuance = issuanceService.findByIds(editionId, userId);
         issuanceService.cancel(issuance);
