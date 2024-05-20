@@ -10,7 +10,7 @@
 
 <div class="container light-style flex-grow-1 container-p-y">
 
-    <div class="card mb-3" style="width: 40%;">
+    <div class="card mb-3" style="width: 40%; display: block; margin-left: auto; margin-right: auto;">
         <div class="row justify-content-center">
             <div class="col-md-8 justify-content-center">
                 <div class="card-body justify-content-center">
@@ -46,7 +46,7 @@
                                                     </h5>
                                                 </div>
 
-                                                <p class="card-text"
+                                                <p class="row card-text"
                                                    th:each="a: ${edition?.authors}"
                                                    style="float: left; width: auto; margin-right: 10px; ">
                                                     <a th:href="@{/authors/profile/{id} (id=${a.id})}"
@@ -54,9 +54,9 @@
                                                        class="link-dark link-underline-dark link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"></a>
                                                 </p>
 
-                                                <br>
+                                                <p style="height: 30px;"></p>
 
-                                                <p class="card-text"
+                                                <p class="row card-text"
                                                    th:each="a: ${edition?.genres}"
                                                    style="float: left; width: auto; margin-right: 10px; ">
                                                     <a th:href="@{/genres/genre/{id} (id=${a.id})}"

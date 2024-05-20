@@ -1,9 +1,18 @@
 package com.example.library.services;
 
+import com.example.library.dto.PageRequestDto;
+import com.example.library.dto.RequestDto;
+import com.example.library.dto.SearchRequestDto;
 import com.example.library.models.Author;
+import com.example.library.models.Book;
 import com.example.library.repositories.AuthorRepository;
 import com.example.library.repositories.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,6 +24,11 @@ import java.util.Optional;
 public class AuthorService {
     @Autowired
     private AuthorRepository authorRepository;
+    public Page<Author> getSearchPaginatedPage(RequestDto request) {
+        Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
+
+        return authorRepository.findAll(pageable);
+    }
 
     public String getNamesByIds(String selectedAuthors)
     {

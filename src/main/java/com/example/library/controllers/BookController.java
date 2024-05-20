@@ -273,12 +273,14 @@ public class BookController {
             @CookieValue(value = "historyOfViews", required = false) String cookieValue,
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable("id") Integer id,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size,
             Model model,
-            HttpServletResponse response
+            HttpServletResponse response,
+            HttpServletRequest httpRequest
     )
     {
         List<Integer> views;
-        System.out.println(cookieValue);
 
         if (cookieValue == null)
         {
@@ -304,6 +306,7 @@ public class BookController {
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
+
         Book book = bookService.getById(id);
 
         Optional<User> user = userService.getAuthUser(userDetails);
@@ -313,7 +316,7 @@ public class BookController {
                 user.isPresent() ? bookingService.checkBooking(id, userDetails.getId()) : BookingStatus.DISABLED);
         model.addAttribute("showLike",
                 user.isPresent() && likeService.checkLike(id, userDetails.getId()));
-        model.addAttribute("reviews", reviewService.getByEditionId(id));
+        //model.addAttribute("reviews", reviewService.getByEditionId(id));
         model.addAttribute("disabled",
                 user.isPresent() && notificationService.checkNotification(id, userDetails.getId()));
         if (user.isPresent())
@@ -321,6 +324,32 @@ public class BookController {
             Integer userId = userDetails.getId();
             model.addAttribute("reviewExists", reviewService.existsByIds(userId, id));
             model.addAttribute("issuanceExists", issuanceService.exists(id, userId));
+        }
+
+        RequestDto request = new RequestDto();
+        size=Optional.of(1);
+        request.setPageDto(new PageRequestDto(page, size));
+
+        Page<Review> reviewPage = reviewService.getBookReviews(id, request);
+        model.addAttribute("form", new ObjectsListDto<Review>(reviewPage));
+
+        String url = utils.getCurrentUrl(httpRequest);
+        if (url.contains("page="))
+        {
+            url = url.replaceFirst("[&?]page=[\\d]+[?]?", "");
+            System.out.println(url);
+        }
+        char firstDelimeter = url.contains("=") ? '&' : '?';
+
+        model.addAttribute("currentUrl", url);
+        model.addAttribute("firstDelimeter", firstDelimeter);
+
+        int totalPages = reviewPage.getTotalPages();
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
         }
 
         return "profiles/book";

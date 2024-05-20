@@ -3,19 +3,28 @@ package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.dto.ObjectsListDto;
 import com.example.library.dto.AuthorListDto;
+import com.example.library.dto.PageRequestDto;
+import com.example.library.dto.RequestDto;
 import com.example.library.models.Author;
+import com.example.library.models.Book;
 import com.example.library.repositories.AuthorRepository;
 import com.example.library.services.AuthorService;
 import com.example.library.services.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -27,9 +36,40 @@ public class AuthorController {
     private GlobalFunctions utils;
 
     @GetMapping
-    public String index(Model model)
+    public String index(@RequestParam("page") Optional<Integer> page,
+                        @RequestParam("size") Optional<Integer> size,
+                        Model model,
+                        HttpServletRequest httpRequest)
     {
-        model.addAttribute("form", new ObjectsListDto<Author>(authorService.getAll()));
+        RequestDto request = new RequestDto();
+
+        if (size.isEmpty())
+            size = Optional.of(10);
+        request.setPageDto(new PageRequestDto(page, size));
+
+        Page<Author> authorPage = authorService.getSearchPaginatedPage(request);
+        model.addAttribute("form", new ObjectsListDto<Author>(authorPage));
+
+        String url = utils.getCurrentUrl(httpRequest);
+        if (url.contains("page="))
+        {
+            url = url.replaceFirst("[&?]page=[\\d]+[?]?", "");
+            System.out.println(url);
+        }
+        char firstDelimeter = url.contains("=") ? '&' : '?';
+
+        model.addAttribute("currentUrl", url);
+        model.addAttribute("firstDelimeter", firstDelimeter);
+
+        int totalPages = authorPage.getTotalPages();
+        System.out.println(totalPages);
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "lists/authors-cards";
     }
 

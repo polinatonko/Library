@@ -105,6 +105,9 @@
             <div th:replace="modals/confirmDeletion :: modal(${form}, 'author')"></div>
 
         </div>
+
+        <div th:replace="fragments/pagination.html :: pagination(${form})"></div>
+
     </div>
 </div>
 

@@ -1,10 +1,16 @@
 package com.example.library.services;
 
 import com.example.library.GlobalFunctions;
+import com.example.library.dto.PageRequestDto;
+import com.example.library.dto.RequestDto;
 import com.example.library.dto.ReviewDto;
+import com.example.library.dto.SearchRequestDto;
 import com.example.library.models.*;
 import com.example.library.repositories.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,6 +21,8 @@ public class ReviewService {
     private BookService bookService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FilterSpecification<Review> filterSpecification;
     @Autowired
     private GlobalFunctions utils;
     @Autowired
@@ -49,5 +57,13 @@ public class ReviewService {
             throw new IllegalArgumentException("Object with such id doesn't exist");
 
         return object.get();
+    }
+
+    public Page<Review> getBookReviews(Integer id, RequestDto request)
+    {
+        Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
+        request.add("edition-id", id.toString(), SearchRequestDto.Operation.JOIN);
+        Specification<Review> spec = filterSpecification.getSearchSpecification(request.getSearchRequestDtos());
+        return reviewRepository.findAll(spec, pageable);
     }
 }

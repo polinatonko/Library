@@ -4,6 +4,7 @@ import com.example.library.GlobalFunctions;
 import com.example.library.dto.ObjectsListDto;
 import com.example.library.dto.PublisherDto;
 import com.example.library.dto.PublishersListDto;
+import com.example.library.models.Genre;
 import com.example.library.models.Publisher;
 import com.example.library.services.PublisherService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -66,5 +67,19 @@ public class PublisherController {
     {
         publisherService.createPublisher(publisherDto);
         return "redirect:/publishers";
+    }
+
+    @GetMapping(value = "/{id}")
+    public String publisherEditions(
+            HttpServletRequest request,
+            @PathVariable("id") Integer id,
+            Model model
+    )
+    {
+        Publisher publisher = publisherService.getById(id);
+        model.addAttribute("publisher", publisher);
+        model.addAttribute("books", publisherService.getById(id));
+        model.addAttribute("publishers", publisherService.getAll());
+        return "profiles/publisher";
     }
 }

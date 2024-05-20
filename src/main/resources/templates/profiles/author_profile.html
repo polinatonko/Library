@@ -17,53 +17,63 @@
 
                 <button class="btn btn-sm btn-outline-dark px-4"
                         onclick="showEditions()"
-                        style="margin: 20px;">View editions</button>
+                        style="margin: 20px auto; display: block;">View editions</button>
 
             </div>
             <div class="col-md-8">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${object.fullName}"></h5>
                     <p class="card-text" th:text="${object.bio}"></p>
-                    <div class="buttons">
+                    <div class="buttons"  style="width: 30%; display: block; margin-left: auto; margin-right: auto;">
 
                         <div id="list" class="carousel slide justify-content-center" hidden="hidden" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <div th:each="edition, it: ${object.books}" >
+                                    <button type="button"
+                                            style="background-color: #28242c;"
+                                            data-bs-target="#list"
+                                            th:data-bs-slide-to="${it.index}"
+                                            th:class="${it.index} ? 'indicator' : 'indicator active'"
+                                            th:aria-current="${it.index} ? 'false' : 'true'"></button>
+                                </div>
+                            </div>
 
                             <div class="carousel-inner">
 
                                 <div th:each="edition, it: ${object.books}" th:class="${it.index} ? 'carousel-item' : 'carousel-item active'" >
                                     <div class="container bootstrap snipets">
 
-                                                <div class="card mb-3" style="width: 30%;">
-                                                    <img th:if="${edition.photo}" th:src="@{${edition.photo.url}}" alt="image" class="card-img-top">
-                                                    <div class="card-body">
-                                                        <div class="row">
-                                                            <h5 class="card-title col-md-10">
-                                                                <a th:href="@{/books/{id} (id=${edition.id})}"
-                                                                   th:text="${edition.name}"
-                                                                   class="link-dark link-underline-dark link-offset-3 link-underline-opacity-0 link-underline-opacity-0-hover"></a>
-                                                            </h5>
-                                                        </div>
+                                        <div class="card mb-3">
+                                            <img th:if="${edition.photo}" th:src="@{${edition.photo.url}}" alt="image" class="card-img-top">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <h5 class="card-title col-md-10">
+                                                        <a th:href="@{/books/{id} (id=${edition.id})}"
+                                                           th:text="${edition.name}"
+                                                           class="link-dark link-underline-dark link-offset-3 link-underline-opacity-0 link-underline-opacity-0-hover"></a>
+                                                    </h5>
+                                                </div>
 
-                                                        <p class="card-text"
-                                                           th:each="a: ${edition?.authors}"
-                                                           style="float: left; width: auto; margin-right: 10px; ">
-                                                            <a th:href="@{/authors/profile/{id} (id=${a.id})}"
-                                                               th:text="${a.fullName}"
-                                                               class="link-dark link-underline-dark link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"></a>
-                                                        </p>
+                                                <p class="row card-text"
+                                                   th:each="a: ${edition?.authors}"
+                                                   style="float: left; width: auto; margin-right: 10px; ">
+                                                    <a th:href="@{/authors/profile/{id} (id=${a.id})}"
+                                                       th:text="${a.fullName}"
+                                                       class="link-dark link-underline-dark link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"></a>
+                                                </p>
 
-                                                        <br>
+                                                <p style="height: 30px;"></p>
 
-                                                        <p class="card-text"
-                                                           th:each="a: ${edition?.genres}"
-                                                           style="float: left; width: auto; margin-right: 10px; ">
-                                                            <a th:href="@{/genres/genre/{id} (id=${a.id})}"
-                                                               class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover">
-                                                                <small th:text="${a.name}"></small>
-                                                            </a>
-                                                        </p>
+                                                <p class="row card-text"
+                                                   th:each="a: ${edition?.genres}"
+                                                   style="float: left; width: auto; margin-right: 10px; ">
+                                                    <a th:href="@{/genres/genre/{id} (id=${a.id})}"
+                                                       class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover">
+                                                        <small th:text="${a.name}"></small>
+                                                    </a>
+                                                </p>
 
-                                                    </div>
+                                            </div>
 
                                         </div>
                                     </div>

@@ -33,10 +33,10 @@
         </div>
     </div>
 
-    <div class="table-responsive">
-        <table class="table align-items-center table-flush">
-            <thead class="thead-light">
-            <tr>
+    <div>
+        <table>
+            <thead>
+            <tr class="table100-head">
                 <th scope="col">Id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
@@ -49,7 +49,11 @@
             <tbody>
             <tr th:each="publisher : ${form.objects}">
                 <td th:text="${publisher.id}"></td>
-                <td th:text="${publisher.name}"></td>
+                <td>
+                    <a class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"
+                       th:href="@{/publishers/{id} (id=${publisher.id})}"
+                       th:text="${publisher.name}"></a>
+                </td>
                 <td th:text="${#strings.abbreviate(publisher.description, 20)}"></td>
                 <td th:text="${publisher.address}"></td>
                 <td th:text="${publisher.ISBNPrefix}"></td>

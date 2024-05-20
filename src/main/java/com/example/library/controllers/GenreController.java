@@ -1,17 +1,28 @@
 package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
+import com.example.library.dto.ObjectsListDto;
+import com.example.library.dto.PageRequestDto;
+import com.example.library.dto.RequestDto;
+import com.example.library.models.Book;
 import com.example.library.models.Genre;
+import com.example.library.repositories.BookRepository;
 import com.example.library.services.BookService;
 import com.example.library.services.GenreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 
 @Controller
@@ -20,6 +31,8 @@ import org.springframework.stereotype.Controller;
 public class GenreController {
     @Autowired
     private GenreService genreService;
+    @Autowired
+    private BookRepository bookRepository;
     @Autowired
     private GlobalFunctions utils;
 
@@ -64,7 +77,6 @@ public class GenreController {
 
     @GetMapping(value = "/genre/{id}")
     public String genreEditions(
-            HttpServletRequest request,
             @PathVariable("id") Integer id,
             Model model
     )
