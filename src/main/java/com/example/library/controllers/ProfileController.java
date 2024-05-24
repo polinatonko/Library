@@ -60,7 +60,7 @@ public class ProfileController {
 
         userService.sendResetPasswordEmail(userService.createPasswordResetToken(user.get()));
         model.addAttribute("messageHeader", "Password reset mail was send!");
-        model.addAttribute("messageBody", "Сheck your mail and follow the link from the letter\n");
+        model.addAttribute("messageBody", "Сheck your mail and follow the link from the letter.\n");
         return "pages/message";
     }
 
@@ -88,7 +88,7 @@ public class ProfileController {
     }
 
     @PostMapping(value = "/save-password")
-    public String savePassword(@ModelAttribute("passwordDto") PasswordDto passwordDto, Model model)
+    public String savePassword(@ModelAttribute("passwordDto") PasswordDto passwordDto, RedirectAttributes redirectAttributes, Model model)
     {
         String res = securityService.checkToken(passwordDto.getToken());
 
@@ -105,9 +105,8 @@ public class ProfileController {
 
             if (pwd.equals(matchPwd)) {
                 userService.changePassword(user.get(), pwd);
-                model.addAttribute("messageHeader", "Success password reset!");
-                model.addAttribute("messageBody", "Log in our application");
-                return "login";
+                redirectAttributes.addFlashAttribute("passwordChanged", true);
+                return "redirect:/login";
             }
         }
         return "redirect:/reset-password?token=" + passwordDto.getToken() + "&error=true";

@@ -1,5 +1,6 @@
 package com.example.library.models;
 
+import com.example.library.interfaces.IEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,7 +16,7 @@ import java.util.Set;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Genre {
+public class Genre implements IEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -36,4 +37,9 @@ public class Genre {
         editions.add(edition);
     }
     public void removeEdition(Edition edition) { editions.remove(edition);}
+
+    @Override
+    public String getShortName() {
+        return name;
+    }
 }

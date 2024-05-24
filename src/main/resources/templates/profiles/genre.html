@@ -13,7 +13,16 @@
 <div class="col-md-2">
     <h5 style="margin: 30px;">Genres:</h5>
     <div th:each="a: ${genres}">
-        <a th:href="@{/genres/genre/{id} (id=${a.id})}"
+        <a th:if="${a.id == genre.id}"
+           th:href="@{/genres/genre/{id} (id=${a.id})}"
+           class="link-dark link-underline-dark link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"
+           style="margin: 30px;"
+        >
+            <strong><small th:text="${a.name}"></small></strong>
+        </a>
+
+        <a th:if="${a.id != genre.id}"
+           th:href="@{/genres/genre/{id} (id=${a.id})}"
            class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover"
            style="margin: 30px;">
             <small th:text="${a.name}"></small>
@@ -29,7 +38,7 @@
             </div>
 
             <div class="row flow-offset-1">
-                <div th:each="edition : ${genre.editions}" style="float: left; width: 25%;">
+                <div th:each="edition : ${form.objects}" style="float: left; width: 25%;">
 
                     <div class="card mb-3" >
                         <img th:if="${edition.photo}" th:src="@{${edition.photo.url}}" alt="image" class="card-img-top">
@@ -84,6 +93,9 @@
                 </div>
 
             </div>
+
+            <div th:replace="fragments/pagination.html :: pagination(${form})"></div>
+
         </div>
 </div>
 

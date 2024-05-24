@@ -1,10 +1,9 @@
 package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
-import com.example.library.dto.ObjectsListDto;
-import com.example.library.dto.PageRequestDto;
-import com.example.library.dto.RequestDto;
+import com.example.library.dto.*;
 import com.example.library.models.Book;
 import com.example.library.models.Genre;
+import com.example.library.models.Publisher;
 import com.example.library.repositories.BookRepository;
 import com.example.library.services.BookService;
 import com.example.library.services.GenreService;
@@ -32,13 +31,14 @@ public class GenreController {
     @Autowired
     private GenreService genreService;
     @Autowired
-    private BookRepository bookRepository;
+    private BookService bookService;
     @Autowired
     private GlobalFunctions utils;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String index(Model model) {
-        model.addAttribute("genres", genreService.getAll());
+    public String index(
+            Model model) {
+        model.addAttribute("form", new ObjectsListDto<>(genreService.getAll()));
         return "lists/genres";
     }
 
@@ -61,7 +61,7 @@ public class GenreController {
 
         genreService.save(newGenre);
 
-        return "redirect:";
+        return "redirect:/genres";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
@@ -78,13 +78,57 @@ public class GenreController {
     @GetMapping(value = "/genre/{id}")
     public String genreEditions(
             @PathVariable("id") Integer id,
+            @RequestParam("page") Optional<Integer> page,
+            @RequestParam("size") Optional<Integer> size,
+            HttpServletRequest httpRequest,
             Model model
     )
     {
         Genre genre = genreService.getById(id);
         model.addAttribute("genre", genre);
-        model.addAttribute("books", genreService.getByGenreId(id));
         model.addAttribute("genres", genreService.getAll());
+
+        RequestDto request = new RequestDto();
+        request.setPageDto(new PageRequestDto(page, size));
+
+        Page<Book> bookPage = bookService.getSearchPaginatedPageForGenre(request, id);
+        model.addAttribute("form", new ObjectsListDto<>(bookPage));
+
+        String url = utils.getCurrentUrl(httpRequest);
+        if (url.contains("page="))
+        {
+            url = url.replaceFirst("[&?]page=[\\d]+[?]?", "");
+            System.out.println(url);
+        }
+        char firstDelimeter = url.contains("=") ? '&' : '?';
+
+        model.addAttribute("currentUrl", url);
+        model.addAttribute("firstDelimeter", firstDelimeter);
+
+        int totalPages = bookPage.getTotalPages();
+        System.out.println(totalPages);
+        if (totalPages > 0) {
+            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
+                    .boxed()
+                    .collect(Collectors.toList());
+            model.addAttribute("pageNumbers", pageNumbers);
+        }
+
         return "profiles/genre";
+    }
+
+    @PostMapping(value = "/edit/{id}")
+    public String edit(
+            @ModelAttribute("form") GenreListDto form,
+            @PathVariable("id") Integer id,
+            Model model,
+            HttpServletRequest request
+    )
+    {
+        Genre edited = form.getObjects().getLast();
+        edited.setId(id);
+        genreService.save(edited);
+
+        return utils.getPreviousUrl(request);
     }
 }

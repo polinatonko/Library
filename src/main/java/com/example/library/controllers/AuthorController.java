@@ -6,10 +6,7 @@ import com.example.library.dto.AuthorListDto;
 import com.example.library.dto.PageRequestDto;
 import com.example.library.dto.RequestDto;
 import com.example.library.models.Author;
-import com.example.library.models.Book;
-import com.example.library.repositories.AuthorRepository;
 import com.example.library.services.AuthorService;
-import com.example.library.services.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,7 +124,6 @@ public class AuthorController {
 
     @GetMapping(value = "profile/{id}")
     public String profile(
-
             @PathVariable("id") Integer id,
             Model model
     )

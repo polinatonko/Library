@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //@PasswordMatches(message = "Passwords don't match")
 @Data
@@ -53,5 +55,16 @@ public class UserDto {
     public boolean checkEqualPasswords()
     {
         return password.equals(matchingPassword);
+    }
+
+    public boolean validatePassword()
+    {
+        boolean correct = true;
+        Pattern DIGITS = Pattern.compile("[0-9]"), LETTERS = Pattern.compile("[a-zA-Z]");
+        Matcher d = DIGITS.matcher(password), l = LETTERS.matcher(password);
+
+        if (password.length() < 8 || !d.find() || !l.find())
+            return false;
+        return true;
     }
 }

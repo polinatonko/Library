@@ -35,6 +35,19 @@ public class BookService {
     private FilterSpecification<Book> filterSpecification;
     @Autowired
     private GlobalFunctions utils;
+    public Page<Book> getSearchPaginatedPageForGenre(RequestDto request, Integer genreId)
+    {
+        Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
+
+        //return  new PageImpl<>(bookRepository.findAll(), pageable, bookRepository.findAll().size());
+        return bookRepository.findByGenresId(genreId, pageable);
+    }
+    public Page<Book> getSearchPaginatedPageForPublisher(RequestDto request, Integer publisherId)
+    {
+        Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
+
+        return bookRepository.findByPublisherId(publisherId, pageable);
+    }
     public Page<Book> getSearchPaginatedPage(RequestDto request, String selectedAuthors, String selectedPublishers, String selectedFormats,
                                              String selectedGenres, String minAge, String maxAge, String keywords) {
         Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());

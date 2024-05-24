@@ -18,14 +18,14 @@
 
                     <input required type="hidden" th:field="*{editionId}" class="form-control">
 
-                    <div class="row">
+                    <div class="row" style="display: block; margin-left: auto; margin-right: auto;">
                         <label for="input-6" class="control-label" style="font-size: 20pt; font-style: bold;"></label>
                         <input id="input-6" name="input-6" class="rating rating-loading" th:field="*{rating}" data-min="1" data-max="5" data-step="1" data-show-clear="false" data-show-caption="false" data-size="sm">
                     </div>
 
-                    <div class="row">
+                    <div class="row" style="display: block; margin-left: auto; margin-right: auto;">
                         <div class="form-floating col-auto mb-3">
-                            <textarea required type="text" th:field="*{content}" class="form-control" id="floatingContent" placeholder="Content"></textarea>
+                            <textarea required type="text" th:field="*{content}" class="form-control" id="floatingContent" placeholder="Content" style=" height: 400px;"></textarea>
                             <label for="floatingContent">Content</label>
                             <p th:each="error : ${#fields.errors('content')}"
                                th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>

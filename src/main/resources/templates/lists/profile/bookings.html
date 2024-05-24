@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="modal-body">
-                            <form class="login-form" th:action="@{/books/cancel-book/{id}/{editionId} (id=${id}, editionId=${b.id})}" method="post">
+                            <form class="login-form" th:action="@{/books/cancel-book/{id} (id=${b.id})}" method="post">
 
                                 <p>Do you really want to cancel booking on [[${b.edition.name}]]?</p>
 

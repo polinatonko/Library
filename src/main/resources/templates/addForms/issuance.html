@@ -61,13 +61,23 @@
                     </div>
                 </form>
 
-                <div class="error alert alert-dark" th:if="${noUser} == true"
+                <div class="error alert alert-dark alert-dismissible" th:if="${noUser} == true"
                      role="alert">
-                    User doesn't exists.</div>
+                    User doesn't exists.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
 
-                <div class="error alert alert-dark" th:if="${noUser} == true"
+                <div class="error alert alert-dark alert-dismissible" th:if="${noUser} == true"
                      role="alert">
-                    There not free copies of this edition.</div>
+                    There not free copies of this edition.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div class="error alert alert-dark alert-dismissible" th:if="${small} == true"
+                     role="alert">
+                    User is not old enough.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
 
             </div>
         </div>
