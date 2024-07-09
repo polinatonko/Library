@@ -14,12 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.lang.Math.min;
 
 @Service
 public class BookService {
@@ -35,6 +32,18 @@ public class BookService {
     private FilterSpecification<Book> filterSpecification;
     @Autowired
     private GlobalFunctions utils;
+    public Page<Book> getSearchPaginatedPageForGenre(RequestDto request, Integer genreId)
+    {
+        Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
+
+        return bookRepository.findByGenresId(genreId, pageable);
+    }
+    public Page<Book> getSearchPaginatedPageForPublisher(RequestDto request, Integer publisherId)
+    {
+        Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
+
+        return bookRepository.findByPublisherId(publisherId, pageable);
+    }
     public Page<Book> getSearchPaginatedPage(RequestDto request, String selectedAuthors, String selectedPublishers, String selectedFormats,
                                              String selectedGenres, String minAge, String maxAge, String keywords) {
         Pageable pageable = new PageRequestDto().getPageable(request.getPageDto());
@@ -126,7 +135,10 @@ public class BookService {
         book.book();
         save(book);
     }
-    public Iterable<Book> getNew() { return bookRepository.findByReceiptDateGreaterThan(utils.getDate(-7,0,0,0));}
+    public Iterable<Book> getNew()
+    {
+        return bookRepository.findByReceiptDateGreaterThan(utils.getDate(-7,0,0,0));
+    }
     public Iterable<Book> getAll() { return bookRepository.findAll(); }
 
     public Book save(Book book)

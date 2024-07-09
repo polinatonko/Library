@@ -32,7 +32,6 @@ public class StartUpService {
     @PostConstruct
     public void init() {
         restoreBlocks();
-        //initDates();
     }
     public void restoreBlocks() {
         for (Block block: blockService.getActive()) {

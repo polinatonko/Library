@@ -45,6 +45,5 @@ public class Author implements IEntity {
 
     public void removeBook(Book book) {
         this.books.remove(book);
-        //book.getAuthors().remove(this);
     }
 }

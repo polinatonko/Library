@@ -179,14 +179,20 @@ public class UserController {
     {
         if (userDto.checkEqualPasswords())
         {
-            try
+            if (userDto.validatePassword())
             {
-                userService.registerUser(userDto, ERole.ROLE_READER);
+                try
+                {
+                    userService.registerUser(userDto, ERole.ROLE_READER);
+                }
+                catch (IllegalArgumentException ex)
+                {
+                    bindingResult.rejectValue("email", "userDto.email", "User with this email already exists");
+                }
             }
-            catch (IllegalArgumentException ex)
-            {
-                bindingResult.rejectValue("email", "userDto.email", "User with this email already exists");
-            }
+            else
+                bindingResult.rejectValue("password", "userDto.password",
+                        "The password must contain at least 8 characters, at least 1 letter and one number");
         }
         else
         {

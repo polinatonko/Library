@@ -34,6 +34,7 @@ public class User implements IEntity {
     private boolean isEnabled;
     private boolean isBlocked;
     private Date blockingEnd;
+    private Integer blockedReviewsCount = 0;
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "verification_token_id")
     private VerificationToken verificationToken;
@@ -68,4 +69,7 @@ public class User implements IEntity {
     public String getShortName() {
         return String.join(" ", lastName, name, middleName);
     }
+
+    public void blockReview() { blockedReviewsCount++;}
+    public void clearBlockedReviewCount() { blockedReviewsCount = 0;}
 }

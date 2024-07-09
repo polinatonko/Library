@@ -35,23 +35,23 @@
                                     Book
                                 </button>
 
-                                <button th:case="${T(com.example.library.enums.BookingStatus).ZERO_COPIES}"
-                                        type="button"
-                                        class="btn btn-dark"
-                                        style="width: 20%;">
-                                    <a th:href="@{/books/notify/{id} (id=${object.id})}" th:disabled="${disabled}">
-                                        Notify</a>
-                                </button>
+                                <a th:case="${T(com.example.library.enums.BookingStatus).ZERO_COPIES}"
+                                   th:href="@{/books/notify/{id} (id=${object.id})}"
+                                   th:disabled="${disabled}"
+                                   role="button"
+                                   class="btn btn-dark"
+                                   style="width: 20%;">Notify</a>
 
                                 <a th:href="@{/books/preview/{id} (id=${object.id})}"
                                    role="button"
-                                   class="btn btn-sm btn-dark"
-                                   style="width: 20%;"
-                                   id="preview">
-                                    View preview</a>
+                                   class="btn btn-dark"
+                                   style="width: 20%; color: white;"
+                                   id="preview">View preview</a>
 
                             </div>
                     </div>
+
+
 
                 <div hidden="hidden">
                     <input type="text" hidden="hidden" id="isbn" th:value="${object.ISBN}"/>
@@ -71,6 +71,7 @@
                             </li>
                         </ul>
                     </div>
+
                 </div>
 
             </div>
@@ -81,7 +82,7 @@
 
                         <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" style="float: left; width: auto; height: 40px;">
                             <div class="col-auto" style="float: left; width: auto; height: 40px;">
-                                <a class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2"
+                                <a class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login rounded-circle fw-bold mb-2"
                                    th:href="@{/books/edit/{id} (id=${object.id})}"><i class="bi bi-pencil-fill"></i></a>
                             </div>
 
@@ -90,7 +91,7 @@
                                   style="float: left; width: auto; height: 40px;"
                                   method="post">
                                 <button type="submit"
-                                        class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2">
+                                        class="btn btn-md btn-light btn-bg-light.bg-gradient btn-login rounded-circle fw-bold mb-2">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </form>
@@ -175,9 +176,11 @@
                             </div>
                         </div>
                         <div id="reviews" class="tab-pane">
-                            <div class="error alert alert-dark" th:if="${showReviewExists} == true"
+                            <div class="error alert alert-dark alert-dismissible" th:if="${showReviewExists} == true"
                                  role="alert">
-                                Review already exists.</div>
+                                Review already exists.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
 
                             <p class="card-text">
                                 <div class="row justify-content-start">
@@ -185,7 +188,8 @@
                                     <form class="col-auto" sec:authorize="isAuthenticated()" th:action="@{/reviews/review/{id} (id=${object.id})}" method="get">
                                         <button type="submit"
                                                 class="btn btn-sm btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold"
-                                                th:disabled="${issuanceExists} == false">
+                                                th:disabled="${issuanceExists == false OR reviewExists == true}"
+                                        >
                                             Leave review</button>
                                     </form>
 
@@ -202,7 +206,28 @@
                         </div>
                     </div>
 
+                    <div class="row" style="margin: 10px;">
+                        <div class="toast fade show bottom-0 end-0" id="toastNoPreview" style="visibility: hidden;">
+                            <div class="toast-header">
+                                <strong class="me-auto"><i class="bi bi-slash-circle"></i> Error!</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                Preview doesn't exist.
+                            </div>
+                        </div>
+                    </div>
 
+
+                    <div class="toast fade show bottom-0 end-0" id="myToast" th:if="${small}">
+                        <div class="toast-header">
+                            <strong class="me-auto"><i class="bi bi-slash-circle"></i> Error!</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                        </div>
+                        <div class="toast-body">
+                            You have not reached the required age.
+                        </div>
+                    </div>
 
 
                 </div>
@@ -253,8 +278,16 @@
 <script type="text/javascript" src="https://www.google.com/books/jsapi.js"></script>
 
 <script>
+    function showNoPreview() {
+    console.log('here');
+        var elem = document.getElementById('toastNoPreview');
+        elem.style.visibility = 'visible';
+        document.getElementById('preview').removeAttribute("href");
+    }
+</script>
+<script>
     function submitLikeForm() {
-    document.likeFormName.submit();
+        document.likeFormName.submit();
     }
 </script>
 
@@ -268,18 +301,25 @@
 <script type="text/javascript">
     google.books.load();
 
+    const previewLink = document.getElementById('preview');
+
+    document.getElementById('toastNoPreview').style.visibility = 'hidden';
+
     function alertNotFound() {
-        document.getElementById("preview").classList.add('disable');
+        document.getElementById("preview").classList.add('noPreview');
+
+         previewLink.addEventListener('click', function(event) {
+             event.preventDefault(); // Prevent the default link behavior
+             showNoPreview(); // Custom action
+        });
     }
 
     function alertInitialized() {
-
     }
 
     function initialize() {
         var viewer = new google.books.DefaultViewer(document.getElementById('viewerCanvas'));
         var isbn = document.getElementById('isbn');
-        console.log(isbn.value);
         viewer.load('ISBN:' + isbn.value, alertNotFound, alertInitialized);
       }
 

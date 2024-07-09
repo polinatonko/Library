@@ -1,5 +1,5 @@
 <div th:fragment="pagination (form)">
-    <ul class="pagination justify-content-center">
+    <ul class="pagination justify-content-center" th:if="${form.page.totalPages}">
         <li th:class="${form.page.number} ? 'page-item' : 'page-item disabled'">
             <a class="page-link"
                th:href="@{${currentUrl} + ${firstDelimeter} + 'page=' + ${form.page.number-1}}"

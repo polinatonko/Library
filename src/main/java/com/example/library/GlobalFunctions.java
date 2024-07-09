@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Optional;
@@ -40,5 +42,10 @@ public class GlobalFunctions {
     {
         Calendar cal = Calendar.getInstance();
         return new Date(cal.getTime().getTime());
+    }
+
+    public LocalDate dateToLocalDate(Date date)
+    {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

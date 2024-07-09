@@ -20,6 +20,18 @@
                     <li sec:authorize="isAuthenticated()" class="nav-item">
                         <a class="nav-link" th:href="@{/recommend}">Recommend</a>
                     </li>
+
+                    <li class="nav-item dropdown">
+                        <button class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Lists
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a th:href="@{/publishers}" class="dropdown-item">Publishers</a></li>
+                            <li><a th:href="@{/genres}" class="dropdown-item">Genres</a></li>
+                            <li><a th:href="@{/authors}" class="dropdown-item">Authors</a></li>
+                        </ul>
+                    </li>
+
                     <li sec:authorize="isAuthenticated()" class="nav-item">
                         <a class="nav-link" th:href="@{/profile}">Profile</a>
                     </li>

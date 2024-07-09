@@ -1,11 +1,11 @@
 package com.example.library.controllers;
 
 import org.springframework.core.annotation.Order;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.ui.Model;
 
 @Order(-1)
 @ControllerAdvice

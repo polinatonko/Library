@@ -14,7 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import static java.time.temporal.ChronoUnit.YEARS;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -176,6 +181,7 @@ public class UserService {
     {
         String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
+        save(user);
     }
 
     public Iterable<User> getAllUsers()
@@ -264,5 +270,16 @@ public class UserService {
             return "Email was successfully changed";
         }
         return "Token is invalid!";
+    }
+
+    public Integer getAgeById(Integer userId)
+    {
+        User user = getUserByIdOrThrowException(userId);
+
+        LocalDate from = utils.dateToLocalDate(user.getBirthDate()),
+                to = utils.dateToLocalDate(utils.getCurentDate());
+
+        Period period = Period.between(from, to);
+        return period.getYears();
     }
 }

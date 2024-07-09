@@ -1,5 +1,7 @@
 package com.example.library.config;
 
+import com.cloudinary.provisioning.Account;
+import com.example.library.enums.ERole;
 import com.example.library.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -49,4 +51,5 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() { return user.isEnabled(); }
+    public boolean isAdmin() { return user.getRole().getName() == ERole.ROLE_ADMIN;}
 }

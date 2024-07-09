@@ -49,6 +49,18 @@ public class ReviewService {
 
         reviewRepository.delete(review);
     }
+    public void block(Review review)
+    {
+        User user = review.getUser();
+        if (user.getBlockedReviewsCount() == 4)
+        {
+            userService.blockUser(user.getId(), utils.getDate(30, 0, 0, 0));
+            user.clearBlockedReviewCount();
+        }
+        else
+            user.blockReview();
+        delete(review);
+    }
     private Review getByIdOrThrowException(Integer id)
     {
         Optional<Review> object = reviewRepository.findById(id);

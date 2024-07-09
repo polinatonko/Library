@@ -10,65 +10,75 @@
 <div class="container-fluid ps-md-0">
     <div class="login d-flex align-items-center py-5">
         <div class="container">
-            <div class="col-md-9 col-lg-8 mx-auto">
+            <div class="col-md-9 col-lg-8 mx-auto justify-content-center">
                 <h3 class="login-heading mb-4">Add book</h3>
 
-                <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2"
+                <div class="row justify-content-center">
+                    <button class="col-3 btn btn-lg btn-light btn-bg-light.bg-gradient btn-login fw-bold mb-2"
                         onclick="getFieldsValues()">Fill fields</button>
+                </div>
 
                 <form class="login-form" th:action="@{/books/add-post}" th:object="${object}" method="post">
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-journals input-group-text"></i>
                         <input required type="text" th:field="*{ISBN}" class="form-control" id="floatingISBN" placeholder="ISBN">
-                        <label for="floatingISBN">ISBN</label>
+                        <label for="floatingISBN"  id="myLabel1">ISBN</label>
                         <p th:each="error : ${#fields.errors('ISBN')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-globe-asia-australia input-group-text"></i>
                         <input required type="text" th:field="*{language}" class="form-control" id="floatingLanguage" placeholder="Language">
-                        <label for="floatingLanguage">Language</label>
+                        <label for="floatingLanguage"  id="myLabel2">Language</label>
                         <p th:each="error : ${#fields.errors('language')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-calendar-check input-group-text"></i>
                         <input required type="text" th:field="*{publishingDate}" class="form-control" id="floatingPublishingDate" placeholder="Publishing date">
-                        <label for="floatingPublishingDate">Publishing date</label>
+                        <label for="floatingPublishingDate" id="myLabel3">Publishing date</label>
                         <p th:each="error : ${#fields.errors('publishingDate')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-pencil-fill input-group-text"></i>
                         <input required type="text" th:field="*{name}" class="form-control" id="floatingName" placeholder="Name">
-                        <label for="floatingName">Name</label>
+                        <label for="floatingName" id="myLabel4">Name</label>
                         <p th:each="error : ${#fields.errors('name')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-info-circle input-group-text"></i>
                         <textarea required type="text" th:field="*{about}" class="form-control" id="floatingAbout" placeholder="About"></textarea>
-                        <label for="floatingAbout">About</label>
+                        <label for="floatingAbout" id="myLabel5">About</label>
                         <p th:each="error : ${#fields.errors('about')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-stack input-group-text"></i>
                         <input required type="text" th:field="*{pagesCount}" class="form-control" id="floatingPagesCount" placeholder="Pages count">
-                        <label for="floatingPagesCount">Pages count</label>
+                        <label for="floatingPagesCount" id="myLabel6">Pages count</label>
                         <p th:each="error : ${#fields.errors('pagesCount')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-collection input-group-text"></i>
                         <input required type="text" th:field="*{copiesCount}" class="form-control" id="floatingCopiesCount" placeholder="Copies count">
-                        <label for="floatingCopiesCount">Copies count</label>
+                        <label for="floatingCopiesCount" id="myLabel7">Copies count</label>
                         <p th:each="error : ${#fields.errors('copiesCount')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div class="form-floating mb-3">
+                    <div class="input-group form-floating mb-3">
+                        <i class="bi bi-eye-slash-fill input-group-text"></i>
                         <input required type="text" th:field="*{ageLimit}" class="form-control" id="floatingAgeLimit" placeholder="Age limit">
-                        <label for="floatingAgeLimit">Age limit</label>
+                        <label for="floatingAgeLimit" id="myLabel8">Age limit</label>
                         <p th:each="error : ${#fields.errors('ageLimit')}"
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
@@ -82,10 +92,9 @@
                         </select>
                     </div>
 
-                    <div class="d-grid">
-
-
-                        <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">Add</button>
+                    <div class="row justify-content-center">
+                        <button class="col-3 btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">
+                            Add</button>
                     </div>
 
                 </form>
@@ -109,6 +118,9 @@
     function getFieldsValues() {
         const xhr = new XMLHttpRequest();
         var isbn = document.getElementById('floatingISBN').value;
+
+        if (isbn)
+        {
         xhr.open("GET", "https://www.googleapis.com/books/v1/volumes?q=isbn:" + isbn + "&key=AIzaSyAIlK21hU5uCyE-LksOy8Ctl-Li0aollNA");
         xhr.send();
         xhr.responseType = "json";
@@ -117,7 +129,7 @@
             const data = xhr.response;
 
             const item = data['items'][0];
-            console.log(item);
+
             document.getElementById('floatingName').setAttribute('value', item['volumeInfo']['title']);
 
             var partsDate = item['volumeInfo']['publishedDate'].split('-');
@@ -125,13 +137,18 @@
             var date = partsDate[2] + ' ' + months[Number(partsDate[1])] + ', ' + partsDate[0];
 
             document.getElementById('floatingPublishingDate').setAttribute('value', date);
-            document.getElementById('floatingAbout').setAttribute('value', item['volumeInfo']['description']);
+            document.getElementById('floatingAbout').value = item['volumeInfo']['description'];
             document.getElementById('floatingPagesCount').setAttribute('value', item['volumeInfo']['pageCount']);
 
           } else {
             console.log(`Error: ${xhr.status}`);
           }
         };
+        }
+        else
+        {
+            alert('Fill ISBN value!');
+        }
     }
 </script>
 

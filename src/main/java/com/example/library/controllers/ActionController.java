@@ -3,7 +3,6 @@ package com.example.library.controllers;
 import com.example.library.GlobalFunctions;
 import com.example.library.dto.IssuanceDto;
 import com.example.library.dto.PeriodDto;
-import com.example.library.dto.SearchRequestDto;
 import com.example.library.enums.BookingStatus;
 import com.example.library.models.Edition;
 import com.example.library.models.Issuance;
@@ -76,15 +75,23 @@ public class ActionController {
             return utils.getPreviousUrl(request);
         }
 
-        // create and save:
-        Issuance issuance = new Issuance(edition, user.get(), utils.getDate(30, 0, 0, 0), utils.getCurentDate());
-        issuanceService.create(issuance, new IssuanceTimerTask(issuance));
+        // check age
+        Integer userAge = userService.getAgeById(userId);
 
+        // too small
+        if (userAge < edition.getAgeLimit())
+        {
+            redirectAttributes.addFlashAttribute("small", true);
+            return "redirect:/issuance";
+        }
 
-        // cancel booking, if exists:
         BookingStatus bookingStatus = bookingService.checkBooking(editionId, userId);
         if (bookingStatus == BookingStatus.DISABLED)
             bookingService.cancelBooking(editionId, userId);
+
+        // create and save:
+        Issuance issuance = new Issuance(edition, user.get(), utils.getDate(30, 0, 0, 0), utils.getCurentDate());
+        issuanceService.create(issuance, new IssuanceTimerTask(issuance));
 
         return "redirect:/manage-actions?type=issuance";
 
@@ -98,12 +105,10 @@ public class ActionController {
         Edition edition = bookService.getById(editionId);
         Optional<User> user = userService.getById(userId); // fix!
 
-        // check if issuance exists
         if (issuanceService.exists(editionId, userId))
         {
             if (user.isPresent())
             {
-                // create and save:
                 Return ret = new Return(edition, user.get(), utils.getDate(0, 0, 0, 0));
                 returnService.create(ret);
             }

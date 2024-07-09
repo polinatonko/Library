@@ -19,7 +19,7 @@
             <div class="col-md-8">
                 <div class="card-body">
 
-                    <form class="login-form" th:action="@{/books/edit/{id}(id=${object.id})}" th:object="${object}" method="post">
+                    <form id="editForm" class="login-form" th:action="@{/books/edit/{id}(id=${object.id})}" th:object="${object}" method="post">
                         <div class="row">
 
                             <div class="form-floating col-auto mb-3">
@@ -147,13 +147,6 @@
 
                         </div>
 
-
-                        <div class="text-center">
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-md btn-secondary btn-bg-secondary.bg-gradient btn-login fw-bold" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold">Save changes</button>
-                            </div>
-                        </div>
                     </form>
 
                     <div class="card-text">
@@ -161,8 +154,7 @@
                         <div th:each="obj : ${object.genres}">
                             <form style="float: left; width: auto;" th:action="@{/books/delete-genre/{id}/{genre} (id=${object.id}, genre=${obj?.id})}" method="post">
                                 <input hidden="true" th:name="id" th:value="${obj?.id}"/>
-
-                                <a class="link-dark link-underline-dark link-offset-3 link-underline-opacity-100 link-underline-opacity-50-hover" th:name="name" th:text="${obj.name}"></a>
+                                <a  class="link-dark link-underline-success link-offset-3 link-underline-opacity-50 link-underline-opacity-100-hover" th:name="name" th:href="@{/genres/genre/{id} (id=${obj.id})}" th:text="${obj.name}"></a>
                                 <button type="submit" class="btn btn-sm btn-light rounded-circle"><span>&times;</span></button>
                             </form>
                         </div>
@@ -176,17 +168,17 @@
                             ></option>
                         </select>
 
-                        <form th:object="${addGenre}" th:action="@{/books/add-genre/{id} (id=${object.id})}" style="float: left; width: auto;" method="post">
+                        <form th:object="${addGenre}" th:action="@{/books/add-genre/{id} (id=${object.id})}" id="genreForm" style="float: left; width: auto;" method="post">
                             <input type="hidden" id="selectedValueId2" th:field="*{id}"/>
 
-                            <button type="submit" class="btn btn-sm btn-light rounded-circle">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                                </svg>
+                            <button type="submit" form="genreForm" class="btn btn-sm btn-light rounded-circle">
+                                <i class="bi bi-plus"></i>
                             </button>
 
                         </form>
                     </div>
+
+                    <p style="height: 30px;"></p>
 
                     <div class="card-text">
 
@@ -212,19 +204,21 @@
                             ></option>
                         </select>
 
-                        <form th:object="${addAuthor}" th:action="@{/books/add-author/{id} (id=${object.id})}" id="genreForm" style="float: left; width: auto;" method="post">
+                        <form th:object="${addAuthor}" th:action="@{/books/add-author/{id} (id=${object.id})}" style="float: left; width: auto;" id="authorForm" method="post">
                             <input type="hidden" id="selectedAuthorId" th:field="*{id}"/>
 
-                            <button type="submit" form="genreForm" class="btn btn-sm btn-light rounded-circle">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                                    <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                                </svg>
+                            <button type="submit" form="authorForm" class="btn btn-sm btn-light rounded-circle">
+                                <i class="bi bi-plus"></i>
                             </button>
 
                         </form>
                     </div>
 
-
+                    <div class="text-center">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button form="editForm" type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold">Save changes</button>
+                        </div>
+                    </div>
 
                 </div>
             </div>

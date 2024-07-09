@@ -21,3 +21,4 @@ public interface BlockRepository extends CrudRepository<Block, Integer> {
     @Query("SELECT i FROM Block i WHERE i.day >= %?1% AND i.day <= %?2% AND i.user.id = %?3%")
     public List<Block> findByPeriodAndUserId(Date from, Date to, Integer userId);
 }
+

@@ -9,7 +9,6 @@ import java.util.Timer;
 
 @Service
 public class TimerService {
-    // userId actionId
     private final HashMap<Pair<Integer, Integer>, Timer> timers = new HashMap<>();
 
     public Timer getTimerById(Integer id, Integer actionId)

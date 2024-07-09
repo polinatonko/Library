@@ -35,6 +35,16 @@ public class ReviewController {
         reviewService.delete(review);
         return utils.getPreviousUrl(request);
     }
+    @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})
+    @PostMapping(value = "/block-review/{id}")
+    public String blockById(HttpServletRequest request,
+                             @PathVariable("id") Integer id,
+                             Model model)
+    {
+        Review review = reviewService.getById(id);
+        reviewService.block(review);
+        return utils.getPreviousUrl(request);
+    }
     @PostMapping(value = "/delete/{id}")
     public String delete(HttpServletRequest request,
                          @AuthenticationPrincipal CustomUserDetails userDetails,

@@ -12,17 +12,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -83,7 +82,6 @@ public class BookController {
 
         Page<Book> bookPage = bookService.getSearchPaginatedPage(request, selectedAuthors, selectedPublishers, selectedFormats, selectedGenres, minAge, maxAge, keywords);
 
-
         model.addAttribute("form", new ObjectsListDto<Book>(bookPage));
         model.addAttribute("authors", authorService.getAll());
         model.addAttribute("publishers", publisherService.getAll());
@@ -124,8 +122,7 @@ public class BookController {
     public List<Book> search(@RequestBody RequestDto requestDto)
     {
         Specification<Book> spec = filters.getSearchSpecification(requestDto.getSearchRequestDtos());
-        List<Book> books = (List<Book>)bookService.search(spec);
-        return books;
+        return (List<Book>)bookService.search(spec);
     }
     @GetMapping(value = "/notify/{id}")
     public String notify(
@@ -164,14 +161,15 @@ public class BookController {
         return utils.getPreviousUrl(request);
     }
 
-    @PostMapping(value = "/cancel-book/{id}/{editionId}")
+    @PostMapping(value = "/cancel-book/{id}")
     public String cancelBooking (
+            @AuthenticationPrincipal CustomUserDetails userDetails,
             HttpServletRequest request,
             @PathVariable("id") Integer id,
-            @PathVariable("editionId") Integer editionId,
             Model model)
-    {
-        bookingService.cancelBooking(editionId, id);
+            throws AccessDeniedException {
+        bookingService.checkPermission(userDetails, id);
+        bookingService.cancelBooking(id);
         return utils.getPreviousUrl(request);
     }
 
@@ -181,10 +179,21 @@ public class BookController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable("id") Integer editionId,
             @ModelAttribute("booking") BookingDto bookingDto,
+            RedirectAttributes redirectAttributes,
             Model model)
     {
         User user = userService.getAuthUser(userDetails).get(); // != null because auth user
         Book book = bookService.getById(editionId);
+
+        // check age
+        Integer userAge = userService.getAgeById(user.getId());
+
+        // too small
+        if (userAge < book.getAgeLimit())
+        {
+            redirectAttributes.addFlashAttribute("small", true);
+            return utils.getPreviousUrl(request);
+        }
 
         if (bookingService.checkBooking(book.getId(), user.getId()) == BookingStatus.ENABLED)
         {
@@ -316,7 +325,6 @@ public class BookController {
                 user.isPresent() ? bookingService.checkBooking(id, userDetails.getId()) : BookingStatus.DISABLED);
         model.addAttribute("showLike",
                 user.isPresent() && likeService.checkLike(id, userDetails.getId()));
-        //model.addAttribute("reviews", reviewService.getByEditionId(id));
         model.addAttribute("disabled",
                 user.isPresent() && notificationService.checkNotification(id, userDetails.getId()));
         if (user.isPresent())
