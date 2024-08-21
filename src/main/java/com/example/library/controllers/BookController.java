@@ -134,7 +134,6 @@ public class BookController {
     {
         Book book = bookService.getById(editionId);
         Optional<User>  user = userService.getAuthUser(userDetails);
-        Integer userId = userDetails.getId();
         if (user.isPresent())
         {
             notificationService.create(user.get(), book);

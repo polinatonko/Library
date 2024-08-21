@@ -1,10 +1,6 @@
 package com.example.library;
 
-import com.example.library.config.CustomUserDetails;
-import com.example.library.models.User;
-import com.example.library.services.UserService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

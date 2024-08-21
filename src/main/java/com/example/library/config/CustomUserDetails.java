@@ -1,6 +1,5 @@
 package com.example.library.config;
 
-import com.cloudinary.provisioning.Account;
 import com.example.library.enums.ERole;
 import com.example.library.models.User;
 import org.springframework.security.core.GrantedAuthority;

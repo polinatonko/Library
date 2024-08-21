@@ -1,11 +1,8 @@
 package com.example.library.models;
 
-import com.example.library.dto.ReviewDto;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 

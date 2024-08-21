@@ -1,24 +1,15 @@
 package com.example.library.controllers;
 
 import com.example.library.config.CustomUserDetails;
-import com.example.library.dto.ObjectsListDto;
-import com.example.library.models.Author;
-import com.example.library.models.Book;
 import com.example.library.models.User;
 import com.example.library.services.BookService;
 import com.example.library.services.GenreService;
 import com.example.library.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Controller
 public class MainController {

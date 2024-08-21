@@ -1,6 +1,5 @@
 package com.example.library.models;
 
-import com.example.library.timer.BlockTimerTask;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.Getter;

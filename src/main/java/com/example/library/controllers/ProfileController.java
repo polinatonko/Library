@@ -36,8 +36,6 @@ public class ProfileController {
     @Autowired
     private LikeService likeService;
     @Autowired
-    private BlockService blockService;
-    @Autowired
     private BookingService bookingService;
     @Autowired
     private IssuanceService issuanceService;

@@ -3,8 +3,6 @@ import com.example.library.GlobalFunctions;
 import com.example.library.dto.*;
 import com.example.library.models.Book;
 import com.example.library.models.Genre;
-import com.example.library.models.Publisher;
-import com.example.library.repositories.BookRepository;
 import com.example.library.services.BookService;
 import com.example.library.services.GenreService;
 import jakarta.servlet.http.HttpServletRequest;

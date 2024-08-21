@@ -38,8 +38,6 @@ public class ActionController {
     @Autowired
     private UserService userService;
     @Autowired
-    private TimerService timerService;
-    @Autowired
     private GlobalFunctions utils;
 
     @PostMapping(value = "/cancel-issuance/{id}")

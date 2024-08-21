@@ -2,7 +2,6 @@ package com.example.library.dto;
 
 import com.example.library.enums.ERole;
 import com.example.library.models.User;
-import com.example.library.validation.PasswordMatches;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -59,7 +58,6 @@ public class UserDto {
 
     public boolean validatePassword()
     {
-        boolean correct = true;
         Pattern DIGITS = Pattern.compile("[0-9]"), LETTERS = Pattern.compile("[a-zA-Z]");
         Matcher d = DIGITS.matcher(password), l = LETTERS.matcher(password);
 

@@ -1,8 +1,6 @@
 package com.example.library.repositories;
 
 import com.example.library.models.Block;
-import com.example.library.models.Issuance;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

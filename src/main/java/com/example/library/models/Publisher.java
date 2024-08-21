@@ -2,7 +2,6 @@ package com.example.library.models;
 
 import com.example.library.interfaces.IEntity;
 import com.example.library.dto.PublisherDto;
-import com.example.library.validation.UniqueISBNPrefix;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

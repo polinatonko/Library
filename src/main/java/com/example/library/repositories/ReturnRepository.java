@@ -1,6 +1,5 @@
 package com.example.library.repositories;
 
-import com.example.library.models.Issuance;
 import com.example.library.models.Return;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

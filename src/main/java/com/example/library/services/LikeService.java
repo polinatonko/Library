@@ -1,6 +1,5 @@
 package com.example.library.services;
 
-import com.example.library.models.Book;
 import com.example.library.models.Edition;
 import com.example.library.models.Like;
 import com.example.library.models.User;
@@ -9,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class LikeService {

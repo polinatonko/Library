@@ -44,7 +44,6 @@ public class FilterSpecification<T> {
                     case JOIN_IN -> {
                         String[] cols = column.split("-");
                         String[] vars = searchRequestDto.getValue().split(",");
-                        Object obj = root.join(cols[0]).get(cols[1]);
                         yield root.join(cols[0]).get(cols[1]).in(Arrays.asList(vars));
                     }
                     case FIND -> {

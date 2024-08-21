@@ -2,7 +2,6 @@ package com.example.library.repositories;
 
 import com.example.library.enums.IssuanceStatus;
 import com.example.library.models.Issuance;
-import com.example.library.services.IssuanceService;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

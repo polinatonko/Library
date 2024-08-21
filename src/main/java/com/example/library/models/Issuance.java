@@ -1,7 +1,6 @@
 package com.example.library.models;
 
 import com.example.library.enums.IssuanceStatus;
-import com.example.library.timer.BlockTimerTask;
 import com.example.library.timer.IssuanceTimerTask;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

@@ -29,10 +29,6 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private BlockService blockService;
-    @Autowired
-    private BookService bookService;
-    @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private GlobalFunctions utils;

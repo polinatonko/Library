@@ -2,7 +2,6 @@ package com.example.library.services;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.example.library.models.Image;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
