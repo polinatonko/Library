@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head('Edit book')"></div>
+<div th:replace="~{fragments/head.html :: head('Edit book')}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="container light-style flex-grow-1 container-p-y">
 
@@ -226,7 +226,7 @@
 
         <div class="row">
             <div class="col-md-4">
-                <div th:replace="fragments/loadBookImage.html :: loadBookImage(${object.id}, ${object.photo != null})"></div>
+                <div th:replace="~{fragments/loadBookImage.html :: loadBookImage(${object.id}, ${object.photo != null})}"></div>
             </div>
         </div>
     </div>

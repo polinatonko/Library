@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head('Add genre')"></div>
+<div th:replace="~{fragments/head.html :: head('Add genre')}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <form th:object="${genre}" method="post" th:action="@{/genres/add-genre}">
     <div>

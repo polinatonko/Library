@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head('Issuances')"></div>
+<div th:replace="~{fragments/head.html :: head('Issuances')}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="col">
     <div class="row justify-content-center">
@@ -23,7 +23,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments/search-by-date.html :: search_by_date (${period}, 'issuance')"></div>
+    <div th:replace="~{fragments/search-by-date.html :: search_by_date (${period}, 'issuance')}"></div>
 
     <div>
         <table>
@@ -109,7 +109,7 @@
 /* vanillajs-datepicker 1.1.4 JS included */
 
 const getDatePickerTitle = elem => {
-      // From the label or the aria-label
+      // from the label or the aria-label
       const label = elem.nextElementSibling;
       let titleText = '';
       if (label && label.tagName === 'LABEL') {

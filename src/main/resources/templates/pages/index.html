@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head('Main page')"></div>
+<div th:replace="~{fragments/head.html :: head('Main page')}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="container rounded-top">
     <div class="row justify-content-center m-5">

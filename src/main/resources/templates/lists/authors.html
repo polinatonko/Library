@@ -20,7 +20,7 @@
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="col">
     <div class="row">
@@ -70,7 +70,7 @@
                     <a th:href="@{/authors/profile/{id} (id=${object.id})}">[[${object.fullName}]]</a>
                 </td>
 
-                <td th:replace="fragments/dropdown-actions.html :: dropdown-actions(${object})"></td>
+                <td th:replace="~{fragments/dropdown-actions.html :: dropdown-actions(${object})}"></td>
             </tr>
 
             </tbody>
@@ -89,7 +89,7 @@
                     </div>
 
                     <div class="modal-body">
-                        <div th:replace="fragments/loadImage.html :: loadImage(${object.id}, 'author')"></div>
+                        <div th:replace="~{fragments/loadImage.html :: loadImage(${object.id}, 'author')}"></div>
 
                         <form class="login-form" th:action="@{/authors/edit-author/{id}(id=${object.id})}" th:object="${form}" method="post">
 

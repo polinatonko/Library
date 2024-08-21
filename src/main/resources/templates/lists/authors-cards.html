@@ -21,7 +21,7 @@
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="col">
     <div class="container bootstrap snipets">
@@ -47,7 +47,7 @@
                                    class="link-dark link-underline-dark link-offset-3 link-underline-opacity-0 link-underline-opacity-0-hover"></a>
                             </h5>
 
-                            <div th:replace="fragments/dropdown-actions.html :: dropdown-actions(${obj})"></div>
+                            <div th:replace="~{fragments/dropdown-actions.html :: dropdown-actions(${obj})}"></div>
 
                         </div>
                     </div>
@@ -66,7 +66,7 @@
                         </div>
 
                         <div class="modal-body">
-                            <div th:replace="fragments/loadImage.html :: loadImage(${object?.id}, ${object?.photo != null})"></div>
+                            <div th:replace="~{fragments/loadImage.html :: loadImage(${object?.id}, ${object?.photo != null})}"></div>
 
                             <form class="login-form" th:action="@{/authors/edit-author/{id}(id=${object?.id})}" th:object="${form}" method="post">
 
@@ -106,7 +106,7 @@
 
         </div>
 
-        <div th:replace="fragments/pagination.html :: pagination(${form})"></div>
+        <div th:replace="~{fragments/pagination.html :: pagination(${form})}"></div>
 
     </div>
 </div>

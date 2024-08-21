@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="~{fragments/head.html :: head}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="col">
     <div class="row">
@@ -51,7 +51,7 @@
                 <td th:text="${edition.name}"></td>
                 <td th:text="${edition.ISBN}"></td>
                 <td th:text="${edition.language}"></td>
-                <td th:replace="fragments/datepicker.html : datepicker"></td>
+                <td th:replace="~{fragments/datepicker.html : datepicker}"></td>
                 <td th:text="${edition.publisher}"></td>
                 <td th:text="${edition.pagesCount}"></td>
                 <td th:text="${edition.copiesCount}"></td>

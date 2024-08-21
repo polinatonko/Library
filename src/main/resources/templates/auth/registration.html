@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head('Registration')"></div>
+<div th:replace="~{fragments/head.html :: head('Registration')}"></div>
 
 <body>
 
@@ -71,7 +71,7 @@
                                     </p>
                                 </div>
 
-                                <div th:replace="fragments/datepicker.html :: datepicker"></div>
+                                <div th:replace="~{fragments/datepicker.html :: datepicker}"></div>
 
                                 <div class="d-grid">
                                     <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">Sign up</button>

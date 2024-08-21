@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head('Add user')"></div>
+<div th:replace="~{fragments/head.html :: head('Add user')}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="container-fluid ps-md-0">
     <div class="login d-flex align-items-center py-5">
@@ -57,7 +57,7 @@
                                        th:text="${error}" class="alert alert-danger" role="alert">Passwords don't match</p>
                                 </div>
 
-                                <div th:replace="fragments/datepicker.html :: datepicker"></div>
+                                <div th:replace="~{fragments/datepicker.html :: datepicker}"></div>
 
                                 <div class="input-group form-floating mb-3">
                                     <i class="bi bi-person-fill input-group-text"></i>

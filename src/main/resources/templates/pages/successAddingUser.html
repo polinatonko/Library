@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head('Success create user')"></div>
+<div th:replace="~{fragments/head.html :: head('Success create user')}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <h1>User was successfully added! <a href="${previousUrl}">Return</a> to previous page</h1>
 </body>

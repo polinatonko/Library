@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/" xmlns="http://www.w3.org/1999/html"
       xmlns:sec="http://www.w3.org/1999/xhtml">
 
-<div th:replace="fragments/head.html :: head('Blocks')"></div>
+<div th:replace="~{fragments/head.html :: head('Blocks')}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="col">
     <div class="row justify-content-center">
@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <div th:replace="fragments/search-by-date.html :: search_by_date (${period}, 'block')"></div>
+    <div th:replace="~{fragments/search-by-date.html :: search_by_date (${period}, 'block')}"></div>
 
     <div>
         <table>

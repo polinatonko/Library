@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 
-<div th:replace="fragments/head.html :: head"></div>
+<div th:replace="~{fragments/head.html :: head}"></div>
 
 <body>
 
-<div th:replace="fragments/navbar.html :: navbar"></div>
+<div th:replace="~{fragments/navbar.html :: navbar}"></div>
 
 <div class="container-fluid ps-md-0">
     <div class="login d-flex align-items-center py-5">
@@ -46,7 +46,7 @@
                            th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
                     </div>
 
-                    <div th:replace="fragments/datepicker.html :: datepicker"></div>
+                    <div th:replace="~{fragments/datepicker.html :: datepicker}"></div>
 
                     <div class="input-group form-floating mb-3">
                         <i class="bi bi- input-group-text"></i>

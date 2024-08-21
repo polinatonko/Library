@@ -1,7 +1,7 @@
 <div th:fragment="bookings(bookings, id)">
     <div class="col">
 
-        <div th:replace="fragments/search-by-date-user.html :: search_by_date_user (${period})"></div>
+        <div th:replace="~{fragments/search-by-date-user.html :: search_by_date_user (${period})}"></div>
 
         <table>
             <thead>
