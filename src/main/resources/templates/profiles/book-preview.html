@@ -14,9 +14,8 @@
         <div class="row justify-content-center no-gutters">
             <div class="col-md-4">
 
-                <p style="text-align: center;">
-                    Return to
-                    <a th:href="@{/books/{id} (id=${object.id})}">book page</a>
+                <p style="text-align: center;" th:text="#{return}">
+                    <a th:href="@{/books/{id} (id=${object.id})}" th:text="#{book.page}"></a>
                 </p>
 
                 <input type="text" hidden="hidden" id="isbn" th:value="${object.ISBN}"/>
@@ -53,6 +52,8 @@
 
     google.books.setOnLoadCallback(initialize);
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

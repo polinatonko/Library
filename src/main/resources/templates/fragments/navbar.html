@@ -1,7 +1,7 @@
 <div th:fragment="navbar">
     <div class="container-fluid px-0">
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark py-0 px-0">
-            <a class="navbar-brand" th:href="@{/}"><i class="bi bi-book"></i> &nbsp;&nbsp;&nbsp;E-library</a>
+            <a class="navbar-brand" th:href="@{/}" th:text="#{app}"><i class="bi bi-book"></i></a>
             <span class="v-line"></span>
             <button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -9,62 +9,72 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item active">
-                        <a class="nav-link" th:href="@{/books}">Catalog</a>
+                        <a class="nav-link" th:href="@{/books}" th:text="#{catalog}"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/books/history}">Last views</a>
+                        <a class="nav-link" th:href="@{/books/history}" th:text="#{history}"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/new}">New editions</a>
+                        <a class="nav-link" th:href="@{/new}" th:text="#{new.editions}"></a>
                     </li>
                     <li sec:authorize="isAuthenticated()" class="nav-item">
-                        <a class="nav-link" th:href="@{/recommend}">Recommend</a>
+                        <a class="nav-link" th:href="@{/recommend}" th:text="#{recommendations}"></a>
                     </li>
 
                     <li class="nav-item dropdown">
-                        <button class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-bs-toggle="dropdown" aria-expanded="false">
-                            Lists
+                        <button th:text="#{lists}" class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu1" data-bs-toggle="dropdown" aria-expanded="false">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a th:href="@{/publishers}" class="dropdown-item">Publishers</a></li>
-                            <li><a th:href="@{/genres}" class="dropdown-item">Genres</a></li>
-                            <li><a th:href="@{/authors}" class="dropdown-item">Authors</a></li>
+                            <li><a th:href="@{/publishers}" th:text="#{publishers}" class="dropdown-item"></a></li>
+                            <li><a th:href="@{/genres}" th:text="#{genres}" class="dropdown-item"></a></li>
+                            <li><a th:href="@{/authors}" th:text="#{authors}" class="dropdown-item"></a></li>
                         </ul>
                     </li>
 
                     <li sec:authorize="isAuthenticated()" class="nav-item">
-                        <a class="nav-link" th:href="@{/profile}">Profile</a>
+                        <a class="nav-link" th:href="@{/profile}" th:text="#{profile}"></a>
                     </li>
 
                     <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" class="nav-item dropdown">
-                        <button class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                            Manage users
+                        <button th:text="#{users}" class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                            <li><a th:href="@{/manage-users?role=all}" class="dropdown-item">All users</a></li>
-                            <li><a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/manage-users?role=admin}" class="dropdown-item">Admins</a></li>
-                            <li><a th:href="@{/manage-users?role=librarian}" class="dropdown-item">Librarians</a></li>
-                            <li><a th:href="@{/manage-users?role=reader}" class="dropdown-item">Readers</a></li>
+                            <li><a th:href="@{/manage-users?role=all}" th:text="#{all}" class="dropdown-item"></a></li>
+                            <li><a sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{admins}" th:href="@{/manage-users?role=admin}" class="dropdown-item"></a></li>
+                            <li><a th:href="@{/manage-users?role=librarian}" th:text="#{librarians}" class="dropdown-item"></a></li>
+                            <li><a th:href="@{/manage-users?role=reader}" th:text="#{readers}" class="dropdown-item"></a></li>
                         </ul>
                     </li>
 
                     <li sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" class="nav-item dropdown">
-                        <button class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
-                            Manage actions
+                        <button th:text="#{manage.actions}" class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu3" data-bs-toggle="dropdown" aria-expanded="false">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-                            <li><a th:href="@{/manage-actions?type=block}" class="dropdown-item">Blocks</a></li>
-                            <li><a th:href="@{/manage-actions?type=booking}" class="dropdown-item">Bookings</a></li>
-                            <li><a th:href="@{/manage-actions?type=issuance}" class="dropdown-item">Issuances</a></li>
-                            <li><a th:href="@{/manage-actions?type=return}" class="dropdown-item">Returns</a></li>
+                            <li><a th:href="@{/manage-actions?type=block}" th:text="#{blocks}" class="dropdown-item"></a></li>
+                            <li><a th:href="@{/manage-actions?type=booking}" th:text="#{bookings}" class="dropdown-item"></a></li>
+                            <li><a th:href="@{/manage-actions?type=issuance}" th:text="#{issuances}" class="dropdown-item"></a></li>
+                            <li><a th:href="@{/manage-actions?type=return}" th:text="#{returns}" class="dropdown-item"></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <button th:text="#{lang.change}" class="btn btn-secondary dropdown-toggle nav-link" type="button" id="dropdownMenu4" data-bs-toggle="dropdown" aria-expanded="false">
+                        </button>
+                        <ul id="locales" class="dropdown-menu" aria-labelledby="dropdownMenu4">
+                            <li class="dropdown-item">
+                                <button class="dropdown-item" value="en" th:text="#{lang.en}"></button>
+                            </li>
+                            <li class="dropdown-item">
+                                <button class="dropdown-item" value="ru" th:text="#{lang.ru}"></button>
+                            </li>
                         </ul>
                     </li>
 
                     <li sec:authorize="isAuthenticated()" class="nav-item">
-                        <a class="nav-link" th:href="@{/logout}">Logout</a>
+                        <a class="nav-link" th:href="@{/logout}" th:text="#{logout}"></a>
                     </li>
                     <li sec:authorize="!isAuthenticated()" class="nav-item">
-                        <a class="nav-link" th:href="@{/login}">Login</a>
+                        <a class="nav-link" th:href="@{/login}" th:text="#{login}"></a>
                     </li>
                 </ul>
             </div>

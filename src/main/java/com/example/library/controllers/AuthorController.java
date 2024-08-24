@@ -75,7 +75,7 @@ public class AuthorController {
     public String addForm(Model model)
     {
         model.addAttribute("object", new Author());
-        return "addForms/addAuthor";
+        return "addForms/author";
     }
 
     @Secured({"ROLE_ADMIN","ROLE_LIBRARIAN"})

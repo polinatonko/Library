@@ -44,7 +44,7 @@ public class GenreController {
     @GetMapping(value = "/add-genre")
     public String addGenreDisplayForm(Model model) {
         model.addAttribute(new Genre());
-        return "addForms/addGenreForm";
+        return "addForms/genre";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})

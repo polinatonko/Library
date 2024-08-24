@@ -215,7 +215,7 @@ public class BookController {
     public String addForm(Model model)
     {
         model.addAttribute("object", new Book());
-        return "addForms/addBook";
+        return "addForms/book";
     }
 
     @Secured({"ROLE_ADMIN","ROLE_LIBRARIAN"})

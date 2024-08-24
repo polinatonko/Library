@@ -14,12 +14,12 @@
         </div>
         <div class="col-sm">
             <div class="card-header border-0">
-                <h3 class="mb-0">Books</h3>
+                <h3 th:text="#{books}" class="mb-0"></h3>
             </div>
         </div>
         <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" class="col-sm d-flex justify-content-end">
             <a class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold mb-2"
-               th:href="@{/books/add}">Add book</a>
+            th:text="#{add.book}" th:href="@{/books/add}"></a>
         </div>
     </div>
 
@@ -27,21 +27,21 @@
         <table class="table align-items-center table-flush">
             <thead class="thead-light">
             <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Name</th>
-                <th scope="col">Authors</th>
-                <th scope="col">About</th>
+                <th th:text="#{id}" scope="col"></th>
+                <th th:text="#{name}" scope="col"></th>
+                <th th:text="#{authors}" scope="col"></th>
+                <th th:text="#{about}" scope="col"></th>
                 <th scope="col">ISBN</th>
-                <th scope="col">Language</th>
-                <th scope="col">Publishing date</th>
-                <th scope="col">Publisher</th>
-                <th scope="col">Pages count</th>
-                <th scope="col">Copies count</th>
-                <th scope="col">Age limit</th>
-                <th scope="col">Rating</th>
-                <th scope="col">Edition format</th>
-                <th scope="col">Genres</th>
-                <th sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" scope="col">Actions</th>
+                <th th:text="#{language}" scope="col"></th>
+                <th th:text="#{publishing.date}" scope="col"></th>
+                <th th:text="#{publisher}" scope="col"></th>
+                <th th:text="#{pages.count}" scope="col"></th>
+                <th th:text="#{copies.count}" scope="col"></th>
+                <th th:text="#{age.limit}" scope="col"></th>
+                <th th:text="#{rating}" scope="col"></th>
+                <th th:text="#{edition.format}" scope="col"></th>
+                <th th:text="#{genres}" scope="col"></th>
+                <th th:text="#{actions}" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" scope="col"></th>
             </tr>
 
             </thead>
@@ -83,11 +83,12 @@
                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                             <a class="dropdown-item"
                                data-bs-toggle="modal"
-                               th:attr="data-bs-target='#deleteModal' + ${edition?.id}">Delete</a>
+                               th:text="#{delete}"
+                               th:attr="data-bs-target='#deleteModal' + ${edition?.id}"></a>
 
                             <a class="dropdown-item"
-                               th:href="@{/books/edit/{id} (id=${edition?.id})}"
-                            >Edit</a>
+                               th:text="#{edit}"
+                               th:href="@{/books/edit/{id} (id=${edition?.id})}"></a>
                         </div>
                     </div>
                 </td>
@@ -97,7 +98,7 @@
         </table>
     </div>
 
-    <div th:replace="modals/confirmDeletion :: modal(${form}, 'book')"></div>
+    <div th:replace="~{modals/confirmDeletion :: modal(${form}, 'book')}"></div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>

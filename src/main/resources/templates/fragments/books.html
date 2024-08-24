@@ -2,10 +2,10 @@
     <div class="col">
         <div class="container bootstrap snipets">
             <div class="row">
-                <h1 class="text-center text-muted">Books</h1>
-                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" class="col-sm d-flex justify-content-end">
+                <h1 th:text="#{books}" class="text-center text-muted"></h1>
+                <div sec:authorize="hasAnyRole('ROLE.ADMIN', 'ROLE.LIBRARIAN')" class="col-sm d-flex justify-content-end">
                     <a class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login fw-bold mb-2"
-                       th:href="@{/books/add}">Add book</a>
+                        th:text="#{add.book}" th:href="@{/books/add}"></a>
                 </div>
             </div>
 
@@ -22,7 +22,7 @@
                                        class="link-dark link-underline-dark link-offset-3 link-underline-opacity-0 link-underline-opacity-0-hover"></a>
                                 </h5>
 
-                                <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" class="text-right col-md-2">
+                                <div sec:authorize="hasAnyRole('ROLE.ADMIN', 'ROLE.LIBRARIAN')" class="text-right col-md-2">
                                     <div class="dropdown">
                                         <a class="btn btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="bi bi-list"></i>
@@ -30,11 +30,12 @@
                                         <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                             <a class="dropdown-item"
                                                data-bs-toggle="modal"
-                                               th:attr="data-bs-target='#deleteModal' + ${edition?.id}">Delete</a>
+                                               th:text="#{delete}"
+                                               th:attr="data-bs-target='#deleteModal' + ${edition?.id}"></a>
 
                                             <a class="dropdown-item"
-                                               th:href="@{/books/edit/{id} (id=${edition?.id})}"
-                                            >Edit</a>
+                                               th:text="#{edit}"
+                                               th:href="@{/books/edit/{id} (id=${edition?.id})}"></a>
                                         </div>
                                     </div>
                                 </div>

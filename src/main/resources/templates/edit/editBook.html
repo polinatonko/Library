@@ -24,14 +24,14 @@
 
                             <div class="form-floating col-auto mb-3">
                                 <input required type="text" th:field="*{name}" class="form-control" th:attr="id=${'floatingName' + object.id}" placeholder="Name">
-                                <label th:attr="for=${'#floatingName' + object.id}">Name</label>
+                                <label th:text="#{name}" th:attr="for=${'#floatingName' + object.id}"></label>
                                 <p th:each="error : ${#fields.errors('name')}"
-                                   th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                                   th:text="${error}" class="alert alert-danger" role="alert"></p>
                             </div>
 
                             <div class="col-auto">
                                 <label for="input-6" class="control-label" th:text="*{rating}" style="font-size: 20pt; font-style: bold;"></label>
-                                <label class="control-label" style="font-size: 10pt;">[[*{reviews.size}]] ratings</label>
+                                <label class="control-label" style="font-size: 10pt;">[[*{reviews.size}]] <span th:text="#{ratings}"></span></label>
                                 <input id="input-6" name="input-6" class="rating rating-loading" th:value="*{rating}" data-show-clear="false" data-show-caption="false" data-readonly="true" data-size="sm">
                             </div>
 
@@ -41,25 +41,25 @@
                             <div class="col-md-4">
                                 <div class="form-floating mb-3">
                                     <input disabled="disabled" required type="text" th:field="*{id}" class="form-control" th:attr="id=${'floatingId' + object.id}">
-                                    <label th:attr="for=${'#floatingId' + object.id}">Id</label>
+                                    <label th:text="#{id}" th:attr="for=${'#floatingId' + object.id}"></label>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-floating mb-3">
                                     <input required type="text" th:field="*{ageLimit}" class="form-control" th:attr="id=${'floatingAgeLimit' + object.id}" placeholder="Age limit">
-                                    <label th:attr="for=${'#floatingAgeLimit' + object.id}">Age limit</label>
+                                    <label th:text="#{age.limit}" th:attr="for=${'#floatingAgeLimit' + object.id}"></label>
                                     <p th:each="error : ${#fields.errors('ageLimit')}"
-                                       th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                                       th:text="${error}" class="alert alert-danger" role="alert"></p>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-floating mb-3">
                                     <input required type="text" th:field="*{copiesCount}" class="form-control" th:attr="id=${'floatingCopiesCount' + object.id}" placeholder="Copies count">
-                                    <label th:attr="for=${'#floatingCopiesCount' + object.id}">Copies count</label>
+                                    <label th:text="#{copies.count}" th:attr="for=${'#floatingCopiesCount' + object.id}"></label>
                                     <p th:each="error : ${#fields.errors('copiesCount')}"
-                                       th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                                       th:text="${error}" class="alert alert-danger" role="alert"></p>
                                 </div>
                             </div>
 
@@ -67,9 +67,9 @@
 
                         <div class="form-floating mb-3">
                             <input required type="text" th:field="*{about}" class="form-control" th:attr="id=${'floatingAbout' + object.id}" placeholder="About">
-                            <label th:attr="for=${'#floatingAbout' + object.id}">About</label>
+                            <label th:text="#{about}" th:attr="for=${'#floatingAbout' + object.id}"></label>
                             <p th:each="error : ${#fields.errors('about')}"
-                               th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                               th:text="${error}" class="alert alert-danger" role="alert"></p>
                         </div>
 
                         <div class="row">
@@ -79,14 +79,14 @@
                                     <input required type="text" th:field="*{ISBN}" class="form-control" th:attr="id=${'floatingISBN' + object.id}" placeholder="ISBN">
                                     <label th:attr="for=${'#floatingISBN' + object.id}">ISBN</label>
                                     <p th:each="error : ${#fields.errors('ISBN')}"
-                                       th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                                       th:text="${error}" class="alert alert-danger" role="alert"></p>
                                 </div>
                             </div>
 
                             <div class="col-md-4" hidden="hidden">
                                 <div class="form-floating mb-3">
                                     <input required type="text" th:field="*{rating}" class="form-control" th:attr="id=${'floatingRating' + object.id}">
-                                    <label th:attr="for=${'#floatingRating' + object.id}">Rating</label>
+                                    <label th:text="#{rating}" th:attr="for=${'#floatingRating' + object.id}"></label>
                                 </div>
                             </div>
 
@@ -121,27 +121,27 @@
                             <div class="col-md-4">
                                 <div class="form-floating mb-3">
                                     <input required type="text" th:field="*{language}" class="form-control" th:attr="id=${'floatingLanguage' + object.id}" placeholder="Language">
-                                    <label th:attr="for=${'#floatingLanguage' + object.id}">Language</label>
+                                    <label th:text="#{language}" th:attr="for=${'#floatingLanguage' + object.id}"></label>
                                     <p th:each="error : ${#fields.errors('language')}"
-                                       th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                                       th:text="${error}" class="alert alert-danger" role="alert"></p>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-floating mb-3">
                                     <input required type="text" th:field="*{publishingDate}" class="form-control" th:attr="id=${'floatingPublishingDate' + object.id}" placeholder="Publishing date">
-                                    <label th:attr="for=${'#floatingPublishingDate' + object.id}">Publishing date</label>
+                                    <label th:text="#{publishing.date}" th:attr="for=${'#floatingPublishingDate' + object.id}"></label>
                                     <p th:each="error : ${#fields.errors('publishingDate')}"
-                                       th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                                       th:text="${error}" class="alert alert-danger" role="alert"></p>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-floating mb-3">
                                     <input required type="text" th:field="*{pagesCount}" class="form-control" th:attr="id=${'floatingPagesCount' + object.id}" placeholder="Pages count">
-                                    <label th:attr="for=${'#floatingPagesCount' + object.id}">Pages count</label>
+                                    <label th:text="#{pagies.count}" th:attr="for=${'#floatingPagesCount' + object.id}"></label>
                                     <p th:each="error : ${#fields.errors('pagesCount')}"
-                                       th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                                       th:text="${error}" class="alert alert-danger" role="alert"></p>
                                 </div>
                             </div>
 
@@ -255,6 +255,8 @@
 
     //# /edit/editBook.html=my.js
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

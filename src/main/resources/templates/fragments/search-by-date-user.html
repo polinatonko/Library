@@ -8,7 +8,7 @@
                     <div class="form-floating input-group mb-4">
                         <i class="bi bi-calendar-date input-group-text" id="myIcon"></i>
                         <input type="text" id="datepickerFrom" th:field="*{from}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
-                        <label for="datepickerFrom" id="myLabel1">From:</label>
+                        <label th:text="#{from}" for="datepickerFrom" id="myLabel1">:</label>
                     </div>
                 </div>
 
@@ -16,11 +16,9 @@
                     <div class="form-floating input-group mb-4">
                         <i class="bi bi-calendar-date input-group-text" id="myIcon1"></i>
                         <input type="text" id="datepickerTo" th:field="*{to}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
-                        <label for="datepickerTo" id="myLabel2">To:</label>
+                        <label th:text="#{to}" for="datepickerTo" id="myLabel2">:</label>
                     </div>
                 </div>
-
-
 
                 <div class="col-auto d-grid">
                     <button type="submit"

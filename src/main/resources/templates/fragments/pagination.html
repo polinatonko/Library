@@ -2,8 +2,8 @@
     <ul class="pagination justify-content-center" th:if="${form.page.totalPages}">
         <li th:class="${form.page.number} ? 'page-item' : 'page-item disabled'">
             <a class="page-link"
-               th:href="@{${currentUrl} + ${firstDelimeter} + 'page=' + ${form.page.number-1}}"
-            >Previous</a>
+               th:text="#{previous}"
+               th:href="@{${currentUrl} + ${firstDelimeter} + 'page=' + ${form.page.number-1}}"></a>
         </li>
 
         <li th:if="${form.page.totalPages > 0}"
@@ -17,7 +17,8 @@
 
         <li class="page-item">
             <a th:class="${form.page.number == form.page.totalPages - 1} ? 'page-link disabled' : 'page-link'"
-               th:href="@{${currentUrl} + ${firstDelimeter} + 'page=' + ${form.page.number+1}}">Next</a>
+               th:text="#{next}"
+               th:href="@{${currentUrl} + ${firstDelimeter} + 'page=' + ${form.page.number+1}}"></a>
         </li>
     </ul>
 </div>

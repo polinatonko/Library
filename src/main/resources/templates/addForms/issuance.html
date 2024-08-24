@@ -13,7 +13,7 @@
     <div class="login d-flex align-items-center py-5">
         <div class="container">
             <div class="col-md-9 col-lg-8 mx-auto">
-                <h3 class="login-heading mb-4">Form issuance</h3>
+                <h3 th:text="#{form.issuance}" class="login-heading mb-4"></h3>
 
                 <form class="login-form" th:action="@{/create-issuance}" th:object="${action}" method="post">
 
@@ -53,29 +53,27 @@
 
                     </div>
 
-
                     <div class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold">Form</button>
+                            <button th:text="#{form}" type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold"></button>
                         </div>
                     </div>
                 </form>
 
-                <div class="error alert alert-dark alert-dismissible" th:if="${noUser} == true"
+                <div th:text="#{no.user}" class="error alert alert-dark alert-dismissible" th:if="${noUser} == true"
                      role="alert">
-                    User doesn't exists.
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <div class="error alert alert-dark alert-dismissible" th:if="${noUser} == true"
                      role="alert">
-                    There not free copies of this edition.
+                     <span th:text="#{no.free.copies}"></span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <div class="error alert alert-dark alert-dismissible" th:if="${small} == true"
                      role="alert">
-                    User is not old enough.
+                     <span th:text="#{not.old.user}"></span>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
@@ -107,6 +105,8 @@
 
     //# /edit/editBook.html=my.js
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

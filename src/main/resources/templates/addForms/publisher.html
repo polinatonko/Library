@@ -11,42 +11,42 @@
     <div class="login d-flex align-items-center py-5">
         <div class="container">
             <div class="col-md-9 col-lg-8 mx-auto">
-                <h3 class="login-heading mb-4">Add publisher</h3>
+                <h3 th:text="#{add.publisher}" class="login-heading mb-4"></h3>
 
                 <form class="login-form" th:action="@{/publishers/add-publisher-post}" th:object="${publisher}" method="post">
                     <div class="input-group form-floating mb-3">
                         <input required type="text" th:field="*{name}" class="form-control" id="floatingName" placeholder="Name">
-                        <label for="floatingName">Name</label>
+                        <label th:text="#{name}" for="floatingName"></label>
                         <p th:each="error : ${#fields.errors('name')}"
-                           th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                           th:text="${error}" class="alert alert-danger" role="alert"></p>
                     </div>
 
                     <div class="input-group form-floating mb-3">
                         <i class="bi bi-info-circle input-group-text"></i>
                         <textarea required type="text" th:field="*{description}" class="form-control" id="floatingDescription" placeholder="Description"></textarea>
-                        <label for="floatingDescription" id="myLabel3"></label>
+                        <label th:text="#{description}" for="floatingDescription" id="myLabel3"></label>
                         <p th:each="error : ${#fields.errors('description')}"
-                           th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                           th:text="${error}" class="alert alert-danger" role="alert"></p>
                     </div>
 
                     <div class="input-group form-floating mb-3">
                         <i class="bi bi-geo-alt-fill input-group-text"></i>
                         <input required type="text" th:field="*{address}" class="form-control" id="floatingAddress" placeholder="Address">
-                        <label for="floatingAddress" id="myLabel2"></label>
+                        <label th:text="#{address}" for="floatingAddress" id="myLabel2"></label>
                         <p th:each="error : ${#fields.errors('address')}"
-                           th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                           th:text="${error}" class="alert alert-danger" role="alert"></p>
                     </div>
 
                     <div class="input-group form-floating mb-3">
                         <i class="bi bi-tags input-group-text"></i>
                         <input required type="text" th:field="*{ISBNPrefix}" class="form-control" id="floatingISBNPrefix" placeholder="ISBN prefix">
-                        <label for="floatingISBNPrefix" id="myLabel1">ISBN prefix</label>
+                        <label th:text="#{isbn.prefix}" for="floatingISBNPrefix" id="myLabel1"></label>
                         <p th:each="error : ${#fields.errors('ISBNPrefix')}"
-                           th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                           th:text="${error}" class="alert alert-danger" role="alert"></p>
                     </div>
 
                     <div class="d-grid">
-                        <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">Add</button>
+                        <button th:text="#{add}" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit"></button>
                     </div>
 
                 </form>
@@ -63,6 +63,7 @@
 
 <script type="text/javascript" th:src="@{/js/datepicker.js}"></script>
 
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 

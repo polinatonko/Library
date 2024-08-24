@@ -13,7 +13,7 @@
     <div class="login d-flex align-items-center py-5">
         <div class="container">
             <div class="col-md-9 col-lg-8 mx-auto">
-                <h3 class="login-heading mb-4">Form return</h3>
+                <h3 th:text="#{form.return}" class="login-heading mb-4"></h3>
 
                 <form class="login-form" th:action="@{/create-return}" th:object="${action}" method="post">
 
@@ -61,13 +61,11 @@
                     </div>
                 </form>
 
-                <div class="error alert alert-dark" th:if="${returnError} == true"
-                         role="alert">
-                        Issuance doesn't exists.</div>
+                <div th:text="#{no.issuance}" class="error alert alert-dark" th:if="${returnError} == true"
+                         role="alert"></div>
 
-                <div class="error alert alert-dark" th:if="${noUser} == true"
-                     role="alert">
-                    User doesn't exists.</div>
+                <div th:text="#{no.user}" class="error alert alert-dark" th:if="${noUser} == true"
+                     role="alert"></div>
 
             </div>
         </div>
@@ -97,6 +95,8 @@
 
     //# /edit/editBook.html=my.js
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

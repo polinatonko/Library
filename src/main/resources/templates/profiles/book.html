@@ -19,34 +19,36 @@
                     <div class="row justify-content-center" style="margin: 20px;" th:switch="${bookingStatus}">
                             <div class="btn-group">
                                 <button th:case="${T(com.example.library.enums.BookingStatus).DISABLED}"
+                                        th:text="#{book}"
                                         type="button"
                                         class="btn btn-dark"
                                         data-bs-toggle="modal" data-bs-target="#bookModal"
                                         disabled="disabled"
                                         style="width: 20%;">
-                                    Book
                                 </button>
 
                                 <button th:case="${T(com.example.library.enums.BookingStatus).ENABLED}"
+                                        th:text="#{book}"
                                         type="button"
                                         class="btn btn-dark"
                                         style="width: 20%;"
                                         data-bs-toggle="modal" data-bs-target="#bookModal">
-                                    Book
                                 </button>
 
                                 <a th:case="${T(com.example.library.enums.BookingStatus).ZERO_COPIES}"
+                                   th:text="#{notify}"
                                    th:href="@{/books/notify/{id} (id=${object.id})}"
                                    th:disabled="${disabled}"
                                    role="button"
                                    class="btn btn-dark"
-                                   style="width: 20%;">Notify</a>
+                                   style="width: 20%;"></a>
 
                                 <a th:href="@{/books/preview/{id} (id=${object.id})}"
+                                   th:text="#{view.preview}"
                                    role="button"
                                    class="btn btn-dark"
                                    style="width: 20%; color: white;"
-                                   id="preview">View preview</a>
+                                   id="preview"></a>
 
                             </div>
                     </div>
@@ -64,10 +66,14 @@
                     <div class="col-6 tab" role="tabpanel">
                         <ul class="nav nav-tabs nav-tabs-vertical" role="tablist">
                             <li class="nav-item active" role="presentation">
-                                <a class="nav-link active" data-bs-toggle="tab" href="#info" role="tab" aria-selected="true"><i class="bi bi-info-circle-fill"></i> Info</a>
+                                <a class="nav-link active" th:text="#{info}" data-bs-toggle="tab" href="#info" role="tab" aria-selected="true">
+                                    <i class="bi bi-info-circle-fill"></i>
+                                </a>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <a class="nav-link" data-bs-toggle="tab" href="#reviews" role="tab" aria-selected="false"><i class="bi bi-chat-square-text-fill"></i> Reviews</a>
+                                <a class="nav-link" th:text="#{reviews}" data-bs-toggle="tab" href="#reviews" role="tab" aria-selected="false">
+                                    <i class="bi bi-chat-square-text-fill"></i>
+                                </a>
                             </li>
                         </ul>
                     </div>
@@ -152,7 +158,7 @@
 
                     <div>
                         <label for="input-6" class="control-label" th:text="${object.rating}" style="font-size: 20pt; font-style: bold;"></label>
-                        <label class="control-label" style="font-size: 10pt;">[[${object.reviews.size}]] ratings</label>
+                        <label class="control-label" style="font-size: 10pt;">[[${object.reviews.size}]] <span th:text="#{ratings}"></span></label>
                         <input id="input-6" name="input-6" class="rating rating-loading" th:value="${object.rating}" data-min="0" data-max="5" data-step="0.1" data-show-clear="false" data-show-caption="false" data-readonly="true" data-size="sm">
                     </div>
 
@@ -161,14 +167,22 @@
                             <p class="card-text" th:text="${object.about}"></p>
                             <p class="card-text">ISBN: [[${object.ISBN}]]</p>
 
-                            <p class="card-text">Publisher: [[${object.publisher?.name}]]</p>
-                            <p class="card-text">Language: [[${object.language}]]</p>
-                            <p class="card-text">[[${object.ageLimit}]]+</p>
-                            <p class="card-text">[[${object.copiesCount}]] copies</p>
                             <p class="card-text">
-                                <small class="text-muted">Publishing: [[${object.publishingDate}]]</small>
+                                <span th:text="#{publisher}"></span>: [[${object.publisher?.name}]]
+                            </p>
+                            <p class="card-text">
+                                <span th:text="#{language}"></span>: [[${object.language}]]
+                            </p>
+                            <p class="card-text">[[${object.ageLimit}]]+</p>
+                            <p class="card-text">[[${object.copiesCount}]] <span th:text="#{copies}"></span></p>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <span th:text="#{publishing.date}"></span>: [[${object.publishingDate}]]
+                                </small>
                                 <br>
-                                <small class="text-muted">[[${object.pagesCount}]] pages, [[${object.format.name}]]</small>
+                                <small class="text-muted">
+                                    [[${object.pagesCount}]] <span th:text="#{pages}"></span>, [[${object.format.name}]]
+                                </small>
                             </p>
 
                             <div class="row d-inline card-text" th:each="g : ${object.genres}">
@@ -176,9 +190,8 @@
                             </div>
                         </div>
                         <div id="reviews" class="tab-pane">
-                            <div class="error alert alert-dark alert-dismissible" th:if="${showReviewExists} == true"
+                            <div class="error alert alert-dark alert-dismissible" th:text="#{review.exists}" th:if="${showReviewExists} == true"
                                  role="alert">
-                                Review already exists.
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
@@ -187,17 +200,18 @@
 
                                     <form class="col-auto" sec:authorize="isAuthenticated()" th:action="@{/reviews/review/{id} (id=${object.id})}" method="get">
                                         <button type="submit"
+                                                th:text="#{leave.review}"
                                                 class="btn btn-sm btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold"
                                                 th:disabled="${issuanceExists == false OR reviewExists == true}"
-                                        >
-                                            Leave review</button>
+                                        ></button>
                                     </form>
 
                                     <form class="col-auto" sec:authorize="isAuthenticated()" th:action="@{/reviews/delete/{id} (id=${object.id})}" method="post">
                                         <button
                                                 class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold"
+                                                th:text="#{delete.review}"
                                                 th:disabled="${reviewExists} == false">
-                                            Delete review</button>
+                                        </button>
                                     </form>
                                 </div>
                             </p>
@@ -212,9 +226,7 @@
                                 <strong class="me-auto"><i class="bi bi-slash-circle"></i> Error!</strong>
                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
-                            <div class="toast-body">
-                                Preview doesn't exist.
-                            </div>
+                            <div class="toast-body" th:text="#{no.preview}"></div>
                         </div>
                     </div>
 
@@ -224,9 +236,7 @@
                             <strong class="me-auto"><i class="bi bi-slash-circle"></i> Error!</strong>
                             <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                         </div>
-                        <div class="toast-body">
-                            You have not reached the required age.
-                        </div>
+                        <div class="toast-body" th:text="#{little.age}"></div>
                     </div>
 
 
@@ -239,26 +249,26 @@
         <div class="modal-dialog" role="document" >
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="bookModalLabel">Booking</h5>
+                    <h5 th:text="#{booking}" class="modal-title" id="bookModalLabel"></h5>
                     <button type="button" class="close d-flex justify-content-end" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
 
                 <div class="modal-body">
-                    <p>Select booking end:</p>
+                    <p th:text="#{select.booking.end}"></p>
 
                     <form class="login-form" th:object="${booking}" th:action="@{/books/book/{id}(id=${object.id})}" method="post">
                         <div class="form-floating mb-3">
                             <div class="form-floating input-group mb-4">
                                 <i class="bi bi-calendar-date input-group-text" id="myIcon"></i>
                                 <input type="text" id="datepicker" th:field="*{lastDay}" class="datepicker_input form-control" placeholder="DD/MM/YYYY" required>
-                                <label for="datepicker" id="myLabel1">Select day</label>
+                                <label th:text="#{select.day}" for="datepicker" id="myLabel1"></label>
                             </div>
                         </div>
 
                         <div class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold" data-bs-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold">Book</button>
+                                <button type="button" th:text="#{cancel}" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold" data-bs-dismiss="modal"></button>
+                                <button type="submit" th:text="#{book}" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold"></button>
                             </div>
                         </div>
                     </form>
@@ -354,6 +364,8 @@
         });
     }
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

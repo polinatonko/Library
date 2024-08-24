@@ -13,7 +13,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-9 col-lg-8 mx-auto">
-                            <h3 class="login-heading mb-4">Welcome back!</h3>
+                            <h3 th:etxt="#{welcome.back}" class="login-heading mb-4"></h3>
 
                             <div th:if="${messageHeader != null}" class="alert alert-success alert-dismissible fade show" role="alert">
                                 <h4 class="alert-heading" th:text="${messageHeader}"/>
@@ -24,39 +24,33 @@
                                 </button>
                             </div>
 
-                            <div class="error alert alert-danger alert-dismissible" th:if="${#strings.toString(param.error)} == 'true'"
-                                 role="alert">
-                                Authentication error.
+                            <div th:etxt="#{auth.error}" class="error alert alert-danger alert-dismissible"
+                                 th:if="${#strings.toString(param.error)} == 'true'" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
-                            <div class="error alert alert-danger alert-dismissible" th:if="${#strings.toString(param.error)} == 'bad-credentials'"
-                                 role="alert">
-                                Invalid password.
+                            <div th:text="#{invalid.password}" class="error alert alert-danger alert-dismissible" 
+                                th:if="${#strings.toString(param.error)} == 'bad-credentials'" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
-                            <div class="error alert alert-danger alert-dismissible" th:if="${#strings.toString(param.error)} == 'disabled'"
-                                 role="alert">
-                                This account is disabled.
+                            <div th:text="#{disabled.account}" class="error alert alert-danger alert-dismissible" 
+                                th:if="${#strings.toString(param.error)} == 'disabled'" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
-                            <div class="error alert alert-danger alert-dismissible" th:if="${#strings.toString(param.error)} == 'locked'"
-                                 role="alert">
-                                This account is locked.
+                            <div th:text="#{locked.account}" class="error alert alert-danger alert-dismissible" 
+                                th:if="${#strings.toString(param.error)} == 'locked'" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
-                            <div class="error alert alert-dark alert-dismissible" th:if="${param.logout}"
-                                 role="alert">
-                                You have been logged out.
+                            <div th:text="#{logged.out}" class="error alert alert-dark alert-dismissible" 
+                                th:if="${param.logout}" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
-                            <div class="error alert alert-success alert-dismissible" th:if="${passwordChanged}"
-                                 role="alert">
-                                Password was successfully changed.
+                            <div th:text="#{password.changed}" class="error alert alert-success alert-dismissible" 
+                                th:if="${passwordChanged}" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
 
@@ -66,23 +60,22 @@
                                 <div class="input-group form-floating mb-3">
                                     <i class="bi bi-envelope-open input-group-text"></i>
                                     <input required type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                    <label for="floatingInput" id="myLabel1">Email address</label>
+                                    <label th:text="#{email}" for="floatingInput" id="myLabel1"></label>
                                 </div>
 
                                 <div class="input-group form-floating mb-3">
                                     <i class="bi bi-key input-group-text"></i>
                                     <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
-                                    <label for="floatingPassword" id="myLabel2">Password</label>
+                                    <label th:text="#{password}" for="floatingPassword" id="myLabel2"></label>
                                 </div>
 
                                 <div class="d-grid">
-                                    <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">Sign in</button>
+                                    <button th:text="#{login}" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit"></button>
                                     <div class="text-center">
-                                        <a class="small text-secondary" th:href="@{/forgot-password}">Forgot password?</a>
+                                        <a th:text="#{forgot.password}" class="small text-secondary" th:href="@{/forgot-password}"></a>
                                     </div>
-                                    <div class="small text-secondary text-center">
-                                        Don't have an account?
-                                        <a class="text-dark" th:href="@{/reader/register}">Register</a>
+                                    <div th:text="#{no.account}" class="small text-secondary text-center"></div>
+                                        <a th:text="#{sign.up}" class="text-dark" th:href="@{/reader/register}"></a>
                                     </div>
                                 </div>
 
@@ -97,6 +90,8 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

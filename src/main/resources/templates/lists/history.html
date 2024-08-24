@@ -10,7 +10,7 @@
 
 <div class="container light-style flex-grow-1 container-p-y">
     <div class="col" th:if="${#lists.size(books) == 0}" style="margin: auto; text-align: center;">
-        <h2>History of views is empty.</h2>
+        <h2 th:text="#{empty.history}"></h2>
     </div>
 
     <div class="card mb-3" th:if="${#lists.size(books)}" style="width: 40%; display: block; margin-left: auto; margin-right: auto;">
@@ -77,11 +77,11 @@
 
                             <button class="carousel-control-prev" type="button" data-bs-target="#list" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
+                                <span th:text="#{previous}" class="visually-hidden"></span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#list" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
+                                <span th:text="#{next}" class="visually-hidden"></span>
                             </button>
                         </div>
                     </div>
@@ -102,6 +102,8 @@
         $('list').carousel($(this).data('slide-to'));
     });
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

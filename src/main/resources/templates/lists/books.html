@@ -11,10 +11,10 @@
 <div class="col">
     <div class="container bootstrap snipets">
         <div class="row">
-            <h1 class="text-center text-muted">Books</h1>
+            <h1 th:text="#{books}" class="text-center text-muted"></h1>
             <div sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_LIBRARIAN')" class="col-sm d-flex justify-content-end">
                 <a class="btn btn-sm btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold mb-2"
-                   th:href="@{/books/add}">Add book</a>
+                   th:text="#{add.book}" th:href="@{/books/add}"></a>
             </div>
         </div>
 
@@ -81,7 +81,7 @@
                 <div class="col-md-4 input-group form-floating mb-3">
                     <i class="bi bi-search input-group-text"></i>
                     <input type="text" name="keywords" class="form-control" id="floatingKeywords" placeholder="Search keywords">
-                    <label for="floatingKeywords" id="myLabel2">Search keywords</label>
+                    <label th:text="#{search.keywords}" for="floatingKeywords" id="myLabel2"></label>
                 </div>
             </div>
 
@@ -89,7 +89,7 @@
 
 
             <div class="d-grid">
-                <button class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2" type="submit">Search</button>
+                <button th:text="#{search}" class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login  fw-bold mb-2" type="submit"></button>
             </div>
 
         </form>
@@ -122,11 +122,12 @@
                                     <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
                                         <a class="dropdown-item"
                                            data-bs-toggle="modal"
-                                           th:attr="data-bs-target='#deleteModal' + ${edition?.id}">Delete</a>
+                                           th:text="#{delete}"
+                                           th:attr="data-bs-target='#deleteModal' + ${edition?.id}"></a>
 
                                         <a class="dropdown-item"
-                                           th:href="@{/books/edit/{id} (id=${edition?.id})}"
-                                        >Edit</a>
+                                           th:text="#{edit}"
+                                           th:href="@{/books/edit/{id} (id=${edition?.id})}"></a>
                                     </div>
                                 </div>
                             </div>
@@ -155,7 +156,7 @@
                 </div>
             </div>
 
-            <div th:replace="modals/confirmDeletion :: modal(${form}, 'book')"></div>
+            <div th:replace="~{modals/confirmDeletion :: modal(${form}, 'book')}"></div>
 
         </div>
 
@@ -282,6 +283,8 @@ rangeInput.forEach((input) => {
 });
 
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

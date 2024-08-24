@@ -6,12 +6,12 @@
         <table>
             <thead>
                 <tr class="table100-head">
-                    <th scope="col">Date</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Authors</th>
-                    <th scope="col">Rating</th>
-                    <th scope="col">Booking end</th>
-                    <th scope="col">Cancel</th>
+                    <th th:text="#{date}" scope="col"></th>
+                    <th th:text="#{name}" scope="col"></th>
+                    <th th:text="#{authors}" scope="col"></th>
+                    <th th:text="#{rating}" scope="col"></th>
+                    <th th:text="#{booking.end}" scope="col"></th>
+                    <th th:text="#{cancel}" scope="col"></th>
                 </tr>
             </thead>
 
@@ -50,7 +50,7 @@
                 <div class="modal-dialog" role="document" >
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" th:attr="id=${'cancelBookModalLabel' + b.id}">Cancel booking</h5>
+                            <h5 th:text="#{cancel.booking}" class="modal-title" th:attr="id=${'cancelBookModalLabel' + b.id}"></h5>
                             <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -59,12 +59,14 @@
                         <div class="modal-body">
                             <form class="login-form" th:action="@{/books/cancel-book/{id} (id=${b.id})}" method="post">
 
-                                <p>Do you really want to cancel booking on [[${b.edition.name}]]?</p>
+                                <p>
+                                    <span th:text="#{cancel.booking.question}"></span> [[${b.edition.name}]]?
+                                </p>
 
                                 <div class="text-center">
                                     <div class="btn-group" role="group" aria-label="Basic example">
-                                        <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold" data-bs-dismiss="modal">No</button>
-                                        <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold">Yes</button>
+                                        <button th:text="#{no}" type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login  fw-bold" data-bs-dismiss="modal"></button>
+                                        <button th:text="#{yes}" type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold"></button>
                                     </div>
                                 </div>
                             </form>

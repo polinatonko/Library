@@ -14,14 +14,30 @@
         <div class="row no-gutters row-bordered row-border-light">
             <div class="col-md-3 pt-0">
                 <div class="list-group list-group-flush account-settings-links" id="tabPanel">
-                    <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#general"><i class="bi bi-gear-fill"></i> General</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-change-password"><i class="bi bi-tools"></i> Change password</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-booking"><i class="bi bi-calendar-heart-fill"></i> Bookings</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-issuances"><i class="bi bi-calendar-range"></i> Issuances</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-returns"><i class="bi bi-calendar-week-fill" style="width: 21px;"></i> Returns</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-favorite"><i class="bi bi-bookmark-heart"></i> Favorites</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-on-hands"><i class="bi bi-hourglass-split"></i> On hands</a>
-                    <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-reviews"><i class="bi bi-chat-square-text-fill"></i> Reviews</a>
+                    <a th:text="#{general}" class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#general">
+                        <i class="bi bi-gear-fill"></i>
+                    </a>
+                    <a th:text="#{change.password}" class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-change-password">
+                        <i class="bi bi-tools"></i>
+                    </a>
+                    <a th:text="#{bookings}" class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-booking">
+                        <i class="bi bi-calendar-heart-fill"></i>
+                    </a>
+                    <a th:text="#{issuances}" class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-issuances">
+                        <i class="bi bi-calendar-range"></i>
+                    </a>
+                    <a th:text="#{returns}" class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-returns">
+                        <i class="bi bi-calendar-week-fill" style="width: 21px;"></i>
+                    </a>
+                    <a th:text="#{favourites}" class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-favorite">
+                        <i class="bi bi-bookmark-heart"></i>
+                    </a>
+                    <a th:text="#{on.hands}" class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-on-hands">
+                        <i class="bi bi-hourglass-split"></i>
+                    </a>
+                    <a th:text="#{reviews}" class="list-group-item list-group-item-action" data-bs-toggle="list" href="#account-reviews">
+                        <i class="bi bi-chat-square-text-fill"></i>
+                    </a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -35,32 +51,32 @@
 
                                 <div class="form-floating mb-3">
                                     <input type="text" th:field="*{lastName}" class="form-control" id="floatingLastName" disabled>
-                                    <label for="floatingLastName">Last name</label>
+                                    <label th:text="#{last.name}" for="floatingLastName"></label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" th:field="*{name}" class="form-control" id="floatingName" disabled>
-                                    <label for="floatingLastName">Name</label>
+                                    <label th:text="#{name}" for="floatingLastName"></label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" th:field="*{middleName}" class="form-control" id="floatingMiddleName" disabled>
-                                    <label for="floatingMiddleName">Middle name</label>
+                                    <label th:text="#{middle.name}" for="floatingMiddleName"></label>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" th:field="*{email}" class="form-control" id="floatingEmail">
-                                    <label for="floatingEmail">Email</label>
+                                    <label th:text="#{email}" for="floatingEmail"></label>
 
                                     <div class="error alert alert-dark" th:if="${changedEmail}"
                                          role="alert">
-                                        Check your new email [[${changedEmail}]]</div>
-
+                                         <span th:text="#{check.email}"></span> [[${changedEmail}]]</div>
                                     <p th:text="${emailError}"></p>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" th:field="*{birthDate}" class="form-control" id="floatingBirthDate" disabled>
-                                    <label for="floatingBirthDate">Birth date</label>
+                                    <label th:text="#{birth.date}" for="floatingBirthDate"></label>
                                 </div>
 
-                                <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold mb-2" type="submit">Save changes</button>
+                                <button th:text="#{save.changes}" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">
+                                </button>
 
                             </form>
                         </div>
@@ -72,12 +88,12 @@
                             <form th:action="@{/change-password}" method="post">
                                 <div class="form-floating mb-3">
                                     <input type="password" th:field="${userDto.password}" class="form-control" id="floatingNew">
-                                    <label for="floatingNew">New password</label>
+                                    <label th:text="#{new.password}" for="floatingNew"></label>
                                 </div>
 
                                 <div class="form-floating mb-3">
                                     <input type="password" th:field="${userDto.matchingPassword}" class="form-control" id="floatingNewAgain">
-                                    <label for="floatingNewAgain">New password again</label>
+                                    <label th:text="#{confirm.password}" for="floatingNewAgain"></label>
                                     <div class="error alert alert-danger" th:if="${passwordError}"
                                          role="alert">
                                         [[${passwordError}]]</div>
@@ -86,7 +102,8 @@
                                          role="alert">
                                         [[${passwordSuccess}]]</div>
                                 </div>
-                            <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login  fw-bold mb-2" type="submit">Save changes</button>
+                            <button th:text="#{save_changes}" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">
+                            </button>
                             </form>
                         </div>
                     </div>
@@ -148,8 +165,8 @@
 
 </div>
 
-<div th:replace="modals/short-book-list-modal.html :: short_book_list_modals(${likes})"></div>
-<div th:replace="modals/bookingsModal.html :: bookingsModal(${bookings})"></div>
+<div th:replace="~{modals/short-book-list-modal.html :: short_book_list_modals(${likes})}"></div>
+<div th:replace="~{modals/bookingsModal.html :: bookingsModal(${bookings})}"></div>
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -208,6 +225,8 @@ const elems = document.querySelectorAll('.datepicker_input');
       });
 }
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

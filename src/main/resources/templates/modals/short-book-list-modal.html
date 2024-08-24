@@ -4,7 +4,7 @@
         <div class="modal-dialog" role="document" >
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" th:attr="id=${'cancelLikeModalLabel' + b.id}">Cancel like</h5>
+                    <h5 th:text="#{cancel.like}" class="modal-title" th:attr="id=${'cancelLikeModalLabel' + b.id}"></h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -13,7 +13,7 @@
                 <div class="modal-body">
                     <form class="login-form" th:action="@{/books/like/{editionId} (editionId=${b.id})}" method="post">
 
-                        <p>Do you really want to unlike [[${b.name}]]?</p>
+                        <p><span th:text="#{cancel.like.question}"></span> [[${b.name}]]?</p>
 
                         <div class="text-center">
                             <div class="btn-group" role="group" aria-label="Basic example">

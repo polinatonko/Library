@@ -12,7 +12,7 @@
     <div class="login d-flex align-items-center py-5">
         <div class="container">
             <div class="col-md-9 col-lg-8 mx-auto">
-                <h3 class="login-heading mb-4">Leave review</h3>
+                <h3 th:text="#{leave.review}" class="login-heading mb-4"></h3>
 
                 <form class="login-form" th:action="@{/reviews/create-review}" th:object="${review}" method="post">
 
@@ -26,15 +26,15 @@
                     <div class="row" style="display: block; margin-left: auto; margin-right: auto;">
                         <div class="form-floating col-auto mb-3">
                             <textarea required type="text" th:field="*{content}" class="form-control" id="floatingContent" placeholder="Content" style=" height: 400px;"></textarea>
-                            <label for="floatingContent">Content</label>
+                            <label th:text="#{content}" for="floatingContent"></label>
                             <p th:each="error : ${#fields.errors('content')}"
-                               th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                               th:text="${error}" class="alert alert-danger" role="alert"></p>
                         </div>
                     </div>
 
                     <div class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold">Submit</button>
+                            <button th:text="#{submit}" type="submit" class="btn btn-md btn-dark btn-bg-dark.bg-gradient btn-login fw-bold"></button>
                         </div>
                     </div>
                 </form>
@@ -67,6 +67,8 @@
 
     //# /edit/editBook.html=my.js
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

@@ -89,7 +89,7 @@ public class UserController {
 
         if (bindingResult.hasErrors())
         {
-            return "addForms/addUser";
+            return "addForms/user";
         }
 
         return "redirect:/manage-users?role=all";
@@ -99,7 +99,7 @@ public class UserController {
     public String addUserForm(Model model)
     {
         model.addAttribute("user", new UserDto());
-        return "addForms/addUser";
+        return "addForms/user";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})

@@ -1,8 +1,7 @@
 <div th:fragment="loadImage (authorId, enabled)">
     <div class="row justify-content-center">
         <button class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login fw-bold col-4 " type="button" data-bs-toggle="collapse"
-                data-bs-target="#collapseLoadImage" style="margin: 10px;">
-            Load image
+        th:text="#{load.image}" data-bs-target="#collapseLoadImage" style="margin: 10px;">
         </button>
 
         <div class="col-sm d-flex">
@@ -16,14 +15,14 @@
 
     <div class="collapse" id="collapseLoadImage" style="margin: 5% 0;">
         <form th:action="@{/images/upload/{id} (id=${authorId})}" method="post" class="dropzone" id="myAwesomeDropzone" enctype="multipart/form-data">
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+            <input type="hidden" name=".csrf" value="${.csrf.token}"/>
 
             <div class="row justify-content-between">
                 <div class="col-6 justify-content-start">
                     <input class="form-control form-control-sm" name="file" type="file">
                 </div>
                 <div class="col-4 justify-content-end">
-                    <button type="submit" class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login fw-bold">Save image</button>
+                    <button th:text="#{save.image}" type="submit" class="btn btn-sm btn-light btn-bg-light.bg-gradient btn-login fw-bold"></button>
                 </div>
 
                 <input name="name" type="hidden" th:value="${authorId}"/>

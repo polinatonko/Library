@@ -9,11 +9,14 @@
 
 <form th:object="${genre}" method="post" th:action="@{/genres/add-genre}">
     <div>
-        <label>Name</label>
+        <label th:text="#{name}"></label>
         <input type="text" th:field="*{name}"/>
         <span th:errors="*{name}"></span>
     </div>
-    <input type="submit" class="btn btn-sm stn-dark" value="Add"/>
+    <input type="submit" class="btn btn-sm stn-dark" th:text="#{add}" value="Add"/>
 </form>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
+
 </body>
 </html>

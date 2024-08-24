@@ -23,13 +23,13 @@
         <table>
             <thead>
             <tr class="table100-head">
-                <th scope="col">Id</th>
-                <th scope="col">Date</th>
-                <th scope="col">Is active</th>
-                <th scope="col">Last day</th>
-                <th scope="col">Edition</th>
-                <th scope="col">Used id</th>
-                <th scope="col">Cancel</th>
+                <th th:text="#{id}" scope="col"></th>
+                <th th:text="#{date}" scope="col"></th>
+                <th th:text="#{is.active}" scope="col"></th>
+                <th th:text="#{last.day}" scope="col"></th>
+                <th th:text="#{edition}" scope="col"></th>
+                <th th:text="#{user.id}" scope="col"></th>
+                <th th:text="#{cancel}" scope="col"></th>
             </tr>
             </thead>
 
@@ -71,7 +71,7 @@
 
 </div>
 
-<div th:replace="modals/bookingsModal.html :: bookingsModal(${actions})"></div>
+<div th:replace="~{modals/bookingsModal.html :: bookingsModal(${actions})}"></div>
 
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -104,6 +104,8 @@ const elems = document.querySelectorAll('.datepicker_input');
       });
 }
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

@@ -45,7 +45,7 @@ public class PublisherController {
     public String addPublisher(HttpServletRequest request, Model model)
     {
         model.addAttribute("publisher", new PublisherDto());
-        return "addForms/addPublisher";
+        return "addForms/publisher";
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_LIBRARIAN"})

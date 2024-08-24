@@ -11,26 +11,26 @@
     <div class="login d-flex align-items-center py-5">
         <div class="container">
             <div class="col-md-9 col-lg-8 mx-auto">
-                <h3 class="login-heading mb-4">Add author</h3>
+                <h3 th:text="#{add.author}" class="login-heading mb-4"></h3>
 
                 <form class="login-form" th:action="@{/authors/add-post}" th:object="${object}" method="post">
                     <div class="input-group form-floating mb-3">
                         <input required type="text" th:field="*{fullName}" class="form-control" id="floatingFullName" placeholder="Full name">
-                        <label for="floatingFullName">Full name</label>
+                        <label th:text="#{full.name}" for="floatingFullName"></label>
                         <p th:each="error : ${#fields.errors('fullName')}"
-                           th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                           th:text="${error}" class="alert alert-danger" role="alert"></p>
                     </div>
 
                     <div class="input-group form-floating mb-3">
                         <i class="bi bi-info-circle input-group-text"></i>
                         <textarea required type="text" th:field="*{bio}" class="form-control" id="floatingBio" placeholder="Bio"></textarea>
-                        <label for="floatingBio" id="myLabel3">Bio</label>
+                        <label th:text="#{bio}" for="floatingBio" id="myLabel3"></label>
                         <p th:each="error : ${#fields.errors('bio')}"
-                           th:text="${error}" class="alert alert-danger" role="alert">Validation error</p>
+                           th:text="${error}" class="alert alert-danger" role="alert"></p>
                     </div>
 
                     <div class="d-grid">
-                        <button class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit">Add</button>
+                        <button th:text="#{add}" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login fw-bold mb-2" type="submit"></button>
                     </div>
 
                 </form>
@@ -50,6 +50,7 @@
 
 <script type="text/javascript" th:src="@{/js/datepicker.js}"></script>
 
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 

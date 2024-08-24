@@ -16,8 +16,9 @@
                 <img th:if="${object.photo}" th:src="@{${object.photo.url}}" alt="image" class="card-img">
 
                 <button class="btn btn-sm btn-outline-dark px-4"
+                        th:text="#{view.editions}"
                         onclick="showEditions()"
-                        style="margin: 20px auto; display: block;">View editions</button>
+                        style="margin: 20px auto; display: block;"></button>
 
             </div>
             <div class="col-md-8">
@@ -82,11 +83,11 @@
 
                             <button class="carousel-control-prev" type="button" data-bs-target="#list" data-bs-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
+                                <span class="visually-hidden" th:text="#{previous}"></span>
                             </button>
                             <button class="carousel-control-next" type="button" data-bs-target="#list" data-bs-slide="next">
                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
+                                <span class="visually-hidden" th:text="#{next}"></span>
                             </button>
                         </div>
                     </div>
@@ -115,6 +116,8 @@
             list.setAttribute('hidden', 'hidden');
     }
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

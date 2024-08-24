@@ -10,15 +10,13 @@
 
 <h1 th:text="${error_msg} ? ${error_msg} : 'Oops, something went wrong!'" style="text-align: center;"></h1>
 
-
-
-
-
-<p style="text-align: center; font-size: 20pt;">
-    Return to <a th:href="@{/}">main page</a>
+<p th:text="#{return}" style="text-align: center; font-size: 20pt;">
+    <a th:href="@{/}" th:text="#{main.page}"></a>
 </p>
 
 <img th:src="@{/Dino.gif}" style="width: 300px; height: 300px;" class="center"/>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>

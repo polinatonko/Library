@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
         <div class="col-auto">
             <div class="card-header border-0">
-                <h3 class="mb-0">Issuances</h3>
+                <h3 th:text="#{issuances}" class="mb-0"></h3>
             </div>
         </div>
         <div class="col-auto">
@@ -29,13 +29,13 @@
         <table>
             <thead>
             <tr class="table100-head">
-                <th scope="col">Id</th>
-                <th scope="col">Date</th>
-                <th scope="col">Status</th>
-                <th scope="col">Last day</th>
-                <th scope="col">Edition</th>
-                <th scope="col">Used id</th>
-                <th scope="col">Cancel</th>
+                <th th:text="#{id}" scope="col"></th>
+                <th th:text="#{date}" scope="col"></th>
+                <th th:text="#{status}" scope="col"></th>
+                <th th:text="#{last.day}" scope="col"></th>
+                <th th:text="#{edition}" scope="col"></th>
+                <th th:text="#{user.id}" scope="col"></th>
+                <th th:text="#{cancel}" scope="col"></th>
             </tr>
             </thead>
 
@@ -72,12 +72,12 @@
             <div class="modal-dialog" role="document" >
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" th:attr="id=${'cancelActionModalLabel' + a?.id}">Cancel issuance</h5>
+                        <h5 th:text="#{cancel.issuance}" class="modal-title" th:attr="id=${'cancelActionModalLabel' + a?.id}"></h5>
                         <button type="button" class="close d-flex justify-content-end" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
 
                     <div class="modal-body">
-                        <p>Do you really want to cancel this issuance?</p>
+                        <p th:text="#{cancel.issuance.question}"></p>
 
                         <form class="login-form"
                               th:action="@{/cancel-issuance/{id} (id=${a?.id})}"
@@ -85,8 +85,8 @@
 
                             <div class="text-center">
                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                    <button type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal">No</button>
-                                    <button type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold">Yes</button>
+                                    <button th:text="#{no}" type="button" class="btn btn-lg btn-secondary btn-bg-secondary.bg-gradient btn-login text-uppercase fw-bold" data-bs-dismiss="modal"></button>
+                                    <button th:text="#{yes}" type="submit" class="btn btn-lg btn-dark btn-bg-dark.bg-gradient btn-login text-uppercase fw-bold"></button>
                                 </div>
                             </div>
                         </form>
@@ -128,6 +128,8 @@ const elems = document.querySelectorAll('.datepicker_input');
       });
 }
 </script>
+
+<script type="text/javascript" th:src="@{/js/localization.js}"></script>
 
 </body>
 </html>
